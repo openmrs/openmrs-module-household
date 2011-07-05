@@ -1,0 +1,481 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>
+
+	<class name="org.openmrs.module.household.model.HouseholdDefinition" table="household_definition">
+
+        <cache usage="read-write"/>
+
+		<id name="id" type="java.lang.Integer" unsaved-value="0" column="household_definition_id">
+			<generator class="org.openmrs.api.db.hibernate.NativeIfNotAssignedIdentityGenerator" />
+		</id>
+		
+		<discriminator column="household_definition_id" insert="false"/>
+		
+		<property name="householdDefinitionsCode" type="java.lang.String" 
+			column="household_definition_code" not-null="true" length="45"/>
+		
+		<property name="householdDefinitionsCodeinfull" type="java.lang.String" 
+			column="household_definition_codeinfull" not-null="true" length="255"/>
+		
+		<property name="householdDefinitionsDescription" type="java.lang.String" 
+			column="household_definition_description" not-null="true" length="255"/>
+		
+		<many-to-one name="program" class="org.openmrs.Program" 
+			column="program_id"/>
+		
+		<many-to-one name="creator" class="org.openmrs.User" />
+
+		<property name="dateCreated" type="java.util.Date"
+			column="date_created" not-null="true" length="19" />
+
+		<many-to-one name="changedBy" class="org.openmrs.User" column="changed_by" />
+
+		<property name="dateChanged" type="java.util.Date"
+			column="date_changed" length="19" />
+
+		<many-to-one name="voidedBy" class="org.openmrs.User" column="voided_by" />
+
+		<property name="dateVoided" type="java.util.Date"
+			column="date_voided" length="19" />
+
+		<property name="voidReason" type="java.lang.String"
+			column="void_reason" length="255" />
+
+		<property name="voided" type="boolean" column="voided"
+			length="1" not-null="true" />
+			
+	</class>
+	
+	<class name="org.openmrs.module.household.model.Household" table="household">
+
+        <cache usage="read-write"/>
+
+		<id name="id" type="java.lang.Integer" unsaved-value="0" column="household_group_id">
+			<generator class="org.openmrs.api.db.hibernate.NativeIfNotAssignedIdentityGenerator" />
+		</id>
+		
+		<discriminator column="household_group_id" insert="false"/>
+		
+		<many-to-one name="householdDef" class="org.openmrs.module.household.model.HouseholdDefinition"
+			column="household_def_id"/>
+			
+	</class>
+	
+	<class name="org.openmrs.module.household.model.HouseholdMembership" table="household_membership">
+
+        <cache usage="read-write"/>
+
+		<id name="id" type="java.lang.Integer" unsaved-value="0" column="household_membership_id">
+			<generator class="org.openmrs.api.db.hibernate.NativeIfNotAssignedIdentityGenerator" />
+		</id>
+		
+		<discriminator column="household_membership_id" insert="false"/>
+
+		<many-to-one name="householdMembershipMember" class="org.openmrs.Person"
+			column="household_membership_person_id"/>
+		
+		<many-to-one name="householdMembershipGroups" class="org.openmrs.module.household.model.Household"
+			column="household_membership_group_id"/>
+		
+		<property name="householdMembershipHeadship" type="boolean" 
+			column="household_membership_headship" not-null="false" length="1"/>
+		
+		<property name="startDate" type="java.util.Date"
+			column="start_date" length="19" />
+			
+		<property name="endDate" type="java.util.Date"
+			column="end_date" length="19" />
+		
+		<many-to-one name="creator" class="org.openmrs.User" />
+
+		<property name="dateCreated" type="java.util.Date"
+			column="date_created" not-null="true" length="19" />
+
+		<many-to-one name="changedBy" class="org.openmrs.User" column="changed_by" />
+
+		<property name="dateChanged" type="java.util.Date"
+			column="date_changed" length="19" />
+
+		<many-to-one name="voidedBy" class="org.openmrs.User" column="voided_by" />
+
+		<property name="dateVoided" type="java.util.Date"
+			column="date_voided" length="19" />
+
+		<property name="voidReason" type="java.lang.String"
+			column="void_reason" length="255" />
+
+		<property name="voided" type="boolean" column="voided"
+			length="1" not-null="true" />
+	</class>
+	
+	<class name="org.openmrs.module.household.model.HouseholdAttribute" table="household_attribute">
+	
+		<id name="householdAttributeTypeId" type="java.lang.Integer"
+			column="household_attribute_type_id" unsaved-value="0">
+			<generator class="native" />
+		</id>
+
+		<discriminator column="household_attribute_type_id" insert="false" />
+
+		<property name="uuid" type="java.lang.String"
+			column="uuid" length="38" unique="true" />
+
+		<property name="name" type="java.lang.String" column="name"
+			not-null="true" length="50" />
+
+		<property name="householdDescription" type="java.lang.String"
+			column="household_description" not-null="true" length="65535" />
+
+		<property name="sortWeight" type="java.lang.Double" column="sort_weight" not-null="true"/>
+		
+		<property name="searchable" type="boolean" not-null="true" />
+
+		<many-to-one name="creator" class="org.openmrs.User"
+			not-null="true" column="creator" />
+			
+		<property name="dateCreated" type="java.util.Date"
+			column="date_created" not-null="true" length="19" />
+
+		<many-to-one name="changedBy" class="org.openmrs.User"
+			column="changed_by" />
+			
+		<property name="dateChanged" type="java.util.Date"
+			column="date_changed"  />
+			
+		<many-to-one name="retiredBy" class="org.openmrs.User" column="retired_by" />
+		<property name="dateRetired" type="java.util.Date"
+			column="date_retired" length="19" />
+			
+		<property name="retireReason" type="java.lang.String"
+			column="retire_reason" length="255" />
+			
+		<property name="retired" type="boolean" column="retired"
+			length="1" not-null="true" />
+			
+		<many-to-one name="editPrivilege" class="org.openmrs.Privilege" column="edit_privilege" />
+			
+	</class>
+	
+	<class name="org.openmrs.module.household.model.HouseholdAttribValue" table="household_attrib_value">
+		
+		<id name="id" type="java.lang.Integer"
+			column="household_attribute_id" unsaved-value="0">
+			<generator class="native" />
+		</id>
+		
+		<discriminator column="household_attribute_id" insert="false" />
+
+		<property name="uuid" type="java.lang.String"
+			column="uuid" length="38" unique="true" />
+
+		<many-to-one name="household" class="org.openmrs.module.household.model.Household">
+			<column name="household_group_id" />
+		</many-to-one>
+		
+		<many-to-one name="householdAttributeType" class="org.openmrs.module.household.model.HouseholdAttribute"
+			column="household_attribute_type_id" not-null="true" />
+		
+		<property name="value" type="java.lang.String"
+			column="household_value" not-null="true" length="50" />
+		
+
+		<many-to-one name="creator" class="org.openmrs.User"
+			column="creator" not-null="true" />
+			
+		<property name="dateCreated" type="java.util.Date"
+			column="date_created" not-null="true" />
+		
+		<many-to-one name="changedBy" class="org.openmrs.User"
+			column="changed_by" />
+			
+		<property name="dateChanged" type="java.util.Date"
+			column="date_changed"  />
+
+		<many-to-one name="voidedBy" class="org.openmrs.User"
+			column="voided_by" />
+			
+		<property name="dateVoided" type="java.util.Date"
+			column="date_voided" />
+			
+		<property name="voided" type="boolean" not-null="true" />
+		<property name="voidReason" type="java.lang.String"
+			column="void_reason" length="255" />
+	</class>
+	
+	<class name="org.openmrs.module.household.model.HouseholdLocation" table="household_location">
+		
+		<cache usage="read-write"/>
+		
+		<id name="householdLocationId" type="int" column="household_location_id">
+			<generator class="native" />
+		</id>
+
+		<discriminator column="household_location_id" insert="false" />
+		
+		<property name="uuid" type="java.lang.String"
+			column="uuid" length="38" unique="true" />
+
+		<property name="name" type="java.lang.String" column="name"
+			not-null="true" length="255" />
+			
+		<property name="description" type="java.lang.String"
+			column="description" length="255" />
+			
+		<property name="address1" type="java.lang.String"
+			column="address1" length="255" />
+			
+		<property name="address2" type="java.lang.String"
+			column="address2" length="255" />
+			
+		<property name="cityVillage" type="java.lang.String"
+			column="city_village" length="255" />
+			
+		<property name="citySubLocation" type="java.lang.String"
+			column="city_sub_location" length="255" />
+			
+		<property name="cityLocation" type="java.lang.String"
+			column="city_location" length="255" />
+			
+		<property name="postalCode" type="java.lang.String"
+			column="postal_code" length="50" />
+			
+		<property name="latitude" type="java.lang.String"
+			column="latitude" length="50" />
+			
+		<property name="longitude" type="java.lang.String"
+			column="longitude" length="50" />
+			
+		<property name="countyDistrict" type="java.lang.String"
+			column="county_district" length="255" />
+		
+		<property name="dateCreated" type="java.util.Date"
+			column="date_created" not-null="true" length="19" />
+
+		<!-- Associations -->
+		
+		<many-to-one name="parentHouseholdLocation" class="org.openmrs.module.household.model.HouseholdLocation"
+			column="parent_household_location" />
+		
+		<set name="childHouseholdLocations" inverse="true" cascade="all" order-by="name">
+			<key column="parent_household_location" />
+			<one-to-many class="org.openmrs.module.household.model.HouseholdLocation" />
+ 		</set>
+
+		<!-- bi-directional many-to-one association to User -->
+		<many-to-one name="creator" class="org.openmrs.User" not-null="true">
+			<column name="creator" />
+		</many-to-one>
+
+        <many-to-one name="retiredBy" class="org.openmrs.User"
+            column="retired_by" />
+            
+        <property name="dateRetired" type="java.util.Date"
+            column="date_retired" length="19" />
+            
+        <property name="retireReason" type="java.lang.String"
+            column="retire_reason" length="255" />
+            
+        <property name="retired" type="boolean" column="retired"
+            length="1" not-null="true" />
+
+	</class>
+	
+	<class name="org.openmrs.module.household.model.HouseholdEncounterType" table="household_encounter_type">
+
+		<id name="householdEncounterTypeId" type="java.lang.Integer"
+			column="household_encounter_type_id" unsaved-value="0">
+			<generator class="native" />
+		</id>
+		
+		<discriminator column="household_encounter_type_id" insert="false" />
+		
+		<property name="name" type="java.lang.String"
+			not-null="true" length="50" />
+			
+		<property name="description" type="java.lang.String"
+			not-null="true" length="1024" />
+			
+		<property name="dateCreated" type="java.util.Date"
+			column="date_created" not-null="true" length="19" />
+			
+		<many-to-one name="creator" class="org.openmrs.User"
+			not-null="true" />
+			
+		<property name="uuid" type="java.lang.String"
+			column="uuid" length="38" unique="true" />
+			
+		<many-to-one name="retiredBy" class="org.openmrs.User"
+			column="retired_by" />
+			
+		<property name="dateRetired" type="java.util.Date"
+			column="date_retired" length="19" />
+			
+		<property name="retireReason" type="java.lang.String"
+			column="retire_reason" length="255" />
+			
+		<property name="retired" type="boolean"
+			length="1" not-null="true" />
+
+	</class>
+	
+	<class name="org.openmrs.module.household.model.HouseholdEncounter" table="household_encounter">
+
+		<id name="householdEncounterId" type="int" column="household_encounter_id"
+			unsaved-value="0">
+			<generator class="native" />
+		</id>
+		
+		<discriminator column="household_encounter_id" insert="false" />
+		
+		<property name="uuid" type="java.lang.String"
+			column="uuid" length="38" unique="true" />
+
+		<property name="householdEncounterDatetime" type="java.util.Date"
+			column="household_encounter_datetime" not-null="true" length="19" />
+			
+		<property name="dateCreated" type="java.util.Date"
+			column="date_created" not-null="true" length="19" />
+			
+		<property name="voided" type="java.lang.Boolean" column="voided"
+			length="1" not-null="true" />
+			
+		<property name="dateVoided" type="java.util.Date"
+			column="date_voided" length="19" />
+			
+		<property name="voidReason" type="java.lang.String"
+			column="void_reason" length="255" />
+			
+		<property name="dateChanged" type="java.util.Date" 
+			column="date_changed" not-null="false" length="19" />
+
+		<!-- Associations -->
+		<!-- bi-directional many-to-one association to User -->
+		<many-to-one name="changedBy" class="org.openmrs.User" not-null="false">
+			<column name="changed_by" />
+		</many-to-one>
+
+		<!-- bi-directional many-to-one association to HouseholdGroups -->
+		<many-to-one name="householdGroupId" class="org.openmrs.module.household.model.Household" not-null="true">
+			<column name="household_group_id" />
+		</many-to-one>
+		
+		<!-- bi-directional many-to-one association to Location -->
+		<many-to-one name="householdLocation" class="org.openmrs.module.household.model.HouseholdLocation" not-null="false">
+			<column name="location_id" />
+		</many-to-one>
+		
+		<!-- bi-directional many-to-one association to Form -->
+		<many-to-one name="form" class="org.openmrs.Form" not-null="false">
+			<column name="form_id" />
+		</many-to-one>
+		
+		<!-- bi-directional one-to-many association to Ob -->
+		<set name="householdObs" inverse="true" cascade="all" order-by="concept_id" access="field">
+			<key column="household_encounter_id" />
+			<one-to-many class="org.openmrs.module.household.model.HouseholdObs" />
+		</set>
+		
+		<!-- bi-directional many-to-one association to EncounterType -->
+		<many-to-one name="householdEncounterType" class="org.openmrs.module.household.model.HouseholdEncounterType"
+			not-null="true">
+			<column name="household_encounter_type" />
+		</many-to-one>
+		
+		<!-- bi-directional many-to-one association to User -->
+		<many-to-one name="creator" class="org.openmrs.User" not-null="true">
+			<column name="creator" />
+		</many-to-one>
+		
+		<!-- bi-directional many-to-one association to Person -->
+		<many-to-one name="provider" class="org.openmrs.Person" not-null="true">
+			<column name="provider_id" />
+		</many-to-one>
+		
+		<many-to-one name="voidedBy" class="org.openmrs.User">
+			<column name="voided_by" />
+		</many-to-one>
+
+	</class>
+
+	<class name="org.openmrs.module.household.model.HouseholdObs" table="household_obs" batch-size="25">
+
+		<id name="householdObsId" type="int" column="household_obs_id" unsaved-value="null">
+			<generator class="native" />
+		</id>
+
+		<discriminator column="household_obs_id" insert="false" />
+
+		<property name="uuid" type="java.lang.String"
+			column="uuid" length="38" unique="true" />
+
+		<property name="householdObsDatetime" type="java.util.Date"
+			column="household_obs_datetime" not-null="true" length="19" />
+					
+		<property name="valueGroupId" type="java.lang.Integer"
+			column="value_group_id" length="11" />
+			
+		<property name="valueDatetime" type="java.util.Date"
+			column="value_datetime" length="19" />
+			
+		<property name="valueNumeric" type="double"
+			column="value_numeric" length="22" />
+			
+		<property name="valueModifier" type="java.lang.String"
+			column="value_modifier" length="2" />
+			
+		<property name="valueText" type="java.lang.String"
+			column="value_text" length="50" />
+			
+		<property name="comment" type="java.lang.String"
+			column="comments" length="255" />
+			
+		<property name="dateStarted" type="java.util.Date"
+			column="date_started" length="19" />
+			
+		<property name="dateStopped" type="java.util.Date"
+			column="date_stopped" length="19" />
+			
+		<property name="dateCreated" type="java.util.Date"
+			column="date_created" not-null="true" length="19" />
+			
+		<property name="voided" type="java.lang.Boolean" column="voided"
+			length="1" not-null="true" />
+			
+		<property name="dateVoided" type="java.util.Date"
+			column="date_voided" length="19" />
+			
+		<property name="voidReason" type="java.lang.String"
+			column="void_reason" length="255" />
+
+		<!-- Associations -->
+
+		<many-to-one name="householdGroups" class="org.openmrs.module.household.model.Household" 
+			not-null="true" column="household_group_id" />
+			
+		<many-to-one name="concept" class="org.openmrs.Concept" not-null="true" column="concept_id" />
+		
+		<many-to-one name="valueCoded" class="org.openmrs.Concept" column="value_coded" />
+		
+		<many-to-one name="valueCodedName" class="org.openmrs.ConceptName" column="value_coded_name_id" />
+		
+		<many-to-one name="householdLocation" class="org.openmrs.module.household.model.HouseholdLocation" not-null="false" column="location_id" />
+		
+		<many-to-one name="householdEncounter" class="org.openmrs.module.household.model.HouseholdEncounter" column="household_encounter_id" />
+		
+		<many-to-one name="creator" class="org.openmrs.User" not-null="true" />
+		
+		<many-to-one name="voidedBy" class="org.openmrs.User" column="voided_by" />
+		
+		<!-- many-to-one association from this obs to its parent grouping obs -->
+		<!-- insert/update=false because the groupMembers set is doing the saving for us -->
+		<many-to-one name="householdObsGroup" class="org.openmrs.module.household.model.HouseholdObs" column="household_obs_group_id" insert="true" update="true"/>
+		
+		<!-- one-to-many association to all obs in this grouping -->
+		<set name="householdGroupMembers" inverse="true" cascade="all" order-by="household_obs_id">
+			<key column="household_obs_group_id" />
+			<one-to-many class="org.openmrs.module.household.model.HouseholdObs" />
+		</set> 
+		
+	</class>
+</hibernate-mapping>
