@@ -26,7 +26,7 @@ private Integer encounterId;
 	
 	private Household householdGroups;
 	
-	private Integer householdGroupId;
+	private Household householdGroupId;
 	
 	private HouseholdLocation householdLocation;
 	
@@ -325,14 +325,14 @@ private Integer encounterId;
 	/**
 	 * @return the householdGroupId
 	 */
-	public Integer getHouseholdGroupId() {
+	public Household getHouseholdGroupId() {
 		return householdGroupId;
 	}
 	
 	/**
 	 * @param householdGroupId the householdGroupId to set
 	 */
-	public void setHouseholdGroupId(Integer householdGroupId) {
+	public void setHouseholdGroupId(Household householdGroupId) {
 		this.householdGroupId = householdGroupId;
 	}
 	

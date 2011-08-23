@@ -6,6 +6,7 @@ package org.openmrs.module.household.service;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.openmrs.Concept;
 import org.openmrs.Form;
@@ -14,6 +15,7 @@ import org.openmrs.User;
 import org.openmrs.annotation.Authorized;
 import org.openmrs.api.APIException;
 import org.openmrs.api.OpenmrsService;
+import org.openmrs.module.household.HouseholdLocationField;
 import org.openmrs.module.household.model.Household;
 import org.openmrs.module.household.model.HouseholdAttribValue;
 import org.openmrs.module.household.model.HouseholdAttribute;
@@ -21,8 +23,11 @@ import org.openmrs.module.household.model.HouseholdDefinition;
 import org.openmrs.module.household.model.HouseholdEncounter;
 import org.openmrs.module.household.model.HouseholdEncounterType;
 import org.openmrs.module.household.model.HouseholdLocation;
+import org.openmrs.module.household.model.HouseholdLocationEntry;
+import org.openmrs.module.household.model.HouseholdLocationLevel;
 import org.openmrs.module.household.model.HouseholdMembership;
 import org.openmrs.module.household.model.HouseholdObs;
+import org.openmrs.module.household.util.HouseholdConstants;
 import org.springframework.transaction.annotation.Transactional;
 
 
@@ -116,6 +121,39 @@ public interface HouseholdService extends OpenmrsService{
 	@Transactional(readOnly = true)
 	@Authorized("View Household")
 	public List<HouseholdMembership> getAllHouseholdMemberships();
+	
+	/**
+	 * Get Household Memberships records given Person
+	 * 
+	 * @return Household Memberships with Person
+	 * 
+	 */
+	@Transactional(readOnly = true)
+	@Authorized("View Household")
+	public List<HouseholdMembership> getHouseholdIndexByGroup(Household grp);
+	/**
+	 * get the household memberships by group who exclude headship
+	 */
+	@Transactional(readOnly = true)
+	@Authorized("View Household")
+	public List<HouseholdMembership> getAllNonVoidedHouseholdMembershipsByGroupNotIndex(Household grp);
+	/**
+	 * Get the index person of the household
+	 * 
+	 * @return return the index person of the household
+	 */
+	@Transactional(readOnly = true)
+	@Authorized("View Household")
+	public List<HouseholdMembership> getIndexPerson(Integer id);
+	
+	/**
+	 * Get voided Household Memberships records given ID
+	 * 
+	 * @return voided Household Memberships with ID
+	 */
+	@Transactional(readOnly = true)
+	@Authorized("View Household")
+	public List<HouseholdMembership> getAllVoidedHouseholdMembershipsByGroup(Household grp);
 	
 	/**
 	 * Get Household Memberships records given ID
@@ -372,11 +410,326 @@ public interface HouseholdService extends OpenmrsService{
 	@Authorized("View Household Locations")
 	public Integer getCountOfHouseholdLocations(String nameFragment, Boolean includeRetired);
 	
+	/**
+	 * Distinct Locations returned
+	 * 
+	 * @param includeRetired
+	 * @return List<HouseholdLocation>
+	 */
+	@Transactional(readOnly = true)
+	@Authorized("View Household Locations")
+	public List<HouseholdLocation> getAllHouseholdLocationsByLocation(boolean includeRetired);
+	   
+	/**
+	 * Distinct SubLocations returned
+	 * 
+	 * @param includeRetired
+	 * @return List<HouseholdLocation>
+	 */
+	@Transactional(readOnly = true)
+	@Authorized("View Household Locations")
+	public List<HouseholdLocation> getAllHouseholdLocationsBySubLocation(String location, boolean includeRetired);
+	
+	
+	/**
+	 * Distinct villages returned
+	 * 
+	 * @param includeRetired
+	 * @return List<HouseholdLocation>
+	 */
+	@Transactional(readOnly = true)
+	@Authorized("View Household Locations")
+	public List<HouseholdLocation> getAllHouseholdLocationsByVillage(String subLocation, String location, boolean includeRetired);
+	
+	/**
+	 * 
+	 * @param village
+	 * @param subLocation
+	 * @param location
+	 * @param includeRetired
+	 * @return HouseholdLocation
+	 */
+	public HouseholdLocation getAllHouseholdLocationsByLocSubVil(String village, String subLocation, String location, boolean includeRetired);
 	
 	
 	
 	
+	/**
+	 * Given a household location, returns the names of all entries that are hierarchically valid for the
+	 * specified householdLocationField.  (Excluding duplicate names and ignoring any current value of the specified householdLocationField)
+	 * 
+	 *  This method can handle restrictions based on household location field values not only above but also *below* the specified level.
+	 * (For instance, if the city is set to "Turbo", and we ask for possible values for the "state" level,
+	 *  only Uasin-Gishu should be returned) 
+	 * 
+	 * @param location the location we are testing against
+	 * @param fieldName name of the household location field to look up possible values for
+	 * @return a list of the names of the possible valid location values for the specified field; returns an empty list if no matches, should return null only if error
+	 */
+	public List<String> getPossibleHouseholdLocationValues(HouseholdLocation location, String fieldName);
 	
+	/**
+	 * Given a map of household location fields to household location field values, returns the names of all entries that are hierarchically valid for the
+	 * specified householdLocationField.  (Excluding duplicate names and ignoring any current value of the specified householdLocationField)
+	 * 
+	 *  This method can handle restrictions based on household location field values not only above but also *below* the specified level.
+	 * (For instance, if the city is set to "Turbo", and we ask for possible values for the "state" level,
+	 *  only Uasin-Gishu should be returned) 
+	 * 
+	 * @param locationMap a map of household location fields names to household location field values
+	 * @param fieldName name of the household location field to look up possible values for
+	 * @return a list of the names of the possible valid location values for the specified field; returns an empty list if no matches, should return null only if error
+	 */
+	public List<String> getPossibleHouseholdLocationValues(Map<String,String> locationMap, String fieldName);
+	
+	/**
+	 * Given a household location, returns the names of all entries that are hierarchically valid for the
+	 * specified householdLocationField.  (Excluding duplicate names and ignoring any current value of the specified householdLocationField)
+	 * 
+	 *  This method can handle restrictions based on household location field values not only above but also *below* the specified level.
+	 * (For instance, if the city is set to "Turbo", and we ask for possible values for the "state" level,
+	 *  only Uasin-Gishu should be returned) 
+	 * 
+	 * @param location
+	 * @param field
+	 * @return a list of the names of the possible valid household location entries; returns an empty list if no matches, should return null only if error
+	 */
+	public List<String> getPossibleHouseholdLocationValues(HouseholdLocation location, HouseholdLocationField field);
+		
+	
+	/**
+	 * Given a household location, returns all the household location entries that are hierarchically valid for the
+	 * specified level.  (Ignoring any current value of the householdLocationField associated with the specified level).
+	 * 
+	 * This method can handle restrictions based on household location field values not only above but also *below* the specified level.
+	 * (For instance, if the city is set to "Turbo", and we ask for possible values for the "state" level,
+	 *  only Uasin-Gishu should be returned) 
+	 * 
+	 * @param location
+	 * @param level
+	 * @return a list of possible valid household location entries; returns an empty list if no matches, should return null only if error
+	 */
+	public List<HouseholdLocationEntry> getPossibleHouseholdLocationEntries(HouseholdLocation location, HouseholdLocationLevel level);
+	
+	/**
+	 * Given a search string, returns all the "full locations" that match that search string
+	 * Returns a list of full locations, represented as a pipe-delimited string of 
+	 * household location entry names, ordered from the entry at the highest level to the entry at the lowest level in the tree.
+	 * For example, the full location for the Beacon Hill neighborhood in the city of Turbo might be:
+	 * "United States|Uasin-Gishu|Suffolk County|Turbo|Beacon Hill"
+	 * 
+	 * @param searchString the search string to search for
+	 * @return a list of full locations; returns an empty list if no matches
+	 */
+	public List<String> getPossibleFullHouseholdLocations(String searchString);
+	
+	/**
+	 * Returns a count of the total number of household location entries
+	 * 
+	 * @return the number of household location entries
+	 */
+	public Integer getHouseholdLocationEntryCount();
+	
+	/**
+	 * Returns a count of the total number of household location entries associated with the given level
+	 * 
+	 * @param level
+	 * @return the number of household location entries associated with the given level
+	 */
+	public Integer getHouseholdLocationEntryCountByLevel(HouseholdLocationLevel level);
+	
+	/**
+	 * Returns the household location entry with the given id
+	 * 
+	 * @param locationHierarchyEntryId
+	 * @return the household location entry with the given id
+	 */
+	public HouseholdLocationEntry getHouseholdLocationEntry(int locationHierarchyEntryId);
+	
+	/**
+	 * Returns the household location entry with the given user generated id
+	 * 
+	 * @param userGeneratedId
+	 * @return the household location entry with the given user generated id
+	 */
+	public HouseholdLocationEntry getHouseholdLocationEntryByUserGenId(String userGeneratedId);
+	
+	/**
+	 * Returns all household location entries at with the given level 
+	 * 
+	 * @param level
+	 * @return a list of all household location entries at the given level
+	 */
+	public List<HouseholdLocationEntry> getHouseholdLocationEntriesByLevel(HouseholdLocationLevel level);
+	
+	/**
+	 * Returns all household location entries at the given level that have the specified name 
+	 * (name match is case-insensitive)
+	 *
+	 * @param level
+	 * @param name
+	 * @return a list of all household location entries at the given level that have the specified name
+	 */
+	public List<HouseholdLocationEntry> getHouseholdLocationEntriesByLevelAndName(HouseholdLocationLevel level, String name);
+	
+	/**
+	 * Returns all household location entries at the top level in the hierarchy
+	 * 
+	 * @return a list of all the household location entries at the top level of the hierarchy
+	 */
+	public List<HouseholdLocationEntry> getHouseholdLocationEntriesAtTopLevel();
+	
+	/**
+	 * Returns all household location entries that are children of the specified entry
+	 * (If no entry specified, returns all the entries at the top level)
+	 * 
+	 * @param entry
+	 * @return a list of all the household location entries that are children of the specified entry
+	 */
+	public List<HouseholdLocationEntry> getChildHouseholdLocationEntries(HouseholdLocationEntry entry);
+	
+	/**
+	 * Returns all household location entries that are child of the entry with the given id
+	 * 
+	 * @param entryId
+	 * @return a list of all 
+	 */
+	public List<HouseholdLocationEntry> getChildHouseholdLocationEntries(Integer entryId);
+	
+	/**
+	 * Returns the household location entry that is the child entry of the
+	 * specified entry and have the specified name (case-insensitive)
+	 * (If no entry specified, tests against all entries at the top level)
+	 * (Throws an exception if there is only one match, because there should
+	 * be no two entries with the same parent and name)
+	 * 
+	 * @param entry
+	 * @param name
+	 * @return the entry with the specified parent and name
+	 */
+	public HouseholdLocationEntry getChildHouseholdLocationEntryByName(HouseholdLocationEntry entry, String childName);
+	
+	/**
+	 * Saves the specified household location entry
+	 * 
+	 * @param entry
+	 */
+	@Authorized( { HouseholdConstants.PRIV_MANAGE_LOCATIONS })
+	public void saveHouseholdLocationEntry(HouseholdLocationEntry entry);
+	
+	/**
+	 * Saves a block of household location entries within a single transaction
+	 * (This should be used with care since the save interceptors may not be
+	 * used properly. This method is mainly used to speed up the performance
+	 * of importing a hierarchy from a file)
+	 * 
+	 * @param entries
+	 */
+	@Authorized( { HouseholdConstants.PRIV_MANAGE_LOCATIONS })
+	public void saveHouseholdLocationEntries(List<HouseholdLocationEntry> entries);
+	
+	/**
+	 * Removes all household location entries--use with care
+	 */
+	@Authorized( { HouseholdConstants.PRIV_MANAGE_LOCATIONS })
+	public void deleteAllHouseholdLocationEntries();
+	
+	/**
+	 * Gets all household location levels, ordered from the top of hierarchy to the bottom
+	 * 
+	 * @return the ordered list of household location levels
+	 */
+	public List<HouseholdLocationLevel> getOrderedHouseholdLocationLevels();
+	
+	/**
+	 * Gets the household location levels, ordered from the top the hierarchy to the bottom
+	 * 
+	 * @param includeUnmapped specifies whether or not to include hierarchy levels that aren't mapped to an underlying household location field
+	 * @return the ordered list of household location levels
+	 */
+	public List<HouseholdLocationLevel> getOrderedHouseholdLocationLevels(Boolean includeUnmapped);
+	
+	/**
+	 * Gets the household location levels, ordered from the top of the hierarchy to the bottom
+	 * 
+	 * @param includeUnmapped specifies whether or not to include hierarchy levels that aren't mapped to an underlying household location field
+	 * @param includeEmptyLevels specified whether or not include hierarchy levels that don't have any household location entries entries
+	 * @return the ordered list of household location levels
+	 */
+	public List<HouseholdLocationLevel >getOrderedHouseholdLocationLevels(Boolean includeUnmapped, Boolean includeEmptyLevels);
+	
+	/**
+	 * Gets all household location levels
+	 * 
+	 * @return a list of all household location levels
+	 */
+	public List<HouseholdLocationLevel> getHouseholdLocationLevels();
+	
+	/**
+	 * Gets a count of the number of household location levels
+	 * 
+	 * @return the number of household location levels
+	 */
+	public Integer getHouseholdLocationLevelsCount();
+	
+	/**
+	 * Gets the household location level that represents the top level of the hierarchy
+	 * 
+	 * @return the household location level at the top level of the hierarchy
+	 */
+	public HouseholdLocationLevel getTopHouseholdLocationLevel();
+	
+	/**
+	 * Gets the household location level that represents the lowest level of the hierarchy
+	 * 
+	 * @return the household location level at the lowest level of the hierarchy
+	 */
+	public HouseholdLocationLevel getBottomHouseholdLocationLevel();
+	
+	/**
+	 * Gets an HouseholdLocationLevel by id
+	 * 
+	 * @param levelId
+	 * @return the household location level with the given id
+	 */
+	public HouseholdLocationLevel getHouseholdLocationLevel(Integer levelId);
+	
+	/**
+	 * Finds the child HouseholdLocationLevel of the given HouseholdLocationLevel
+	 * 
+	 * @param level
+	 * @return the household location level that is the child of the given level
+	 */
+	public HouseholdLocationLevel getChildHouseholdLocationLevel(HouseholdLocationLevel level);
+	
+	/**
+	 * Adds (and saves) a new HouseholdLocationLevel at the bottom of the hierarchy
+	 * 
+	 * @return the new household location level
+	 */
+	public HouseholdLocationLevel addHouseholdLocationLevel();
+	
+	/**
+	 * Saves an HouseholdLocationLevel
+	 * 
+	 * @param the level to save
+	 */
+	@Authorized( { HouseholdConstants.PRIV_MANAGE_LOCATIONS })
+	public void saveHouseholdLocationLevel(HouseholdLocationLevel level);
+	
+	/**
+	 * Deletes an HouseholdLocationLevel
+	 * 
+	 * @param the level to delete
+	 */
+	@Authorized( { HouseholdConstants.PRIV_MANAGE_LOCATIONS })
+	public void deleteHouseholdLocationLevel(HouseholdLocationLevel level);
+	
+	/**
+	 * Attempt to determine the hierarchy of household location levels based on the hierarchy of entries
+	 * and assign the parent levels accordingly
+	 */
+	public void setHouseholdLocationLevelParents();
 	
 	
 	

@@ -35,7 +35,6 @@ public class HouseholdSearchController {
 		}
 		catch (Exception e) {
 			// TODO: handle exception
-			e.toString();
 		}
 	}
 	

@@ -7,8 +7,10 @@
 	<name>@MODULE_NAME@</name>
 	<version>@MODULE_VERSION@</version>
 	<package>@MODULE_PACKAGE@</package>
-	<author>Ampath Developers</author>
-	<description></description>
+	<author>Ampath Developers [Jonah S. Mwogi, Oliver Mwalo, Nicholas Ingosi]</author>
+	<description>This module is meant to help manage household level data for 
+				studies around patients
+	</description>
 	<activator>org.openmrs.module.household.HouseholdActivator</activator>
 	<updateURL>https://dev.openmrs.org/modules/download/@MODULE_ID@/update.rdf</updateURL>
 
@@ -65,15 +67,41 @@
 	</privilege>
     
     <!-- Global Properties -->
+	<!-- Global Properties -->
 	<globalProperty>
+	<property>household.enctype</property>
+		<defaultValue>0</defaultValue>
+		<description>
+			This value represent the CHW initial encounter
+		</description>
 	</globalProperty>
 	
 	<!-- Servlets -->
-	<servlet>
-        <servlet-name>PatientSearchServlet</servlet-name>
-        <servlet-class>org.openmrs.module.household.web.servlet.PatientSearchServlet</servlet-class>
-    </servlet>
 	<!-- Servlets /-->
+	
+	<dwr>
+		<allow>
+			<create creator="new" javascript="DWRHouseholdService">
+				<param name="class" value="@MODULE_PACKAGE@.@MODULE_ID@.web.dwr.DWRHouseholdService"/>
+				<include method="getSubLocations"/>
+				<include method="getVillage"/>
+				<include method="getHousehold"/>
+				<include method="getHouseholdMembers"/>
+				<include method="getHouseholdMembersPortlet"/>
+			</create>
+		</allow>
+
+		<signatures>
+			<![CDATA[
+			import @MODULE_PACKAGE@.@MODULE_ID@.web.dwr.DWRHouseholdService;
+			DWRHouseholdService.getSubLocations(String strLoc);
+			DWRHouseholdService.getVillage(String strSubLoc, String strLoc);
+			DWRHouseholdService.getHousehold(String strHouseholdID);
+			DWRHouseholdService.getHouseholdMembers(String grpids);
+			DWRHouseholdService.getHouseholdMembersPortlet(String grpids);
+			]]>
+		</signatures>
+	</dwr>
 	
 	<messages>
 		<lang>en</lang>

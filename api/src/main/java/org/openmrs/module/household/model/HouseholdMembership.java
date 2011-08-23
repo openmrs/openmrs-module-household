@@ -21,7 +21,9 @@ public class HouseholdMembership extends BaseOpenmrsData{
 	private boolean householdMembershipHeadship;
 	private Date startDate;
 	private Date endDate;
-
+	private Date resumeDate;
+	private String resumeReason;
+		
 	/**
 	 * @return the id
 	 */
@@ -89,11 +91,43 @@ public class HouseholdMembership extends BaseOpenmrsData{
 	public Date getEndDate() {
 		return endDate;
 	}
+	
 	/**
 	 * @param endDate the endDate to set
 	 */
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
 	}
+	/**
+	 * 
+	 * @return resumeDate
+	 */
+	public Date getResumeDate() {
+		return resumeDate;
+	}
+	/**
+	 * 
+	 * @param resumeDate
+	 */
+	public void setResumeDate(Date resumeDate) {
+		this.resumeDate = resumeDate;
+	}
+	
+	/**
+	 * 
+	 * @return resumeReason
+	 */
+	public String getResumeReason() {
+		return resumeReason;
+	}
+	
+	/**
+	 * 
+	 * @param resumeReason
+	 */
+	public void setResumeReason(String resumeReason) {
+		this.resumeReason = resumeReason;
+	}
+	
 }
 	

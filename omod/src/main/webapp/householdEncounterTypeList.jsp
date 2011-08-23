@@ -7,6 +7,7 @@
 <h3><spring:message code="household.title"/></h3>
 
 <%@ include file="localHeader.jsp"%>
+<link href="${pageContext.request.contextPath}/moduleResources/household/css/tablestyles.css" type="text/css" rel="stylesheet" />
 
 <b class="boxHeader"><spring:message code="household.encounterType.header"/></b>
 <div class="box">

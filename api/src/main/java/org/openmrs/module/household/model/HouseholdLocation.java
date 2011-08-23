@@ -12,7 +12,7 @@ import org.openmrs.BaseOpenmrsMetadata;
 import org.openmrs.api.APIException;
 
 /**
- *  @author Ampath Developers
+ * @author ampath developers
  *
  */
 public class HouseholdLocation extends BaseOpenmrsMetadata implements java.io.Serializable, Attributable<HouseholdLocation>  {
@@ -27,6 +27,14 @@ public class HouseholdLocation extends BaseOpenmrsMetadata implements java.io.Se
 	private String address1;
 	
 	private String address2;
+	
+	private String address3;
+	
+	private String address4;
+	
+	private String address5;
+	
+	private String address6;
 	
 	private String cityVillage;
 	
@@ -105,6 +113,62 @@ public class HouseholdLocation extends BaseOpenmrsMetadata implements java.io.Se
 	 */
 	public void setAddress2(String address2) {
 		this.address2 = address2;
+	}
+
+	/**
+	 * @return the address3
+	 */
+	public String getAddress3() {
+		return address3;
+	}
+
+	/**
+	 * @param address3 the address3 to set
+	 */
+	public void setAddress3(String address3) {
+		this.address3 = address3;
+	}
+
+	/**
+	 * @return the address4
+	 */
+	public String getAddress4() {
+		return address4;
+	}
+
+	/**
+	 * @param address4 the address4 to set
+	 */
+	public void setAddress4(String address4) {
+		this.address4 = address4;
+	}
+
+	/**
+	 * @return the address5
+	 */
+	public String getAddress5() {
+		return address5;
+	}
+
+	/**
+	 * @param address5 the address5 to set
+	 */
+	public void setAddress5(String address5) {
+		this.address5 = address5;
+	}
+
+	/**
+	 * @return the address6
+	 */
+	public String getAddress6() {
+		return address6;
+	}
+
+	/**
+	 * @param address6 the address6 to set
+	 */
+	public void setAddress6(String address6) {
+		this.address6 = address6;
 	}
 
 	/**
@@ -236,7 +300,7 @@ public class HouseholdLocation extends BaseOpenmrsMetadata implements java.io.Se
 	/**
 	 * @return the childHouseholdLocation
 	 */
-	public Set<HouseholdLocation> getChildHouseholdLocations() {
+	public Set<HouseholdLocation> getChildHouseholdLocation() {
 		return childHouseholdLocation;
 	}
 	
@@ -248,12 +312,12 @@ public class HouseholdLocation extends BaseOpenmrsMetadata implements java.io.Se
 	 * @since 1.5
 	 * @should return a set of householdLocations
 	 */
-	public Set<HouseholdLocation> getChildHouseholdLocations(boolean includeRetired) {
+	public Set<HouseholdLocation> getChildHouseholdLocation(boolean includeRetired) {
 		Set<HouseholdLocation> ret = new HashSet<HouseholdLocation>();
 		if (includeRetired)
-			ret = getChildHouseholdLocations();
-		else if (getChildHouseholdLocations() != null) {
-			for (HouseholdLocation l : getChildHouseholdLocations()) {
+			ret = getChildHouseholdLocation();
+		else if (getChildHouseholdLocation() != null) {
+			for (HouseholdLocation l : getChildHouseholdLocation()) {
 				if (!l.isRetired())
 					ret.add(l);
 			}
@@ -264,7 +328,7 @@ public class HouseholdLocation extends BaseOpenmrsMetadata implements java.io.Se
 	/**
 	 * @param childHouseholdLocation the childHouseholdLocation to set
 	 */
-	public void setChildHouseholdLocations(Set<HouseholdLocation> childHouseholdLocation) {
+	public void setChildHouseholdLocation(Set<HouseholdLocation> childHouseholdLocation) {
 		this.childHouseholdLocation = childHouseholdLocation;
 	}
 	
@@ -279,7 +343,7 @@ public class HouseholdLocation extends BaseOpenmrsMetadata implements java.io.Se
 		if (child == null)
 			return;
 		
-		if (getChildHouseholdLocations() == null)
+		if (getChildHouseholdLocation() == null)
 			childHouseholdLocation = new HashSet<HouseholdLocation>();
 		
 		if (child.equals(this))
@@ -317,8 +381,8 @@ public class HouseholdLocation extends BaseOpenmrsMetadata implements java.io.Se
 			return false;
 		if (root.equals(location))
 			return true;
-		if (root.getChildHouseholdLocations() != null) {
-			for (HouseholdLocation l : root.getChildHouseholdLocations())
+		if (root.getChildHouseholdLocation() != null) {
+			for (HouseholdLocation l : root.getChildHouseholdLocation())
 				return isInHierarchy(location, l);
 		}
 		

@@ -9,8 +9,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+//import org.apache.commons.logging.Log;
+//import org.apache.commons.logging.LogFactory;
 import org.openmrs.Person;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.household.model.HouseholdMembership;
@@ -23,7 +23,7 @@ import org.openmrs.web.controller.PortletController;
  */
 public class PatientHouseholdPortletController extends PortletController{
 
-	private static final Log log = LogFactory.getLog(PatientHouseholdPortletController.class);
+	//private static final Log log = LogFactory.getLog(PatientHouseholdPortletController.class);
 	
 	@Override
 	protected void populateModel(HttpServletRequest request,

@@ -4,11 +4,20 @@
 package org.openmrs.module.household.service.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
+import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openmrs.Concept;
 import org.openmrs.Form;
 import org.openmrs.Person;
@@ -16,7 +25,9 @@ import org.openmrs.User;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.impl.BaseOpenmrsService;
+import org.openmrs.module.household.HouseholdLocationField;
 import org.openmrs.module.household.dao.HouseholdDAO;
+import org.openmrs.module.household.exception.HouseholdModuleException;
 import org.openmrs.module.household.model.Household;
 import org.openmrs.module.household.model.HouseholdAttribValue;
 import org.openmrs.module.household.model.HouseholdAttribute;
@@ -24,9 +35,13 @@ import org.openmrs.module.household.model.HouseholdDefinition;
 import org.openmrs.module.household.model.HouseholdEncounter;
 import org.openmrs.module.household.model.HouseholdEncounterType;
 import org.openmrs.module.household.model.HouseholdLocation;
+import org.openmrs.module.household.model.HouseholdLocationEntry;
+import org.openmrs.module.household.model.HouseholdLocationLevel;
 import org.openmrs.module.household.model.HouseholdMembership;
 import org.openmrs.module.household.model.HouseholdObs;
 import org.openmrs.module.household.service.HouseholdService;
+import org.openmrs.module.household.util.HouseholdLocationUtil;
+import org.springframework.transaction.annotation.Transactional;
 
 
 /**
@@ -35,7 +50,11 @@ import org.openmrs.module.household.service.HouseholdService;
  */
 public class HouseholdServiceImpl extends BaseOpenmrsService implements HouseholdService {
 	
+	protected static final Log log = LogFactory.getLog(HouseholdServiceImpl.class);
+	
 	private HouseholdDAO householdDAO;
+	
+	private List<String> fullHouseholdLocationCache;
 	
 	/**
 	 * @param householdDAO the householdDAO to set
@@ -116,6 +135,8 @@ public class HouseholdServiceImpl extends BaseOpenmrsService implements Househol
 	public List<HouseholdMembership> getAllHouseholdMemberships() {
 		return householdDAO.getAllHouseholdMemberships();
 	}
+	
+	
 
 	/**
 	 * @return the householdDAO
@@ -143,6 +164,22 @@ public class HouseholdServiceImpl extends BaseOpenmrsService implements Househol
 	 */
 	public List<HouseholdMembership> getHouseholdMembershipByGrpByPsn(Person p,Household grp){
 		return householdDAO.getHouseholdMembershipByGrpByPsn(p,grp);
+	}
+	
+	public List<HouseholdMembership> getAllVoidedHouseholdMembershipsByGroup(Household grp){
+		return householdDAO.getAllVoidedHouseholdMembershipsByGroup(grp);
+	}
+	// getting the index person of the household
+	public List<HouseholdMembership> getIndexPerson(Integer id) {
+		return householdDAO.getIndexPerson(id);
+	}
+	@Override
+	public List<HouseholdMembership> getAllNonVoidedHouseholdMembershipsByGroupNotIndex(Household grp){
+		return householdDAO.getAllNonVoidedHouseholdMembershipsByGroupNotIndex(grp);
+	}
+	@Override
+	public List<HouseholdMembership> getHouseholdIndexByGroup(Household grp){
+		return householdDAO.getHouseholdIndexByGroup(grp);
 	}
 //======================================================
 	/* (non-Javadoc)
@@ -315,7 +352,561 @@ public class HouseholdServiceImpl extends BaseOpenmrsService implements Househol
 			Boolean includeRetired) {
 		return householdDAO.getCountOfHouseholdLocations(nameFragment, includeRetired);
 	}
+	
+	/*
+	 * Distinct Locations returned
+	 * 
+	 * @param includeRetired
+	 * @return List<HouseholdLocation>
+	 */
+	public List<HouseholdLocation> getAllHouseholdLocationsByLocation(boolean includeRetired){
+		return householdDAO.getAllHouseholdLocationsByLocation(includeRetired);
+	}
+	
+	/*
+	 * Distinct SubLocations returned
+	 * 
+	 * @param includeRetired
+	 * @return List<HouseholdLocation>
+	 */
+	public List<HouseholdLocation> getAllHouseholdLocationsBySubLocation(String location, boolean includeRetired){
+		return householdDAO.getAllHouseholdLocationsBySubLocation(location, includeRetired);
+	}
+	
+	/*
+	 * Distinct village returned
+	 * 
+	 * @param includeRetired
+	 * @return List<HouseholdLocation>
+	 */
+	public List<HouseholdLocation> getAllHouseholdLocationsByVillage(String subLocation, String location, boolean includeRetired){
+		return householdDAO.getAllHouseholdLocationsByVillage(subLocation, location, includeRetired);
+	}
+	
+	/*
+	 * 
+	 * @param village
+	 * @param subLocation
+	 * @param location
+	 * @param includeRetired
+	 * @return HouseholdLocation
+	 */
+	public HouseholdLocation getAllHouseholdLocationsByLocSubVil(String village, String subLocation, String location, boolean includeRetired){
+		return householdDAO.getAllHouseholdLocationsByLocSubVil(village, subLocation, location, includeRetired);
+	}
 
+	
+	
+	@Transactional(readOnly = true)
+	public List<String> getPossibleHouseholdLocationValues(HouseholdLocation householdLocation, String fieldName) {	
+		
+		HouseholdLocationField field = HouseholdLocationField.getByName(fieldName);
+	
+		if (field == null) {
+			throw new HouseholdModuleException(fieldName + " is not the name of a valid householdLocation field");
+		}
+		
+		return getPossibleHouseholdLocationValues(householdLocation, field);
+	}
+	
+	@Transactional(readOnly = true)
+	public List<String> getPossibleHouseholdLocationValues(Map<String,String> householdLocationMap, String fieldName) {		
+		return getPossibleHouseholdLocationValues(HouseholdLocationUtil.convertHouseholdLocationMapToHouseholdLocation(householdLocationMap),fieldName);
+	}
+	
+	@Transactional(readOnly = true)
+	public List<String> getPossibleHouseholdLocationValues(HouseholdLocation householdLocation, HouseholdLocationField field) {	
+		
+		Map<String,String> possibleHouseholdLocationValues = new HashMap<String,String>();
+		HouseholdLocationLevel targetLevel = null;
+		
+		// iterate through the ordered levels until we reach the level associated with the specified fieldName
+		for (HouseholdLocationLevel level : getOrderedHouseholdLocationLevels(false)) {
+			if (level.getHouseholdLocationField() != null && level.getHouseholdLocationField().equals(field)) {
+				targetLevel = level;
+				break;
+			}
+		}
+		
+		if (targetLevel == null) {
+			log.error("HouseholdLocation field " + field + " is not mapped to household Location level.");
+			return null;
+		}
+		
+		// calls getPossibleHouseholdLocationEntries(HouseholdLocation, HouseholdLocationLevel) to perform the actual search
+		List<HouseholdLocationEntry> entries = getPossibleHouseholdLocationEntries(householdLocation, targetLevel);
+		
+		// note that by convention entries should not be null, so we don't test for null here
+		
+		// take the entries returns and convert them into a list of *unique* names (using case-insensitive comparison)
+		// we use a map here to make this process more efficient
+		for (HouseholdLocationEntry entry : entries) {
+			// see if there is already key for this entry name (converted to lower-case)
+			if(!possibleHouseholdLocationValues.containsKey(entry.getName().toLowerCase())) {
+				// if not, add the key/value pair for this entry name, where the value equals the entry name,
+				// and the key is the entry name converted to lower-case
+				possibleHouseholdLocationValues.put(entry.getName().toLowerCase(), entry.getName());
+			}
+		}
+		
+		List<String> results = new ArrayList<String>();
+		results.addAll(possibleHouseholdLocationValues.values());
+		return results;
+	}
+	
+	@Transactional(readOnly = true)
+	public List<HouseholdLocationEntry> getPossibleHouseholdLocationEntries(HouseholdLocation householdLocation, HouseholdLocationLevel targetLevel) {
+		
+		// split the levels into levels before and after the level associated with the field name
+		Boolean reachedFieldLevel = false;
+		List<HouseholdLocationLevel> higherLevels = new ArrayList<HouseholdLocationLevel>();
+		List<HouseholdLocationLevel> lowerLevels = new ArrayList<HouseholdLocationLevel>();
+		
+		for (HouseholdLocationLevel level : getOrderedHouseholdLocationLevels()) {
+			if (reachedFieldLevel) {
+				lowerLevels.add(level);
+			}
+			else {
+				higherLevels.add(level);
+			}
+			if (level.equals(targetLevel)) {
+				lowerLevels.add(level);  // we want the target level in both the higher and lower level lists
+				reachedFieldLevel = true;
+			}
+		}
+		
+		if (!reachedFieldLevel) {
+			// if we haven't found an household Location level associated with this field, then we certainly aren't going to be
+			// able to find a list of possible values
+			// return an empty set here, not null, because null is the default method in core if not overridden
+			return new ArrayList<HouseholdLocationEntry>();
+		}
+		
+		List<HouseholdLocationEntry> possibleEntries = new ArrayList<HouseholdLocationEntry>();
+		
+		// first handle the top level
+		HouseholdLocationLevel topLevel= higherLevels.remove(0);
+		String topLevelValue = topLevel.getHouseholdLocationField() != null ? HouseholdLocationUtil.getHouseholdLocationFieldValue(householdLocation, topLevel.getHouseholdLocationField()) : null;
+		
+		// if we have a top level value, find the top-level entry that matches that value
+		if (StringUtils.isNotBlank(topLevelValue)) {
+			possibleEntries.add(getChildHouseholdLocationEntryByName(null, topLevelValue));
+		}
+		// otherwise, get all the entries at the top level
+		else {
+			possibleEntries.addAll(getHouseholdLocationEntriesAtTopLevel());
+		}
+		
+		// now go through all the other levels above the level we are looking for
+		for (HouseholdLocationLevel level : higherLevels) {
+			List<HouseholdLocationEntry> possibleEntriesAtNextLevel = new ArrayList<HouseholdLocationEntry>();
+			
+			// find the value of the household Location field at the level we are dealing with
+			String levelValue = level.getHouseholdLocationField() != null ? HouseholdLocationUtil.getHouseholdLocationFieldValue(householdLocation, level.getHouseholdLocationField()) : null;
+			
+			// loop through all the possible entries
+			for (HouseholdLocationEntry entry : possibleEntries) {
+				// if a value has been specified, we only want child entries that match that value
+				if(StringUtils.isNotBlank(levelValue)) {
+					HouseholdLocationEntry childEntry = getChildHouseholdLocationEntryByName(entry, levelValue);
+					if (childEntry != null) {
+						possibleEntriesAtNextLevel.add(childEntry);
+					}
+				}
+				// otherwise, we need to add all children of the possible entry
+				else {
+					possibleEntriesAtNextLevel.addAll(getChildHouseholdLocationEntries(entry));
+				}
+			}
+			// now continue the loop and move on to the next level
+			possibleEntries = possibleEntriesAtNextLevel;
+		}
+		
+		// assign the possible entry to results array
+		List<HouseholdLocationEntry> results = possibleEntries;
+	
+		// now we need to handle the any household Location field values that may have been specified *below* the field
+		// we are looking for in the hierarchy
+		
+		// we need to loop through the results in reverse and find any fields that have values
+		Collections.reverse(lowerLevels);
+		Iterator<HouseholdLocationLevel> i = lowerLevels.iterator();
+		
+		possibleEntries = null;
+		
+		while (i.hasNext()) {
+			HouseholdLocationLevel level = i.next();
+			
+			String levelValue = level.getHouseholdLocationField() != null ? HouseholdLocationUtil.getHouseholdLocationFieldValue(householdLocation, level.getHouseholdLocationField()) : null;
+			
+			// we are looking for the first level with a value
+			if (StringUtils.isNotBlank(levelValue)) {
+				possibleEntries = getHouseholdLocationEntriesByLevelAndName(level, levelValue);		
+				break;
+			}
+		}
+		
+		// if we haven't found any possible lower level entries, then we can just return the possibleEntries we calculated by higher level
+		if (possibleEntries == null) {
+			return results;
+		}
+		
+		// now that we've go something to start with, we need to work our way back up the tree 
+		while (i.hasNext()) {
+			
+			HouseholdLocationLevel level = i.next();
+			
+			String levelValue = level.getHouseholdLocationField() != null ? HouseholdLocationUtil.getHouseholdLocationFieldValue(householdLocation, level.getHouseholdLocationField()) : null;
+			
+			List<HouseholdLocationEntry> possibleEntriesAtNextLevel = new ArrayList<HouseholdLocationEntry>();
+			
+			for (HouseholdLocationEntry entry : possibleEntries) {
+				HouseholdLocationEntry parentEntry = entry.getParent();
+				
+				if (parentEntry != null) {
+					possibleEntriesAtNextLevel.add(parentEntry);
+				}	
+			}
+			
+			// if we have a value restriction here, remove any entries that don't fit the restriction
+			if (StringUtils.isNotBlank(levelValue)) {
+				Iterator<HouseholdLocationEntry> j = possibleEntriesAtNextLevel.iterator();
+				while (j.hasNext()) {
+					HouseholdLocationEntry entry = j.next();
+					if (!entry.getName().equalsIgnoreCase(levelValue)) {
+						j.remove();
+					}
+				}
+			}
+			
+			possibleEntries = possibleEntriesAtNextLevel;
+		}
+		
+		// do a union of the results from the higher and lower level tests
+		if (results.retainAll(possibleEntries));
+		
+		return results;
+	}
+	
+	@Transactional(readOnly = true)
+	public List<String> getPossibleFullHouseholdLocations(String searchString) {
+		
+		// if search string isempty or null, return empty list
+		if (StringUtils.isBlank(searchString)) {
+			return new ArrayList<String>();
+		}
+		
+		// refresh the cache where all the full household Locations are stored, if needed
+		if (this.fullHouseholdLocationCache == null || this.fullHouseholdLocationCache.size() == 0) {
+			buildFullHouseholdLocationCache();
+		}
+		
+		List<String> results = new ArrayList<String>();
+		
+		// first remove all characters that are not alphanumerics or whitespace
+		// (more specifically, this pattern matches sets of 1 or more characters that are both non-word (\W) and non-whitespace (\S))
+		searchString = Pattern.compile("[\\W&&\\S]+").matcher(searchString).replaceAll("");
+				
+		// split the search string into words
+		String [] words = searchString.split(" ");
+		
+		// another sanity check; return an empty string if nothing to search on
+		if (words.length == 0 || StringUtils.isBlank(words[0])) {
+			return new ArrayList<String>();
+		}
+		
+		// find all household Locations in the full household Location cache that contain the first word in the search string
+		Pattern p = Pattern.compile(Pattern.quote(words[0]), Pattern.CASE_INSENSITIVE);
+		for (String householdLocation : fullHouseholdLocationCache) {
+			if (p.matcher(householdLocation).find()) {
+				results.add(householdLocation);
+			}
+		}
+		
+		// now go through and remove from the results list any household Locations that don't contain the other words in the search string
+		if (words.length > 1) {
+			for (String word : Arrays.copyOfRange(words, 1, words.length)) {
+				Iterator<String> i = results.iterator();
+				p = Pattern.compile(Pattern.quote(word), Pattern.CASE_INSENSITIVE);
+				while (i.hasNext()) {
+					if (!p.matcher(i.next()).find()) {
+						i.remove();
+					}
+				}
+			}
+		}
+ 		
+		return results;
+	}
+	
+	@Transactional(readOnly = true)
+	public Integer getHouseholdLocationEntryCount() {
+		return householdDAO.getHouseholdLocationEntryCount();
+	}
+	
+	@Transactional(readOnly = true)
+	public Integer getHouseholdLocationEntryCountByLevel(HouseholdLocationLevel level) {
+		return householdDAO.getHouseholdLocationEntryCountByLevel(level);
+	}
+	
+	@Transactional(readOnly = true)
+	public HouseholdLocationEntry getHouseholdLocationEntry(int householdLocationId) {
+		return householdDAO.getHouseholdLocationEntry(householdLocationId);
+	}
+	
+	@Transactional(readOnly = true)
+	public HouseholdLocationEntry getHouseholdLocationEntryByUserGenId(String userGeneratedId) {
+		return householdDAO.getHouseholdLocationEntryByUserGenId(userGeneratedId);
+	}
+	
+	@Transactional(readOnly = true)
+	public List<HouseholdLocationEntry> getHouseholdLocationEntriesByLevel(HouseholdLocationLevel level) {
+		return householdDAO.getHouseholdLocationEntriesByLevel(level);
+	}
+	
+	@Transactional(readOnly = true)
+	public List<HouseholdLocationEntry> getHouseholdLocationEntriesByLevelAndName(HouseholdLocationLevel level, String name) {
+		return householdDAO.getHouseholdLocationEntriesByLevelAndName(level, name);
+	}
+	
+	@Transactional(readOnly = true)
+	public List<HouseholdLocationEntry> getHouseholdLocationEntriesAtTopLevel() {
+		return getHouseholdLocationEntriesByLevel(getTopHouseholdLocationLevel());
+	}
+	
+	@Transactional(readOnly = true)
+	public List<HouseholdLocationEntry> getChildHouseholdLocationEntries(HouseholdLocationEntry entry) {
+		if (entry != null) {
+			return householdDAO.getChildHouseholdLocationEntries(entry);
+		}
+		else {
+			return getHouseholdLocationEntriesAtTopLevel();
+		}
+	}
+	
+	@Transactional(readOnly = true)
+	public List<HouseholdLocationEntry> getChildHouseholdLocationEntries(Integer entryId) {
+		HouseholdLocationEntry entry = getHouseholdLocationEntry(entryId);
+		
+		if (entry == null) {
+			throw new HouseholdModuleException("Invalid Household Location Entry Id " + entryId);
+		}
+		
+		return getChildHouseholdLocationEntries(entry);
+	}
+	
+	@Transactional(readOnly = true)
+	public HouseholdLocationEntry getChildHouseholdLocationEntryByName(HouseholdLocationEntry entry, String childName) {
+		if (entry != null) {
+			return householdDAO.getChildHouseholdLocationEntryByName(entry, childName);
+		}
+		else {
+			List<HouseholdLocationEntry> entries = householdDAO.getHouseholdLocationEntriesByLevelAndName(getTopHouseholdLocationLevel(), childName);
+			if (entries.size() == 0) {
+				return null;
+			}
+			else if (entries.size() == 1) {
+				return entries.get(0);
+			}
+			else {
+				throw new HouseholdModuleException("Two or more top-level entries have the same name");
+			}
+		}
+	} 
+	
+	@Transactional
+	public void saveHouseholdLocationEntry(HouseholdLocationEntry entry) {
+		householdDAO.saveHouseholdLocationEntry(entry);
+		resetFullHouseholdLocationCache();
+	}
+	
+	@Transactional
+	public void saveHouseholdLocationEntries(List<HouseholdLocationEntry> entries) {
+		for (HouseholdLocationEntry entry : entries) {
+			householdDAO.saveHouseholdLocationEntry(entry);
+		}
+		resetFullHouseholdLocationCache();
+	}
+	
+	@Transactional
+	public void deleteAllHouseholdLocationEntries() {
+		householdDAO.deleteAllHouseholdLocationEntries();
+		resetFullHouseholdLocationCache();
+	}
+	
+	@Transactional(readOnly = true)
+	public List<HouseholdLocationLevel> getOrderedHouseholdLocationLevels() {
+		return getOrderedHouseholdLocationLevels(true, true);
+	}
+	
+	@Transactional(readOnly = true)
+	public List<HouseholdLocationLevel> getOrderedHouseholdLocationLevels(Boolean includeUnmapped) {	
+		return getOrderedHouseholdLocationLevels(includeUnmapped, true);
+	}
+	
+	@Transactional(readOnly = true)
+	public List<HouseholdLocationLevel> getOrderedHouseholdLocationLevels(Boolean includeUnmapped, Boolean includeEmptyLevels) {
+		List<HouseholdLocationLevel> levels = new ArrayList<HouseholdLocationLevel>();
+		
+		// first, get the top level level
+		HouseholdLocationLevel level = getTopHouseholdLocationLevel();
+		
+		if (level != null) {
+			// add the top level to this list
+			if ((includeUnmapped == true || level.getHouseholdLocationField() != null) 
+					&& (includeEmptyLevels == true ||  getHouseholdLocationEntryCountByLevel(level) > 0)) {
+				levels.add(level);
+			}
+				
+			// now fetch the children in order
+			while (getChildHouseholdLocationLevel(level) != null) {
+				level = getChildHouseholdLocationLevel(level);
+				if ((includeUnmapped == true || level.getHouseholdLocationField() != null) 
+						&& (includeEmptyLevels == true ||  getHouseholdLocationEntryCountByLevel(level) > 0)) {	
+					levels.add(level);
+				}
+			}
+		}
+		
+		return levels;
+	}
+	
+	@Transactional(readOnly = true)
+	public List<HouseholdLocationLevel> getHouseholdLocationLevels() {
+		return householdDAO.getHouseholdLocationLevels();
+	}
+	
+	@Transactional(readOnly = true)
+	public Integer getHouseholdLocationLevelsCount() {
+		List<HouseholdLocationLevel> levels = getHouseholdLocationLevels();
+		return levels != null ? levels.size() : 0;
+	}
+	
+	@Transactional(readOnly = true)
+	public HouseholdLocationLevel getTopHouseholdLocationLevel() {
+		return householdDAO.getTopHouseholdLocationLevel();
+	}
+	
+	@Transactional(readOnly = true)
+    public HouseholdLocationLevel getBottomHouseholdLocationLevel() {
+		
+		// get the ordered list
+		List<HouseholdLocationLevel> levels = getOrderedHouseholdLocationLevels();
+		
+		// return the last member in the list
+		if (levels != null && levels.size() > 0) {
+			return levels.get(levels.size() - 1);
+		}
+		else {
+			return null;
+		}
+    }
+	
+	@Transactional(readOnly = true)
+	public HouseholdLocationLevel getHouseholdLocationLevel(Integer levelId) {
+		return householdDAO.getHouseholdLocationLevel(levelId);
+	}
+	
+	@Transactional(readOnly = true)
+    public HouseholdLocationLevel getChildHouseholdLocationLevel(HouseholdLocationLevel level) {
+	    return householdDAO.getHouseholdLocationLevelByParent(level);
+    }
+	
+	@Transactional
+	public HouseholdLocationLevel addHouseholdLocationLevel() {
+		HouseholdLocationLevel newLevel = new HouseholdLocationLevel();
+		newLevel.setParent(getBottomHouseholdLocationLevel());
+		// need to call the service method through the context to take care of AOP
+		Context.getService(HouseholdService.class).saveHouseholdLocationLevel(newLevel);
+		return newLevel;
+	}
+	
+	@Transactional
+	public void saveHouseholdLocationLevel(HouseholdLocationLevel level) {
+		householdDAO.saveHouseholdLocationLevel(level);
+	}
+	
+	@Transactional
+    public void deleteHouseholdLocationLevel(HouseholdLocationLevel level) {
+    	householdDAO.deleteHouseholdLocationLevel(level);  
+    }
+	
+	@Transactional
+	public void setHouseholdLocationLevelParents() {
+		// iterate through the levels
+		for (HouseholdLocationLevel level : getHouseholdLocationLevels()) {
+			
+			if (getHouseholdLocationEntryCountByLevel(level) > 0) {
+				// get an entry for this level
+				HouseholdLocationEntry entry = getHouseholdLocationEntriesByLevel(level).get(0);
+				// if needed, set the parent for this level based on the level of the parent of this entry
+				if (entry.getParent() != null && entry.getParent().getLevel() != level.getParent()) {
+					level.setParent(entry.getParent().getLevel());
+					// need to call the service method through the context to take care of AOP
+					Context.getService(HouseholdService.class).saveHouseholdLocationLevel(level);
+				}
+			}
+			// if is level has no entries and no parents, delete it
+			else if (level.getParent() == null){
+				// need to call the service method through the context to take care of AOP
+				Context.getService(HouseholdService.class).deleteHouseholdLocationLevel(level);
+			}
+		}
+	}
+	
+	/**
+	 * Utility methods
+	 */
+	
+	/**
+	 * Builds a list of pipe-delimited strings that represents all the possible full household Locations,
+	 * and stores this in a local cache for use by the getPossibleFullHouseholdLocations(String) method
+	 * A full household Location is represented as a pipe-delimited string of household Location entry names,
+	 * ordered from the entry at the highest level to the entry at the lowest level in the tree.
+	 * For example, the full household Location for the Beacon Hill neighborhood in the city of Turbo might be:
+	 * "Kenya|Rift Valley|Uasin-Gishu|Turbo|Turbo South"
+	 *  
+	 */
+	private void buildFullHouseholdLocationCache() {
+		
+		// TODO: reset the cache every time the household Location entries are changed?
+		
+		this.fullHouseholdLocationCache = new ArrayList<String>();
+		
+		List<HouseholdLocationLevel> levels = getOrderedHouseholdLocationLevels(true,false);
+		HouseholdLocationLevel bottomLevel = levels.get(levels.size() - 1);
+		
+		// go through all the entries at the bottom level of the hierarchy
+		for (HouseholdLocationEntry bottomLevelEntry : getHouseholdLocationEntriesByLevel(bottomLevel)) {	
+			StringBuilder householdLocation = new StringBuilder();
+			householdLocation.append(bottomLevelEntry.getName());
+			
+			HouseholdLocationEntry entry = bottomLevelEntry;
+			
+			// follow back up the tree to the top level and concatenate the names to create the full householdLocation string
+			while (entry.getParent() != null) {
+				entry = entry.getParent();
+				householdLocation.insert(0, entry.getName() + "|");
+			}
+			
+			this.fullHouseholdLocationCache.add(householdLocation.toString());
+		}
+		
+	}
+	
+	private void resetFullHouseholdLocationCache() {
+		this.fullHouseholdLocationCache = null;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	////////////////////////////////////////////////////////////////////
 	/* (non-Javadoc)
 	 * @see org.openmrs.module.household.service.HouseholdEncounterService#saveHouseholdEncounter(org.openmrs.module.household.model.HouseholdEncounter)

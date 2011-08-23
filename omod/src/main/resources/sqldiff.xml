@@ -79,9 +79,11 @@
 		<date>May 23, 2011</date>
 		<description>
 			Create data tables for Household System
-			#To Drop : Drop TABLE `household_obs`,`household_encounter`,`household_encounter_type`,`household_location`,`household_attrib_value`,`household_attribute`
+			#To Drop : Drop TABLE `household_obs`,`household_encounter`,`household_encounter_type`,`household_location`,`household_location_entry`,`household_location_level`,`household_attrib_value`,`household_attribute`
 		</description>
 		<sql>
+			Drop TABLE IF EXISTS `household_obs`,`household_encounter`,`household_encounter_type`,`household_location`,`household_location_entry`,`household_location_level`,`household_attrib_value`,`household_attribute`;
+				
 			CREATE TABLE `household_attribute` (
 				`household_attribute_type_id` int(11) NOT NULL AUTO_INCREMENT,
 				`name` varchar(50) NOT NULL DEFAULT '',
@@ -147,6 +149,10 @@
 			  `description` varchar(255) DEFAULT NULL,
 			  `address1` varchar(255) DEFAULT NULL,
 			  `address2` varchar(255) DEFAULT NULL,
+			  `address3` varchar(255) DEFAULT NULL,
+			  `address4` varchar(255) DEFAULT NULL,
+			  `address5` varchar(255) DEFAULT NULL,
+			  `address6` varchar(255) DEFAULT NULL,
 			  `city_village` varchar(255) DEFAULT NULL,
 			  `city_sub_location` varchar(255) DEFAULT NULL,
 			  `city_location` varchar(255) DEFAULT NULL,
@@ -174,6 +180,44 @@
 			  CONSTRAINT `user_who_created_household_location` FOREIGN KEY (`creator`) REFERENCES `users` (`user_id`),
 			  CONSTRAINT `user_who_retired_household_location` FOREIGN KEY (`retired_by`) REFERENCES `users` (`user_id`)
 			) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+			
+			
+			CREATE TABLE `household_location_level` (
+				`household_location_level_id` int(11) NOT NULL AUTO_INCREMENT,
+				`name` varchar(160) DEFAULT NULL,
+				`parent_level_id` int(11) DEFAULT NULL,
+				`household_location_field` varchar(50) DEFAULT NULL,
+				`uuid` char(38) NOT NULL,
+				`required` tinyint(1) NOT NULL DEFAULT '0',
+				PRIMARY KEY (`household_location_level_id`),
+				UNIQUE KEY `parent_level_id_unique_loc` (`parent_level_id`),
+				KEY `household_location_field_unique` (`household_location_field`),
+				CONSTRAINT `parent_level_loc` FOREIGN KEY (`parent_level_id`) REFERENCES `household_location_level` (`household_location_level_id`)
+			) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+			
+			CREATE TABLE `household_location_entry` (
+				`household_location_entry_id` int(11) NOT NULL AUTO_INCREMENT,
+				`name` varchar(160) NOT NULL,
+				`level_id` int(11) NOT NULL,
+				`parent_id` int(11) DEFAULT NULL,
+				`user_generated_id` varchar(11) DEFAULT NULL,
+				`latitude` double DEFAULT NULL,
+				`longitude` double DEFAULT NULL,
+				`elevation` double DEFAULT NULL,
+				`uuid` char(38) NOT NULL,
+				PRIMARY KEY (`household_location_entry_id`),
+				KEY `parent_name_loci` (`parent_id`,`name`(20)),
+				KEY `level_name` (`level_id`,`name`(20)),
+				CONSTRAINT `level_to_level_loci` FOREIGN KEY (`level_id`) REFERENCES `household_location_level` (`household_location_level_id`),
+				CONSTRAINT `parent_to_parent_loci` FOREIGN KEY (`parent_id`) REFERENCES `household_location_entry` (`household_location_entry_id`)
+			) ENGINE=InnoDB AUTO_INCREMENT=341 DEFAULT CHARSET=utf8;
+			
+			
+			
+			
+			
+			
+			
 
 			CREATE TABLE `household_encounter_type` (
 			  `household_encounter_type_id` int(11) NOT NULL AUTO_INCREMENT,

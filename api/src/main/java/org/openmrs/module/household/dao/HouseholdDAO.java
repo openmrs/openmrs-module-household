@@ -23,6 +23,8 @@ import org.openmrs.module.household.model.HouseholdEncounterType;
 import org.openmrs.module.household.model.HouseholdLocation;
 import org.openmrs.module.household.model.HouseholdMembership;
 import org.openmrs.module.household.model.HouseholdObs;
+import org.openmrs.module.household.model.HouseholdLocationEntry;
+import org.openmrs.module.household.model.HouseholdLocationLevel;
 
 /**
  * Contract for database operation on household object
@@ -121,6 +123,32 @@ public interface HouseholdDAO {
 	 */
 	public List<HouseholdMembership> getHouseholdMembershipByGrpByPsn(Person p,Household grp);
 	
+	/**
+	 * Get voided Household Memberships records by ID
+	 * 
+	 * @return voided Household Memberships with ID
+	 */
+	public List<HouseholdMembership> getAllVoidedHouseholdMembershipsByGroup(Household grp);
+	
+	/**
+	 * Get index person in a given household
+	 * 
+	 * @return index person in a given household
+	 */
+	public List<HouseholdMembership> getIndexPerson(Integer id);
+	/**
+	 * Get members in a given household excluding the index
+	 * 
+	 * @return index persons in a given household
+	 */
+	public List<HouseholdMembership> getAllNonVoidedHouseholdMembershipsByGroupNotIndex(Household grp);
+	/**
+	 * Get index person in a given household group
+	 * 
+	 * @return index person in a given household group
+	 */
+	public List<HouseholdMembership> getHouseholdIndexByGroup(Household grp);
+	
 	//=============================================================================
 	/**
 	 * Save one HouseholdAttribute object to the database
@@ -172,7 +200,7 @@ public interface HouseholdDAO {
 	//=============================================================================
 		
 	
-	
+	/////////////////////////**********************************************************//////////////////////////
 	
 	
 	
@@ -241,14 +269,130 @@ public interface HouseholdDAO {
 	 */
 	public Integer getCountOfHouseholdLocations(String nameFragment, Boolean includeRetired);
 	
+	/**
+	 * Get all DISTINCT locations
+	 * 
+	 * @param includeRetired boolean - include retired locations as well?
+	 * @return <code>List<HouseholdLocation></code> object of all <code>HouseholdLocation</code>s, possibly including
+	 *         retired locations
+	 */
+	public List<HouseholdLocation> getAllHouseholdLocationsByLocation(boolean includeRetired);
+	
+	/**
+	 * Get all DISTINCT sub locations
+	 * 
+	 * @param includeRetired boolean - include retired locations as well?
+	 * @return <code>List<HouseholdLocation></code> object of all <code>HouseholdLocation</code>s, possibly including
+	 *         retired locations
+	 */
+	public List<HouseholdLocation> getAllHouseholdLocationsBySubLocation(String location, boolean includeRetired);
+	
+	/**
+	 * Get all DISTINCT villages
+	 * 
+	 * @param includeRetired boolean - include retired locations as well?
+	 * @return <code>List<HouseholdLocation></code> object of all <code>HouseholdLocation</code>s, possibly including
+	 *         retired locations
+	 */
+	public List<HouseholdLocation> getAllHouseholdLocationsByVillage(String subLocation, String location, boolean includeRetired);
+	
+	/**
+	 * Get Village ID
+	 * 
+	 * @param includeRetired boolean - include retired locations as well?
+	 * @return <code>HouseholdLocation</code> object of all <code>HouseholdLocation</code>s, possibly including
+	 *         retired locations
+	 */
+	public HouseholdLocation getAllHouseholdLocationsByLocSubVil(String village, String subLocation, String location, boolean includeRetired);
 	
 	
 	
 	
+	/**
+	 * Returns the number of household location entries
+	 */
+	public int getHouseholdLocationEntryCount();
+	
+	/**
+	 * Returns the number of household location entries at the given level
+	 */
+	public int getHouseholdLocationEntryCountByLevel(HouseholdLocationLevel level);
+	
+	/**
+	 * Get an household location entry, reference by id
+	 */
+	public HouseholdLocationEntry getHouseholdLocationEntry(int householdLocationId);
+	
+	/**
+	 * Get an household location entry, referenced by the userGeneratedId property
+	 */
+	public HouseholdLocationEntry getHouseholdLocationEntryByUserGenId(String userGeneratedId);
+	
+	/**
+	 * Gets all household location entries associated with a certain level
+	 */
+	public List<HouseholdLocationEntry> getHouseholdLocationEntriesByLevel(HouseholdLocationLevel level);
+	
+	/**
+	 * Gets all household location entries associated with the a certain level that have the specified name
+	 */
+	public List<HouseholdLocationEntry> getHouseholdLocationEntriesByLevelAndName(HouseholdLocationLevel level, String name);
+	
+	/**
+	 * Gets all the household location entries that are children of the specified entry
+	 */
+	public List<HouseholdLocationEntry> getChildHouseholdLocationEntries(HouseholdLocationEntry entry);
+	
+	/**
+	 * Gets the household location entry which the specified name that is a child of the given entry
+	 * (Will throw exception if there are multiple matches, as there should never be two entries with the same name AND parent)
+	 */
+	public HouseholdLocationEntry getChildHouseholdLocationEntryByName(HouseholdLocationEntry entry, String childName);
+	
+	/**
+	 * Saves the specified household location entry
+	 */
+	public void saveHouseholdLocationEntry(HouseholdLocationEntry ah);
+	
+	/**
+	 * Deletes all the household location entries (use with care!)
+	 */
+	public void deleteAllHouseholdLocationEntries();
+	
+	/**
+	 * Returns a list of all household location levels
+	 */
+	public List<HouseholdLocationLevel> getHouseholdLocationLevels();
+	
+	/**
+	 * Returns the top level in the hierarchy (i.e., the highest level, with no parent)
+	 * (Will throw an exception if the multiple levels with no parents)
+	 */
+	public HouseholdLocationLevel getTopHouseholdLocationLevel();
+	
+	/**
+	 * Gets an household location level by Id
+	 */
+	public HouseholdLocationLevel getHouseholdLocationLevel(int levelId);
+	
+	/**
+	 * Gets the household location level that is the child of the specified level
+	 * (Will throw an exception if there are multiple children--a level should only have one child)
+	 */
+	public HouseholdLocationLevel getHouseholdLocationLevelByParent(HouseholdLocationLevel parent);
+	
+	/**
+	 * Saves the specified household location level
+	 */
+	public void saveHouseholdLocationLevel(HouseholdLocationLevel level);
+	
+	/**
+	 * Deletes the specified household location level
+	 */
+	public void deleteHouseholdLocationLevel(HouseholdLocationLevel level);
 	
 	
-	
-	
+/////////////////////////**********************************************************//////////////////////////
 	
 	
 	//=============================================================================

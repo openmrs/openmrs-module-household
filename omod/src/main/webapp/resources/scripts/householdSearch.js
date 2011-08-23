@@ -11,17 +11,34 @@ $j(document).ready(function() {
     householdMembersTable = $j("#householdMembers").dataTable({
     	"bAutoWidth": false,
     	"bLengthChange": true,
-    	"bJQueryUI": true
+    	"bJQueryUI": true,
+    	"sPaginationType": "full_numbers"
     	}
     );
     
-    hhMem = $j("#hhMem").dataTable({
+    $j("#hhdLoc").dataTable({
+    	"bAutoWidth": false,
+    	"bLengthChange": true,
+    	"bJQueryUI": true,
+    	"sPaginationType": "full_numbers"
+    	}
+    );
+    
+    $j("#patientDetail").dataTable({
+    	"bAutoWidth": false,
+    	"bLengthChange": true,
+    	"bJQueryUI": true,
+    	"sPaginationType": "full_numbers"
+    }
+    );
+    
+    /*hhMem = $j("#hhMem").dataTable({
     	"bAutoWidth": false,
     	"bLengthChange": true,
     	//"sPaginationType": "full_numbers",
     	"bJQueryUI": false
     	}
-    );
+    );*/
 });
 
 //Select a patient
@@ -77,7 +94,7 @@ function removePerson(person){
 	householdMembersTable.fnDraw();
 }
 
-//Funtion to remove the selected row.
+//Funtion to select head of household
 function headPerson(person){
 	$j("#hiddenIndex").val(person);
 }

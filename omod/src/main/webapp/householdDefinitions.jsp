@@ -8,6 +8,8 @@
 
 <%@ include file="localHeader.jsp"%>
 
+<link href="${pageContext.request.contextPath}/moduleResources/household/css/tablestyles.css" type="text/css" rel="stylesheet" />
+
 <b class="boxHeader"><spring:message code="household.definitions.header"/></b>
 <div class="box">
 

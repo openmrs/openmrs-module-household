@@ -10,12 +10,13 @@ import java.util.List;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
 import org.openmrs.Concept;
 import org.openmrs.ConceptName;
 import org.openmrs.Form;
@@ -24,6 +25,7 @@ import org.openmrs.User;
 import org.openmrs.api.APIException;
 import org.openmrs.api.db.DAOException;
 import org.openmrs.module.household.dao.HouseholdDAO;
+import org.openmrs.module.household.exception.HouseholdModuleException;
 import org.openmrs.module.household.model.Household;
 import org.openmrs.module.household.model.HouseholdAttribValue;
 import org.openmrs.module.household.model.HouseholdAttribute;
@@ -31,6 +33,8 @@ import org.openmrs.module.household.model.HouseholdDefinition;
 import org.openmrs.module.household.model.HouseholdEncounter;
 import org.openmrs.module.household.model.HouseholdEncounterType;
 import org.openmrs.module.household.model.HouseholdLocation;
+import org.openmrs.module.household.model.HouseholdLocationEntry;
+import org.openmrs.module.household.model.HouseholdLocationLevel;
 import org.openmrs.module.household.model.HouseholdMembership;
 import org.openmrs.module.household.model.HouseholdObs;
 
@@ -187,12 +191,49 @@ public class HibernateHouseholdDAO implements HouseholdDAO {
 		return criteria.list();
 	}
 	
-@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked")
 	
 	public List<HouseholdMembership> getHouseholdMembershipByGrpByPsn(Person p,Household grp) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(HouseholdMembership.class)
 				.add(Restrictions.eq("householdMembershipMember",p))
 				.add(Restrictions.eq("householdMembershipGroups", grp));
+		return criteria.list();
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<HouseholdMembership> getAllVoidedHouseholdMembershipsByGroup(Household grp){
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(HouseholdMembership.class)
+		
+		.add(Expression.eq("householdMembershipGroups",grp))
+		.add(Expression.eq("voided", true));
+
+		return criteria.list();
+	}
+	
+	// finding the index of a given household==================================================
+	@SuppressWarnings("unchecked")
+	public List<HouseholdMembership> getIndexPerson(Integer id) {
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(HouseholdMembership.class)
+		.add(Expression.eq("id",id))
+		.add(Expression.eq("householdMembershipHeadship", true));
+		
+		return criteria.list();
+	}
+	//get the list of persons
+	@SuppressWarnings("unchecked")
+	public List<HouseholdMembership> getAllNonVoidedHouseholdMembershipsByGroupNotIndex(Household grp){
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(HouseholdMembership.class)
+		.add(Expression.eq("householdMembershipGroups",grp))
+		.add(Expression.eq("voided", false))
+		.add(Expression.eq("householdMembershipHeadship", false));
+		return criteria.list();
+	}
+	@SuppressWarnings("unchecked")
+	public List<HouseholdMembership> getHouseholdIndexByGroup(Household grp){
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(HouseholdMembership.class)
+		.add(Expression.eq("householdMembershipGroups",grp))
+		.add(Expression.eq("voided", false))
+		.add(Expression.eq("householdMembershipHeadship", true));
 		return criteria.list();
 	}
 
@@ -245,6 +286,10 @@ public class HibernateHouseholdDAO implements HouseholdDAO {
 	}
 
 
+	
+/////////////////////////**********************************************************//////////////////////////
+	
+	
 	
 	public HouseholdLocation saveHouseholdLocation(
 			HouseholdLocation householdLocation) {
@@ -362,7 +407,264 @@ public class HibernateHouseholdDAO implements HouseholdDAO {
 		
 		return (Integer) criteria.uniqueResult();
 	}
+	
+	/**
+	 * Get all DISTINCT locations
+	 * 
+	 * @param includeRetired boolean - include retired locations as well?
+	 * @return <code>List<HouseholdLocation></code> object of all <code>HouseholdLocation</code>s, possibly including
+	 *         retired locations
+	 */
+	@SuppressWarnings("unchecked")
+	public List<HouseholdLocation> getAllHouseholdLocationsByLocation(boolean includeRetired){
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(HouseholdLocation.class)
+			.setProjection(Projections.distinct(Projections.property("cityLocation")));
+		if (!includeRetired) {
+			criteria.add(Expression.eq("retired", false));
+		}
+		criteria.addOrder(Order.asc("cityLocation"));
+		return criteria.list();
+	}
+	
+	/**
+	 * Get all DISTINCT sub locations
+	 * 
+	 * @param includeRetired boolean - include retired locations as well?
+	 * @return <code>List<HouseholdLocation></code> object of all <code>HouseholdLocation</code>s, possibly including
+	 *         retired locations
+	 */
+	@SuppressWarnings("unchecked")
+	public List<HouseholdLocation> getAllHouseholdLocationsBySubLocation(String location, boolean includeRetired){
+		
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(HouseholdLocation.class);
+		if (!includeRetired)
+			criteria.add(Expression.eq("retired", false));
+		
+		if (StringUtils.isNotBlank(location))
+			criteria.add(Expression.ilike("cityLocation", location, MatchMode.START));
+		
+		criteria.setProjection(Projections.distinct(Projections.property("citySubLocation")));
+		
+		criteria.addOrder(Order.asc("citySubLocation"));
+		return criteria.list();
+	}
+	
+	/**
+	 * Get all DISTINCT villages
+	 * 
+	 * @param includeRetired boolean - include retired locations as well?
+	 * @return <code>List<HouseholdLocation></code> object of all <code>HouseholdLocation</code>s, possibly including
+	 *         retired locations
+	 */
+	@SuppressWarnings("unchecked")
+	public List<HouseholdLocation> getAllHouseholdLocationsByVillage(String subLocation, String location, boolean includeRetired){
+		
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(HouseholdLocation.class);
+		if (!includeRetired)
+			criteria.add(Expression.eq("retired", false));
+		
+		if (StringUtils.isNotBlank(location))
+			criteria.add(Expression.ilike("cityLocation", location, MatchMode.START));
+		
+		if (StringUtils.isNotBlank(location))
+			criteria.add(Expression.ilike("citySubLocation", subLocation, MatchMode.START));
+		
+		criteria.setProjection(Projections.distinct(Projections.property("cityVillage")));
+		
+		criteria.addOrder(Order.asc("cityVillage"));
+		return criteria.list();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public HouseholdLocation getAllHouseholdLocationsByLocSubVil(String village, String subLocation, String location, boolean includeRetired){
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(HouseholdLocation.class);
+		if (!includeRetired)
+			criteria.add(Expression.eq("retired", false));
+		
+		if (StringUtils.isNotBlank(location))
+			criteria.add(Expression.ilike("cityLocation", location, MatchMode.START));
+		
+		if (StringUtils.isNotBlank(location))
+			criteria.add(Expression.ilike("citySubLocation", subLocation, MatchMode.START));
+		
+		if (StringUtils.isNotBlank(location))
+			criteria.add(Expression.ilike("cityVillage", village, MatchMode.START));
+		
+		List<HouseholdLocation> hl = criteria.list();
+		HouseholdLocation strHl = null;
+		for( int i = 0; i<hl.size();i++){
+			strHl = hl.get(i);
+		}
+		return strHl;
+	}
 
+	@SuppressWarnings("unchecked")
+	public int getHouseholdLocationEntryCount() {
+		int x = 0;
+		Session session = sessionFactory.getCurrentSession();
+		Criteria c = session.createCriteria(HouseholdLocationEntry.class);
+		List<Integer> rows = c.setProjection((Projections.rowCount())).list();
+		if (rows.size() > 0) {
+			x = rows.get(0).intValue();
+		}
+		return x;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public int getHouseholdLocationEntryCountByLevel(HouseholdLocationLevel level) {
+		int x = 0;
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HouseholdLocationEntry.class);
+		criteria.createCriteria("level").add(Restrictions.eq("levelId", level.getId()));
+		List<Integer> rows = criteria.setProjection((Projections.rowCount())).list();
+		if (rows.size() > 0) {
+			x = rows.get(0).intValue();
+		}
+		return x;	
+	}
+	
+	public HouseholdLocationEntry getHouseholdLocationEntry(int householdLocationEntryId) {
+		Session session = sessionFactory.getCurrentSession();
+		HouseholdLocationEntry ah = (HouseholdLocationEntry) session.load(HouseholdLocationEntry.class, householdLocationEntryId);
+		return ah;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public HouseholdLocationEntry getHouseholdLocationEntryByUserGenId(String userGeneratedId) {
+		HouseholdLocationEntry ah = null;
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HouseholdLocationEntry.class);
+		
+		List<HouseholdLocationEntry> list = criteria.add(Restrictions.eq("userGeneratedId", userGeneratedId)).list();
+		if (list != null && list.size() > 0) {
+			ah = list.get(0);
+		}
+		return ah;
+	}
+	
+	@SuppressWarnings("unchecked")
+    public List<HouseholdLocationEntry> getHouseholdLocationEntriesByLevel(HouseholdLocationLevel householdLocationLevel) {
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HouseholdLocationEntry.class);
+		criteria.createCriteria("level").add(Restrictions.eq("levelId", householdLocationLevel.getId()));
+		return criteria.list();
+	}
+	
+	@SuppressWarnings("unchecked")
+    public List<HouseholdLocationEntry> getHouseholdLocationEntriesByLevelAndName(HouseholdLocationLevel householdLocationLevel, String name) {
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HouseholdLocationEntry.class);
+		criteria.createCriteria("level").add(Restrictions.eq("levelId", householdLocationLevel.getId()));
+		criteria.add(Restrictions.eq("name", name).ignoreCase());
+		return criteria.list();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<HouseholdLocationEntry> getChildHouseholdLocationEntries(HouseholdLocationEntry entry) {
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HouseholdLocationEntry.class);
+		List<HouseholdLocationEntry> list = criteria.createCriteria("parent").add(
+		    Restrictions.eq("householdLocationEntryId", entry.getId())).list();
+		return list;
+	}
+	
+	public HouseholdLocationEntry getChildHouseholdLocationEntryByName(HouseholdLocationEntry entry, String childName) {
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HouseholdLocationEntry.class);
+		criteria.createCriteria("parent").add(Restrictions.eq("householdLocationEntryId", entry.getId()));
+		criteria.add(Restrictions.eq("name", childName).ignoreCase());  // do a case-insensitive match
+		// this will throw an exception if we don't get a unique result--entries should always be unique on parent and name
+		return (HouseholdLocationEntry) criteria.uniqueResult();    
+	}
+	
+	public void saveHouseholdLocationEntry(HouseholdLocationEntry ah) {
+		try {
+			sessionFactory.getCurrentSession().saveOrUpdate(ah);
+		}
+		catch (Throwable t) {
+			throw new DAOException(t);
+		}
+	}
+	
+	public void deleteAllHouseholdLocationEntries() {
+		Session session = sessionFactory.getCurrentSession();
+		session.createSQLQuery("SET foreign_key_checks = 0").executeUpdate();
+		session.createSQLQuery("DELETE FROM household_location_entry").executeUpdate();
+		session.createSQLQuery("SET foreign_key_checks = 1").executeUpdate();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<HouseholdLocationLevel> getHouseholdLocationLevels() {
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HouseholdLocationLevel.class);
+		return criteria.list();
+	}
+	
+	public HouseholdLocationLevel getTopHouseholdLocationLevel() {
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(HouseholdLocationLevel.class);
+		criteria.add(Restrictions.isNull("parent"));
+		
+		HouseholdLocationLevel topLevel = null;
+		
+		try {
+			topLevel = (HouseholdLocationLevel) criteria.uniqueResult();
+		}
+		catch (Exception e) {
+			throw new HouseholdModuleException("Unable to fetch top level household location type", e);
+		}
+		
+		return topLevel;
+	}
+	
+	public HouseholdLocationLevel getHouseholdLocationLevel(int levelId) {
+		Session session = sessionFactory.getCurrentSession();
+		HouseholdLocationLevel type = (HouseholdLocationLevel) session.load(HouseholdLocationLevel.class, levelId);
+		return type;
+	}
+	
+    public HouseholdLocationLevel getHouseholdLocationLevelByParent(HouseholdLocationLevel parent) {
+    	Session session = sessionFactory.getCurrentSession();
+    	Criteria criteria = session.createCriteria(HouseholdLocationLevel.class);
+    	criteria.add(Restrictions.eq("parent", parent));
+    	
+    	HouseholdLocationLevel child = null;
+		
+		try {
+			child = (HouseholdLocationLevel) criteria.uniqueResult();
+		}
+		catch (Exception e) {
+			throw new HouseholdModuleException("Unable to fetch child household location type", e);
+		}
+		
+		return child;
+    }
+	
+	public void saveHouseholdLocationLevel(HouseholdLocationLevel level) {
+		try {
+			sessionFactory.getCurrentSession().saveOrUpdate(level);
+		}
+		catch (Throwable t) {
+			throw new DAOException(t);
+		}
+	}
+	
+
+    public void deleteHouseholdLocationLevel(HouseholdLocationLevel level) {
+    	try {
+			sessionFactory.getCurrentSession().delete(level);
+		}
+		catch (Throwable t) {
+			throw new DAOException(t);
+		}
+    }
+	
+	
+/////////////////////////**********************************************************//////////////////////////
+	
+	
+	
+	
 
 	public HouseholdEncounter saveHouseholdEncounter(
 			HouseholdEncounter householdEncounter) {

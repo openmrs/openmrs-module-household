@@ -48,6 +48,6 @@
                 </property>
         </bean>
         
-        <bean id="patientHouseholdPortletController" class="@MODULE_PACKAGE@.@MODULE_ID@.web.controller.PatientHouseholdPortletController">
+        <bean id="patientHouseholdPortletController" class="org.openmrs.module.household.web.controller.PatientHouseholdPortletController">
 		</bean>
 </beans>
