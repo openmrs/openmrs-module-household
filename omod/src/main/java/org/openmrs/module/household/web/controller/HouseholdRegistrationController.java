@@ -15,6 +15,7 @@ import java.text.ParseException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openmrs.Patient;
 import org.openmrs.Person;
 import org.openmrs.api.context.Context;
 //import org.openmrs.module.household.model.
@@ -119,7 +120,6 @@ public class HouseholdRegistrationController {
 					//if the list is empty you are allowed to add new members to this group
 					if(member.isEmpty()){ 
 					
-					
 					membership.setHouseholdMembershipMember(pn);
 					membership.setHouseholdMembershipGroups(grp);
 			
@@ -176,6 +176,7 @@ public class HouseholdRegistrationController {
 				Person pn = Context.getPersonService().getPerson(Integer.parseInt(strMember));
 				membership.setHouseholdMembershipMember(pn);
 				membership.setHouseholdMembershipGroups(hgrp);
+				
 				String strVal1 = (intIndex+"").trim();
 				String strVal2 = (pn.getPersonId() + "").trim();
 				if (strVal1.equals(strVal2)){
@@ -187,10 +188,6 @@ public class HouseholdRegistrationController {
 				service.saveHouseholdMembership(membership);
 			}
 		}
-		
-		
-		
-		
 		
 		
 		//save individually

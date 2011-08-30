@@ -59,7 +59,9 @@
 		
 		<many-to-one name="householdDef" class="org.openmrs.module.household.model.HouseholdDefinition"
 			column="household_def_id"/>
-			
+		
+		<property name="uuid" type="java.lang.String"
+			column="uuid" length="36" />
 	</class>
 	
 	<class name="org.openmrs.module.household.model.HouseholdMembership" table="household_membership">
@@ -72,8 +74,8 @@
 		
 		<discriminator column="household_membership_id" insert="false"/>
 
-		<many-to-one name="householdMembershipMember" class="org.openmrs.Person"
-			column="household_membership_person_id"/>
+		<many-to-one name="householdMembershipMember" class="org.openmrs.Person" property-ref="uuid"
+			column="household_membership_person_uuid"/>
 		
 		<many-to-one name="householdMembershipGroups" class="org.openmrs.module.household.model.Household"
 			column="household_membership_group_id"/>

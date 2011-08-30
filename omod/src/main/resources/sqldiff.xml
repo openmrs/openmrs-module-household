@@ -11,6 +11,7 @@
 			drop table `household_membership`, `household`,`household_definition`
 		</description>
 		<sql>
+			Drop TABLE IF EXISTS `household_membership`, `household`,`household_definition`;
 			CREATE TABLE `household_definition` (
 				`household_definition_id` int(10) NOT NULL auto_increment,
 				`household_definition_code` varchar(45) NOT NULL,
@@ -46,9 +47,9 @@
 			
 			CREATE TABLE `household_membership` (
 	                `household_membership_id` int(10) NOT NULL auto_increment,
-	                `household_membership_person_id` int(10) NOT NULL,
 	                `household_membership_group_id` int(10) NOT NULL,
 	                `household_membership_headship` smallint(6) NOT NULL DEFAULT '0',
+	                `household_membership_person_uuid` varchar(38) NOT NULL,
 	                `start_date` datetime DEFAULT NULL,
 	                `end_date` datetime DEFAULT NULL,
 	                `voided` smallint(6) NOT NULL DEFAULT '0',
@@ -63,13 +64,13 @@
 	                KEY `user_who_created_membership` (`creator`),
 	                KEY `user_who_changed_membership` (`changed_by`),
 	                KEY `user_who_voided_membership` (`voided_by`),
-	                KEY `household_membership_person_id` (`household_membership_person_id`),
+	                KEY `household_membership_person_uuid` (`household_membership_person_uuid`),
 	                KEY `household_membership_group_id` (`household_membership_group_id`),
-					CONSTRAINT `household_membership_member_id` FOREIGN KEY (`household_membership_person_id`) REFERENCES `person` (`person_id`),
 	                CONSTRAINT `household_membership_group_id` FOREIGN KEY (`household_membership_group_id`) REFERENCES `household` (`household_group_id`),
 	                CONSTRAINT `user_who_created_membership` FOREIGN KEY (`creator`) REFERENCES `users` (`user_id`),
 	                CONSTRAINT `user_who_changed_membership` FOREIGN KEY (`changed_by`) REFERENCES `users` (`user_id`),
-	                CONSTRAINT `user_who_voided_membership` FOREIGN KEY (`voided_by`) REFERENCES `users` (`user_id`)
+	                CONSTRAINT `user_who_voided_membership` FOREIGN KEY (`voided_by`) REFERENCES `users` (`user_id`),
+	                CONSTRAINT `household_membership_person_uuid` FOREIGN KEY (`household_membership_person_uuid`) REFERENCES `person` (`uuid`)
 	        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 		</sql>
 	</diff>
@@ -213,12 +214,6 @@
 			) ENGINE=InnoDB AUTO_INCREMENT=341 DEFAULT CHARSET=utf8;
 			
 			
-			
-			
-			
-			
-			
-
 			CREATE TABLE `household_encounter_type` (
 			  `household_encounter_type_id` int(11) NOT NULL AUTO_INCREMENT,
 			  `name` varchar(50) NOT NULL DEFAULT '',
@@ -325,6 +320,18 @@
 			  CONSTRAINT `household_group_obs` FOREIGN KEY (`household_group_id`) REFERENCES `household` (`household_group_id`) ON UPDATE CASCADE,
 			  CONSTRAINT `household_user_who_voided_obs` FOREIGN KEY (`voided_by`) REFERENCES `users` (`user_id`)
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+		</sql>
+	</diff>
+	<diff>
+		<version>1.0.2</version>
+		<author>Jonah S. Mwogi</author>
+		<date>August 29, 2011</date>
+		<description>
+			Modify table `household` to use uuid
+		</description>
+		<sql>
+			ALTER TABLE `household` ADD COLUMN `uuid` char(38) DEFAULT NULL; 
+			UPDATE `household` SET uuid = UUID();
 		</sql>
 	</diff>
 </sqldiff>

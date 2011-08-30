@@ -67,22 +67,22 @@
 			</td>
 			<td width="1" bgcolor="#C0C0C0"><BR></td>
 			<td valign="top">
-				<table cellpadding="5" width="100%">
+				<table cellpadding="5" width="100%" id="mytable">
 					<tr>
-						<th>Household Id</th>
-						<th>Household Code</th>
-						<th>Household Code In Full</th>
-						<th>Household Description</th>
+						<th class="tbClass">Household Id</th>
+						<th class="tbClass">Household Code</th>
+						<th class="tbClass">Household Code In Full</th>
+						<th class="tbClass">Household Description</th>
 						<th>Action</th>
 					</tr>
 					<c:forEach var="household" items="${householdsTypes}">
 						<form method="POST" name="${household.id}">
 						<tr>
-							<td>${household.id}</td>
-							<td>${household.householdDefinitionsCode}</td>
-							<td>${household.householdDefinitionsCodeinfull}</td>
-							<td>${household.householdDefinitionsDescription}</td>
-							<td>
+							<td class="tdClass">${household.id}</td>
+							<td class="tdClass">${household.householdDefinitionsCode}</td>
+							<td class="tdClass">${household.householdDefinitionsCodeinfull}</td>
+							<td class="tdClass">${household.householdDefinitionsDescription}</td>
+							<td class="tdClass">
 								<input type="hidden" name="houseid" id="${household.id}" value="${household.id}" />
 								<input type="submit" value="Edit" />
 							</td>

@@ -109,6 +109,10 @@ public class DWRHouseholdService {
 			HouseholdMembership householdMembership = (HouseholdMembership) iterator.next();
 			
 			if(householdMembership.isHouseholdMembershipHeadship()){
+				
+				
+				
+				
 				strHousehold = householdMembership.getHouseholdMembershipMember().getNames() +
 					"," +
 					householdMembership.getHouseholdMembershipMember().getAddresses();
