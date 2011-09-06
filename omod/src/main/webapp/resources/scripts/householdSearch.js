@@ -24,13 +24,13 @@ $j(document).ready(function() {
     	}
     );
     
-    $j("#patientDetail").dataTable({
+   /* $j("#patientDetail").dataTable({
     	"bAutoWidth": false,
     	"bLengthChange": true,
     	"bJQueryUI": true,
     	"sPaginationType": "full_numbers"
     }
-    );
+    );*/
     
     /*hhMem = $j("#hhMem").dataTable({
     	"bAutoWidth": false,

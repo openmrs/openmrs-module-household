@@ -20,7 +20,7 @@ import org.openmrs.User;
  */
 public class HouseholdEncounter extends BaseOpenmrsData {
 
-private Integer encounterId;
+	private Integer encounterId;
 	
 	private Date encounterDatetime;
 	

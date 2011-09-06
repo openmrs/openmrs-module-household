@@ -86,6 +86,14 @@ public interface HouseholdService extends OpenmrsService{
 	public Household getHouseholdGroup(Integer id);
 	
 	/**
+	 * Get one HouseholdGroup record based on the HouseholdGroups householdIdentifier
+	 * 
+	 * @param householdIdentifier the HouseholdGroups householdIdentifier
+	 * @return HouseholdGroup that match the householdIdentifier
+	 */
+	public Household getHouseholdGroupByIdentifier(String householdIdentifier);
+	
+	/**
 	 * Get all HouseholdGroups records
 	 * 
 	 * @return all HouseholdGroups record in the system
@@ -112,7 +120,14 @@ public interface HouseholdService extends OpenmrsService{
 	@Transactional(readOnly = true)
 	@Authorized("View Household")
 	public HouseholdMembership getHouseholdMembership(Integer id);
-	
+
+	/**
+	 * Get Household Memberships records given householdUuid
+	 * 
+	 * @return Household Memberships with householdUuid
+	 * 
+	 */
+	public List<HouseholdMembership> getHouseholdMembershipByUuid(String householdUuid);
 	/**
 	 * Get all Household Memberships records
 	 * 

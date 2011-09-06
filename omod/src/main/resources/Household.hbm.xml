@@ -21,6 +21,8 @@
 		<property name="householdDefinitionsDescription" type="java.lang.String" 
 			column="household_definition_description" not-null="true" length="255"/>
 		
+		<property name="uuid" type="string" length="38" not-null="true" unique="true"/>
+		
 		<many-to-one name="program" class="org.openmrs.Program" 
 			column="program_id"/>
 		
@@ -58,10 +60,33 @@
 		<discriminator column="household_group_id" insert="false"/>
 		
 		<many-to-one name="householdDef" class="org.openmrs.module.household.model.HouseholdDefinition"
-			column="household_def_id"/>
+			property-ref="uuid" column="household_def_uuid"/>
 		
-		<property name="uuid" type="java.lang.String"
-			column="uuid" length="36" />
+		<property name="uuid" type="string" length="38" not-null="true" unique="true"/>
+			
+		<property name="householdIdentifier" type="java.lang.String"
+			column="household_identifier" length="50" />
+			
+		<many-to-one name="creator" class="org.openmrs.User" />
+
+		<property name="dateCreated" type="java.util.Date"
+			column="date_created" not-null="true" length="19" />
+
+		<many-to-one name="changedBy" class="org.openmrs.User" column="changed_by" />
+
+		<property name="dateChanged" type="java.util.Date"
+			column="date_changed" length="19" />
+
+		<many-to-one name="voidedBy" class="org.openmrs.User" column="voided_by" />
+
+		<property name="dateVoided" type="java.util.Date"
+			column="date_voided" length="19" />
+
+		<property name="voidReason" type="java.lang.String"
+			column="void_reason" length="255" />
+
+		<property name="voided" type="boolean" column="voided"
+			length="1" not-null="true" />
 	</class>
 	
 	<class name="org.openmrs.module.household.model.HouseholdMembership" table="household_membership">
@@ -77,8 +102,8 @@
 		<many-to-one name="householdMembershipMember" class="org.openmrs.Person" property-ref="uuid"
 			column="household_membership_person_uuid"/>
 		
-		<many-to-one name="householdMembershipGroups" class="org.openmrs.module.household.model.Household"
-			column="household_membership_group_id"/>
+		<many-to-one name="householdMembershipGroups" class="org.openmrs.module.household.model.Household"  property-ref="uuid"
+			column="household_uuid"/>
 		
 		<property name="householdMembershipHeadship" type="boolean" 
 			column="household_membership_headship" not-null="false" length="1"/>
@@ -120,8 +145,7 @@
 
 		<discriminator column="household_attribute_type_id" insert="false" />
 
-		<property name="uuid" type="java.lang.String"
-			column="uuid" length="38" unique="true" />
+		<property name="uuid" type="string" length="38" not-null="true" unique="true"/>
 
 		<property name="name" type="java.lang.String" column="name"
 			not-null="true" length="50" />
@@ -168,11 +192,10 @@
 		
 		<discriminator column="household_attribute_id" insert="false" />
 
-		<property name="uuid" type="java.lang.String"
-			column="uuid" length="38" unique="true" />
+		<property name="uuid" type="string" length="38" not-null="true" unique="true"/>
 
-		<many-to-one name="household" class="org.openmrs.module.household.model.Household">
-			<column name="household_group_id" />
+		<many-to-one name="household" class="org.openmrs.module.household.model.Household"  property-ref="uuid">
+			<column name="household_group_uuid" />
 		</many-to-one>
 		
 		<many-to-one name="householdAttributeType" class="org.openmrs.module.household.model.HouseholdAttribute"
@@ -227,7 +250,7 @@
 		<property name="required" type="java.lang.Boolean" length="1"
 			not-null="true" />
 
-		<property name="uuid" type="string" length="38" not-null="true" />
+		<property name="uuid" type="string" length="38" not-null="true" unique="true"/>
 	</class>
 	
 	<class name="org.openmrs.module.household.model.HouseholdLocationEntry" table="household_location_entry">
@@ -254,7 +277,7 @@
 
 		<property name="elevation" type="double" column="elevation" />
 
-		<property name="uuid" type="string" length="38" not-null="true" />
+		<property name="uuid" type="string" length="38" not-null="true" unique="true"/>
 
 	</class>	
 	
@@ -268,8 +291,7 @@
 
 		<discriminator column="household_location_id" insert="false" />
 		
-		<property name="uuid" type="java.lang.String"
-			column="uuid" length="38" unique="true" />
+		<property name="uuid" type="string" length="38" not-null="true" unique="true"/>
 
 		<property name="name" type="java.lang.String" column="name"
 			not-null="true" length="255" />
@@ -319,16 +341,6 @@
 		<property name="dateCreated" type="java.util.Date"
 			column="date_created" not-null="true" length="19" />
 
-		<!-- Associations -->
-		
-		<many-to-one name="parentHouseholdLocation" class="org.openmrs.module.household.model.HouseholdLocation"
-			column="parent_household_location" />
-		
-		<set name="childHouseholdLocation" inverse="true" cascade="all" order-by="name">
-			<key column="parent_household_location" />
-			<one-to-many class="org.openmrs.module.household.model.HouseholdLocation" />
- 		</set>
-
 		<!-- bi-directional many-to-one association to User -->
 		<many-to-one name="creator" class="org.openmrs.User" not-null="true">
 			<column name="creator" />
@@ -369,8 +381,7 @@
 		<many-to-one name="creator" class="org.openmrs.User"
 			not-null="true" />
 			
-		<property name="uuid" type="java.lang.String"
-			column="uuid" length="38" unique="true" />
+		<property name="uuid" type="string" length="38" not-null="true" unique="true"/>
 			
 		<many-to-one name="retiredBy" class="org.openmrs.User"
 			column="retired_by" />
@@ -395,8 +406,7 @@
 		
 		<discriminator column="household_encounter_id" insert="false" />
 		
-		<property name="uuid" type="java.lang.String"
-			column="uuid" length="38" unique="true" />
+		<property name="uuid" type="string" length="38" not-null="true" unique="true"/>
 
 		<property name="householdEncounterDatetime" type="java.util.Date"
 			column="household_encounter_datetime" not-null="true" length="19" />
@@ -423,13 +433,13 @@
 		</many-to-one>
 
 		<!-- bi-directional many-to-one association to HouseholdGroups -->
-		<many-to-one name="householdGroupId" class="org.openmrs.module.household.model.Household" not-null="true">
-			<column name="household_group_id" />
+		<many-to-one name="householdGroupId" class="org.openmrs.module.household.model.Household" not-null="true"  property-ref="uuid">
+			<column name="household_group_uuid" />
 		</many-to-one>
 		
 		<!-- bi-directional many-to-one association to Location -->
-		<many-to-one name="householdLocation" class="org.openmrs.module.household.model.HouseholdLocation" not-null="false">
-			<column name="location_id" />
+		<many-to-one name="householdLocation" class="org.openmrs.module.household.model.HouseholdLocation" property-ref="uuid" not-null="false">
+			<column name="location_uuid" />
 		</many-to-one>
 		
 		<!-- bi-directional many-to-one association to Form -->
@@ -473,8 +483,7 @@
 
 		<discriminator column="household_obs_id" insert="false" />
 
-		<property name="uuid" type="java.lang.String"
-			column="uuid" length="38" unique="true" />
+		<property name="uuid" type="string" length="38" not-null="true" unique="true"/>
 
 		<property name="householdObsDatetime" type="java.util.Date"
 			column="household_obs_datetime" not-null="true" length="19" />
@@ -517,8 +526,8 @@
 
 		<!-- Associations -->
 
-		<many-to-one name="householdGroups" class="org.openmrs.module.household.model.Household" 
-			not-null="true" column="household_group_id" />
+		<many-to-one name="householdGroups" class="org.openmrs.module.household.model.Household"  property-ref="uuid" 
+			not-null="true" column="household_group_uuid" />
 			
 		<many-to-one name="concept" class="org.openmrs.Concept" not-null="true" column="concept_id" />
 		
@@ -526,9 +535,9 @@
 		
 		<many-to-one name="valueCodedName" class="org.openmrs.ConceptName" column="value_coded_name_id" />
 		
-		<many-to-one name="householdLocation" class="org.openmrs.module.household.model.HouseholdLocation" not-null="false" column="location_id" />
+		<many-to-one name="householdLocation" class="org.openmrs.module.household.model.HouseholdLocation" property-ref="uuid" not-null="false" column="location_uuid" />
 		
-		<many-to-one name="householdEncounter" class="org.openmrs.module.household.model.HouseholdEncounter" column="household_encounter_id" />
+		<many-to-one name="householdEncounter" class="org.openmrs.module.household.model.HouseholdEncounter" property-ref="uuid" column="household_encounter_uuid" />
 		
 		<many-to-one name="creator" class="org.openmrs.User" not-null="true" />
 		
@@ -536,11 +545,11 @@
 		
 		<!-- many-to-one association from this obs to its parent grouping obs -->
 		<!-- insert/update=false because the groupMembers set is doing the saving for us -->
-		<many-to-one name="householdObsGroup" class="org.openmrs.module.household.model.HouseholdObs" column="household_obs_group_id" insert="true" update="true"/>
+		<many-to-one name="householdObsGroup" class="org.openmrs.module.household.model.HouseholdObs" property-ref="uuid" column="household_obs_group_uuid" insert="true" update="true"/>
 		
 		<!-- one-to-many association to all obs in this grouping -->
-		<set name="householdGroupMembers" inverse="true" cascade="all" order-by="household_obs_id">
-			<key column="household_obs_group_id" />
+		<set name="householdGroupMembers" inverse="true" cascade="all" order-by="household_obs_uuid">
+			<key column="household_obs_group_uuid" />
 			<one-to-many class="org.openmrs.module.household.model.HouseholdObs" />
 		</set> 
 		

@@ -1,7 +1,7 @@
 <%@ include file="/WEB-INF/template/include.jsp"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
-<openmrs:require privilege="Manage Household" otherwise="/login.htm"
+<openmrs:require privilege="View Household" otherwise="/login.htm"
 	redirect="/module/household/householdRegistration.form" />
 
 <%@ include file="/WEB-INF/template/header.jsp"%>
@@ -60,8 +60,8 @@ function inputValidator() {
 			<c:otherwise>
 				<a href="../../findPatient.htm">Register Individuals</a>&nbsp;|&nbsp;
 				<a href="householdSearch.form">Search for a Household</a>&nbsp;|&nbsp;
-				<a href="householdResume.form">Resume Care</a>&nbsp;|&nbsp;
-				<a href="householdIndexPerson.form">Change Household Head</a>
+				<a href="householdResume.form">Resume Household</a>&nbsp;|&nbsp;
+				<a href="householdIndexPerson.form">Change Index/Head</a>
 				<form method="post" name="householdRegistration" onsubmit="return inputValidator()">
 					
 					<table border="0">
@@ -131,17 +131,17 @@ function inputValidator() {
 									<td valign="top">
 										<br />
 										<h4><spring:message code="household.registration.registered"/></h4> &nbsp;&nbsp;<h3>${HouseholdID}</h3><br>
-										<table id="hhMem">
+										<table id="mytable">
 											<tr> 
-												<th>No</th>
-												<th>Full Names</th>
-												<th>Gender</th>
+												<th class="tbClass">No</th>
+												<th class="tbClass">Full Names</th>
+												<th class="tbClass">Gender</th>
 											</tr>
 											<c:forEach var="householdMems" items="${householdSaved}" varStatus="ind">
 													<tr>
-														<td>${ind.index + 1}</td>
-														<td>${householdMems.householdMembershipMember.names}</td>
-														<td>${householdMems.householdMembershipMember.gender}</td>
+														<td class="tdClass">${ind.index + 1}</td>
+														<td class="tdClass">${householdMems.householdMembershipMember.names}</td>
+														<td class="tdClass">${householdMems.householdMembershipMember.gender}</td>
 													</tr>
 											</c:forEach>
 										</table>

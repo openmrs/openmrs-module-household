@@ -28,10 +28,10 @@ public class HouseholdSearchController {
 	@RequestMapping(method=RequestMethod.GET, value="module/household/householdSearch")
 	public void preparePage(ModelMap map,@RequestParam(required=false, value="grpids") Integer grpids) {
 		try{
-		HouseholdService service = Context.getService(HouseholdService.class);
-		Household grp=service.getHouseholdGroup(grpids);
-		List<HouseholdMembership> householdsMem = service.getAllHouseholdMembershipsByGroup(grp);
-		map.addAttribute("hhmembers",householdsMem);
+			HouseholdService service = Context.getService(HouseholdService.class);
+			Household grp=service.getHouseholdGroup(grpids);
+			List<HouseholdMembership> householdsMem = service.getAllHouseholdMembershipsByGroup(grp);
+			map.addAttribute("hhmembers",householdsMem);
 		}
 		catch (Exception e) {
 			// TODO: handle exception
@@ -40,69 +40,57 @@ public class HouseholdSearchController {
 	
 	@RequestMapping(method=RequestMethod.POST, value="module/household/householdSearch")
 	public void processForm(ModelMap map, HttpServletRequest request,
-			@RequestParam(required=false, value="householdSearchCode") Integer householdSearchCode,
-			@RequestParam(required=false, value="householdGroup") String householdGroup,
-			//@RequestParam(required=false, value="householdgrpRef") String householdgrpRef,
-			@RequestParam(required=false, value="marktext") String marktext,
-			@RequestParam(required=false, value="voidReason") String voidReason) //throws NullPointerException 
-			{
-			HouseholdService service = Context.getService(HouseholdService.class);
-			Household grp=null;
-			Integer householdGroup1=0;
-			log.info("Processing post request ..." + householdGroup);
-			
-			
-			
-			if(request.getParameter("findMembers") !=null && StringUtils.hasText(householdGroup)){
-				 householdGroup1=(Integer.parseInt( householdGroup));
-				
+		@RequestParam(required=false, value="householdSearchCode") Integer householdSearchCode,
+		@RequestParam(required=false, value="householdGroup") String householdGroup,
+		//@RequestParam(required=false, value="householdgrpRef") String householdgrpRef,
+		@RequestParam(required=false, value="marktext") String marktext,
+		@RequestParam(required=false, value="voidReason") String voidReason) //throws NullPointerException 
+		{
+		HouseholdService service = Context.getService(HouseholdService.class);
+		Household grp=null;
+		//Integer householdGroup1=0;
+		log.info("Processing post request ..." + householdGroup);
+		
+		if(request.getParameter("findMembers") !=null && StringUtils.hasText(householdGroup)){
+			 //householdGroup1=(Integer.parseInt( householdGroup));
+			try{
+					//voided=service.getAllHouseholdMemberships();
+					grp=service.getHouseholdGroupByIdentifier(householdGroup);
+					//householdMembershipMember
+					HouseholdMembership hm = service.getHouseholdMembership(grp.getId());
 					
-						try{
-								//voided=service.getAllHouseholdMemberships();
-								grp=service.getHouseholdGroup((householdGroup1));
-								//householdMembershipMember
-								HouseholdMembership dfn=service.getHouseholdMembership(grp.getId());
-								
-									
-								
-								List<HouseholdMembership> householdsMem = service.getAllHouseholdMembershipsByGroup(grp);
+					List<HouseholdMembership> householdsMem = service.getAllHouseholdMembershipsByGroup(grp);
+		
+					Integer householdsMemCount=householdsMem.size();
 					
-								Integer householdsMemCount=householdsMem.size();
-								
-								//Integer x=;
-								log.info("\n..............." + householdsMem.size()+ "  "+grp.getId() );
-								
-								map.addAttribute("hhmembers",householdsMem);
-								map.addAttribute("hhmembersgrp", dfn);
-								map.addAttribute("hhmembersCount", householdsMemCount);
-							}
-						catch(NullPointerException ex){
-								ex.getMessage();
-						}
-				 
+					//Integer x=;
+					log.info("\n..............." + householdsMem.size()+ "  "+grp.getId() );
+					
+					map.addAttribute("hhmembers",householdsMem);
+					map.addAttribute("hhmembersgrp", hm);
+					map.addAttribute("hhmembersCount", householdsMemCount);
+				}
+			catch(NullPointerException ex){
+				log.error(ex.getMessage());
 			}
-			// end of search members here
-			//start voiding selected members in households
-			else if(request.getParameter("voidMembers") !=null && StringUtils.hasText(marktext)){
-				voidRecords(marktext,voidReason);
-				//grp=service.getHouseholdGroup((householdGroup1));
-				List<HouseholdMembership> householdsMem = service.getAllHouseholdMembershipsByGroup(grp);
-				map.addAttribute("hhmembers",householdsMem);
-			}
-			//voiding the entire house hold
-			/*else if(request.getParameter("voidMembersAll") !=null && StringUtils.hasText(householdgrpRef)){
-				
-				voidEntireHousehold(householdgrpRef,voidReason);
-			}*/
-			//if none of the above fails
-			else{
-				List<HouseholdMembership> householdsMem = service.getAllHouseholdMembershipsByGroup(grp);
-				map.addAttribute("hhmembers",householdsMem);
-				log.info("nothing to save");
-			}
-				
-	
+			 
+		}
+		// end of search members here
+		//start voiding selected members in households
+		else if(request.getParameter("voidMembers") !=null && StringUtils.hasText(marktext)){
+			voidRecords(marktext,voidReason);
+			//grp=service.getHouseholdGroup((householdGroup1));
+			List<HouseholdMembership> householdsMem = service.getAllHouseholdMembershipsByGroup(grp);
+			map.addAttribute("hhmembers",householdsMem);
+		}
+		else{
+			List<HouseholdMembership> householdsMem = service.getAllHouseholdMembershipsByGroup(grp);
+			map.addAttribute("hhmembers",householdsMem);
+			log.info("Nothing to save");
+		}
+		
 	}
+	
 	@Transactional
 	private String voidRecords(String voidList,String voidReason){
 		HouseholdService service = Context.getService(HouseholdService.class);

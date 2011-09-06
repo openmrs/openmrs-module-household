@@ -1,6 +1,6 @@
 <%@ include file="/WEB-INF/template/include.jsp"%>
 
-<openmrs:require privilege="View Household" otherwise="/login.htm"
+<openmrs:require privilege="Manage Household" otherwise="/login.htm"
 	redirect="/module/household/householdEncounterTypeList.list" />
 
 <%@ include file="/WEB-INF/template/header.jsp"%>
@@ -58,18 +58,18 @@
 			<td valign="top">
 				<table cellpadding="5" width="100%">
 					<tr>
-						<th>No</th>
-						<th>Name</th>
-						<th>Description</th>
-						<th>Action</th>
+						<th class="tbClass">No</th>
+						<th class="tbClass">Name</th>
+						<th class="tbClass">Description</th>
+						<th class="tbClass">Action</th>
 					</tr>
 					<c:forEach var="householdEnc" items="${householdEncTypes}" varStatus="encIndex" >
 						<form method="POST" name="${householdEnc.householdEncounterTypeId}">
 						<tr>
-							<td>${encIndex.index + 1}</td>
-							<td>${householdEnc.name}</td>
-							<td>${householdEnc.description}</td>
-							<td>
+							<td class="tdClass">${encIndex.index + 1}</td>
+							<td class="tdClass">${householdEnc.name}</td>
+							<td class="tdClass">${householdEnc.description}</td>
+							<td class="tdClass">
 								<input type="hidden" name="houseid" id="${householdEnc.householdEncounterTypeId}" value="${householdEnc.householdEncounterTypeId}" />
 								<input type="submit" value="Edit" />
 							</td>

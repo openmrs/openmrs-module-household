@@ -73,6 +73,14 @@ public interface HouseholdDAO {
 	public Household getHouseholdGroup(Integer id);
 	
 	/**
+	 * Get one HouseholdGroup record based on the HouseholdGroups id
+	 * 
+	 * @param id the HouseholdGroups householdIdentifier
+	 * @return HouseholdGroup that match the householdIdentifier
+	 */
+	public Household getHouseholdGroupByIdentifier(String householdIdentifier);
+	
+	/**
 	 * Get all HouseholdGroups records
 	 * 
 	 * @return all HouseholdGroups record in the system
@@ -94,6 +102,14 @@ public interface HouseholdDAO {
 	 * @return HouseholdMembership that match the id
 	 */
 	public HouseholdMembership getHouseholdMembership(Integer id);
+	
+	/**
+	 * Get one Household Membership record based on the HouseholdMembership householdUuid
+	 * 
+	 * @param householdUuid the HouseholdMembership householdUuid
+	 * @return HouseholdMembership that match the householdUuid
+	 */
+	public List<HouseholdMembership> getHouseholdMembershipByUuid(String householdUuid);
 	
 	/**
 	 * Get all Household Memberships records

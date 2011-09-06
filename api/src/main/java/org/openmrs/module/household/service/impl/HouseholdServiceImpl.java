@@ -103,6 +103,13 @@ public class HouseholdServiceImpl extends BaseOpenmrsService implements Househol
 	public Household getHouseholdGroup(Integer id) {
 		return householdDAO.getHouseholdGroup(id);
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.openmrs.module.household.service.HouseholdService#getHouseholdGroupByIdentifier(java.lang.String)
+	 */
+	public Household getHouseholdGroupByIdentifier(String householdIdentifier){
+		return householdDAO.getHouseholdGroupByIdentifier(householdIdentifier);
+	}
 
 	/* (non-Javadoc)
 	 * @see org.openmrs.module.household.service.HouseholdService#getAllHouseholdGroups()
@@ -126,6 +133,13 @@ public class HouseholdServiceImpl extends BaseOpenmrsService implements Househol
 	
 	public HouseholdMembership getHouseholdMembership(Integer id) {
 		return householdDAO.getHouseholdMembership(id);
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.openmrs.module.household.service.HouseholdService#getHouseholdMembershipByUuid(java.lang.String)
+	 */
+	public List<HouseholdMembership> getHouseholdMembershipByUuid(String householdUuid){
+		return householdDAO.getHouseholdMembershipByUuid(householdUuid);
 	}
 
 	/* (non-Javadoc)

@@ -8,16 +8,16 @@
 				Definitions/Groups
 			</a>
 		</li>
-		<li <c:if test='<%= request.getRequestURI().contains("householdRegistration") %>'>class="active"</c:if>>
-			<a href="${pageContext.request.contextPath}/module/household/householdRegistration.form">
-				Registration
+		<li <c:if test='<%= request.getRequestURI().contains("householdEncounterType") %>'>class="active"</c:if>>
+			<a href="${pageContext.request.contextPath}/module/household/householdEncounterTypeList.list">
+				Encounters
 			</a>
 		</li>
 	</openmrs:hasPrivilege>
 	<openmrs:hasPrivilege privilege="View Household">
-		<li <c:if test='<%= request.getRequestURI().contains("householdEncounterType") %>'>class="active"</c:if>>
-			<a href="${pageContext.request.contextPath}/module/household/householdEncounterTypeList.list">
-				Encounters
+		<li <c:if test='<%= request.getRequestURI().contains("householdRegistration") %>'>class="active"</c:if>>
+			<a href="${pageContext.request.contextPath}/module/household/householdRegistration.form">
+				Registration
 			</a>
 		</li>
 		

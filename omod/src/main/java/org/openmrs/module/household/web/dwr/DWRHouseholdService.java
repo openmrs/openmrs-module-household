@@ -15,6 +15,7 @@ import org.openmrs.module.household.model.HouseholdLocationEntry;
 import org.openmrs.module.household.model.HouseholdLocationLevel;
 import org.openmrs.module.household.model.HouseholdMembership;
 import org.openmrs.module.household.service.HouseholdService;
+import org.openmrs.module.household.util.HouseholdCheckDigit;
 
 /**
  * @author Ampath developers
@@ -147,6 +148,20 @@ public class DWRHouseholdService {
 					"," + householdsMem.get(i).getHouseholdMembershipMember().getBirthdate();
 		}
 		return strHousehold;
+	}
+	
+	public boolean getCheckDigit(String hhold){
+		try {
+			String []strHHold = hhold.split("-");
+			int x = HouseholdCheckDigit.CheckDigit(strHHold[0]);
+			log.info("\n ======" + strHHold[0] + "-" + strHHold[1]);
+			if(x == Integer.parseInt(strHHold[1]))
+				return true;
+			else
+				return false;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 }

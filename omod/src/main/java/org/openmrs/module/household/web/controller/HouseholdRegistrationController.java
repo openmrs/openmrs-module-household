@@ -23,6 +23,7 @@ import org.openmrs.module.household.model.Household;
 import org.openmrs.module.household.model.HouseholdDefinition;
 import org.openmrs.module.household.model.HouseholdMembership;
 import org.openmrs.module.household.service.HouseholdService;
+import org.openmrs.module.household.util.HouseholdCheckDigit;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.StringUtils;
@@ -150,7 +151,22 @@ public class HouseholdRegistrationController {
 		//save household group
 		hgrp = new Household();
 		hgrp.setHouseholdDef(hd);
+		log.info("\n Household NOT SAVED!!");
 		service.saveHouseholdGroup(hgrp);
+		log.info("\n Household SAVED!! =" + hgrp.getUuid());
+		//Edit the household identifier
+		String strSite = Context.getAdministrationService().getGlobalProperty("household.siteacronym");
+		String strIdent = strSite + hgrp.getId();
+		log.info("\n Household Identifier b4 check digit:  " + strIdent);
+		int checkDigit = HouseholdCheckDigit.CheckDigit(strIdent);
+		log.info("\n check digit:  " + checkDigit);
+		String hhPlusCheckDigit = strIdent + "-" + checkDigit;
+		
+		hgrp.setHouseholdIdentifier(hhPlusCheckDigit);
+		service.saveHouseholdGroup(hgrp);
+		
+		log.info("\n Household Identifier after update " + hgrp.getHouseholdIdentifier());
+
 		
 		String []strMem = householdMem.split(",");
 		
@@ -190,8 +206,9 @@ public class HouseholdRegistrationController {
 		}
 		
 		
+		
 		//save individually
-		return hd.getHouseholdDefinitionsCode() + ":" + hd.getId() + "-" + hgrp.getId();
+		return hgrp.getHouseholdIdentifier();
 	}
 	
 }

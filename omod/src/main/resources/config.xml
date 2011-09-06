@@ -67,14 +67,21 @@
 	</privilege>
     
     <!-- Global Properties -->
-	<!-- Global Properties -->
 	<globalProperty>
-	<property>household.enctype</property>
+		<property>household.enctype</property>
 		<defaultValue>0</defaultValue>
 		<description>
 			This value represent the CHW initial encounter
 		</description>
 	</globalProperty>
+	<globalProperty>
+		<property>household.siteacronym</property>
+		<defaultValue>H</defaultValue>
+		<description>
+			This value represent site that the module is currently installed. e.g. Turbo = TB
+		</description>
+	</globalProperty>
+	<!-- Global Properties -->
 	
 	<!-- Servlets -->
 	<!-- Servlets /-->
@@ -88,6 +95,7 @@
 				<include method="getHousehold"/>
 				<include method="getHouseholdMembers"/>
 				<include method="getHouseholdMembersPortlet"/>
+				<include method="getCheckDigit"/>
 			</create>
 		</allow>
 
@@ -99,6 +107,7 @@
 			DWRHouseholdService.getHousehold(String strHouseholdID);
 			DWRHouseholdService.getHouseholdMembers(String grpids);
 			DWRHouseholdService.getHouseholdMembersPortlet(String grpids);
+			DWRHouseholdService.getCheckDigit(String hhold);
 			]]>
 		</signatures>
 	</dwr>

@@ -21,9 +21,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class HouseholdIndexPersonController {
 	private static final Log log = LogFactory.getLog(HouseholdIndexPersonController.class);
-	Integer hshgrp=0;
-	Household grp=null;
-	HouseholdMembership grpId=null;
+	//Integer hshgrp=0;
+	//Household grp=null;
+	//HouseholdMembership grpId=null;
 	
 	@RequestMapping(method=RequestMethod.GET, value="module/household/householdIndexPerson")
 	public void preparePage(ModelMap map) {
@@ -38,23 +38,23 @@ public class HouseholdIndexPersonController {
 			@RequestParam(required=false, value="closeReason") String closeReason){
 		
 		HouseholdService service = Context.getService(HouseholdService.class);
+		Household grp=null;
 			
 		if(request.getParameter("findMembers") !=null && StringUtils.hasText(householdGroup)){
-			hshgrp=(Integer.parseInt( householdGroup));
-			log.info(hshgrp);
 			try{
-				//get all unvoided patients from the group
-				grp=service.getHouseholdGroup((hshgrp));
-				//getting the exactly group id
-				grpId=service.getHouseholdMembership(grp.getId());
-				//getting the list of all the unvoided members
+				
+				//voided=service.getAllHouseholdMemberships();
+				grp=service.getHouseholdGroupByIdentifier(householdGroup);
+				//householdMembershipMember
+				HouseholdMembership hm = service.getHouseholdMembership(grp.getId());
+				
 				List<HouseholdMembership> indexPerson=service.getHouseholdIndexByGroup(grp);
 				List<HouseholdMembership> householdsMembers = service.getAllNonVoidedHouseholdMembershipsByGroupNotIndex(grp);
 				//return the list that will be used on the viewer
 				Integer len=householdsMembers.size();
 				map.addAttribute("length",len);
 				map.addAttribute("hhmembers",householdsMembers);
-				map.addAttribute("HHgrpId",grpId);
+				map.addAttribute("HHgrpId",hm);
 				map.addAttribute("index",indexPerson);
 				
 			}
@@ -65,10 +65,7 @@ public class HouseholdIndexPersonController {
 		}
 		 if(request.getParameter("changeIndex") !=null && StringUtils.hasText(indexVal)){
 			
-			//call the function to void the current index person
-			//log.info("hahahahahahahhhahahhahaha   "+memberId);
-				
-				voidIndex(memberId);
+			 voidIndex(memberId);
 			//set the new index as well
 				
 			newIndex(indexVal);

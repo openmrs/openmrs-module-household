@@ -6,6 +6,7 @@ package org.openmrs.module.household.model;
 import java.util.Date;
 
 import org.openmrs.BaseOpenmrsData;
+import org.openmrs.PatientIdentifier;
 import org.openmrs.Person;
 
 

@@ -31,7 +31,7 @@
                                         <property name="target">
                                                 <bean class="org.openmrs.module.household.service.impl.HouseholdServiceImpl">
                                                         <property name="householdDAO">
-                                                                <bean class="org.openmrs.module.household.dao.hibernate.HibernateHouseholdDAO">
+                                                                <bean class="org.openmrs.module.household.dao.hibernate.HibernateHouseholdDAO" autowire="byType">
                                                                         <property name="sessionFactory"><ref bean="sessionFactory" /></property>
                                                                 </bean>
                                                         </property>

@@ -4,76 +4,73 @@
 <openmrs:require privilege="Manage Household" otherwise="/login.htm"
 	redirect="/module/household/householdIndexPerson.form" />
 	
-	<link href="${pageContext.request.contextPath}/moduleResources/household/css/tablestyles.css" type="text/css" rel="stylesheet" />
+	<%-- <link href="${pageContext.request.contextPath}/moduleResources/household/css/tablestyles.css" type="text/css" rel="stylesheet" /> --%>
 
 <%@ include file="/WEB-INF/template/header.jsp"%>
 <h3><spring:message code="household.householdIndexPerson.header"/></h3>
 <%@ include file="localHeader.jsp"%>
 <script type="text/javascript">
-function inputValidator() {
-	var errorDivElement = document.getElementById("errorDivEmpty");
-	var householdGroup = document.getElementById("householdGroup").value;
-	if (householdGroup == "") {
-		errorDivElement.style.display = '';
-		return false;
-	}else{
-		return true;
+	function inputValidator() {
+		var errorDivElement = document.getElementById("errorDivEmpty");
+		var householdGroup = document.getElementById("householdGroup").value;
+		if (householdGroup == "") {
+			document.getElementById("errorDivEmpty").innerHTML = "Empty Household";
+			errorDivElement.style.display = '';
+			return false;
+		}else{
+			isValidHouseholdIdentifier();
+		}
 	}
-}
-</script>
-<script type="text/javascript">
-function inputValidatorIndexSelect() {
-	var errorDivIndexSelect = document.getElementById("errorDivIndexSelect");
-	var indexVal = document.getElementById("indexVal").value;
-	if (indexVal == "") {
-		errorDivIndexSelect.style.display = '';
-		return false;
-	}else{
-		return true;
+	function fnRetCheckDigit(val){
+		alert("Hey:" + val);
+		if(val)
+			return true;
+		else{
+			document.getElementById("errorDivEmpty").innerHTML = "Invalid Household Identifier";
+			errorDivElement.style.display = '';
+			return false;
+		}
 	}
-}
-</script>
-<script type="text/javascript">
-function inputValidatorClosehouse() {
-	var errorDivClosehsld = document.getElementById("closehousehold");
-	var closersn = document.getElementById("closeReason").value;
-	if (closersn == "") {
-		errorDivClosehsld.style.display = '';
-		return false;
-	}else{
-		return true;
+	function isValidHouseholdIdentifier(){
+		var hhVal = document.getElementById("householdGroup").value;
+		var errorDivElement = document.getElementById("errorDivEmpty");
+		if (hhVal == "") {
+			document.getElementById("errorDivEmpty").innerHTML = "Empty Household";
+			errorDivElement.style.display = '';
+			return false;
+		}else{
+			DWRHouseholdService.getCheckDigit(hhVal,fnRetCheckDigit);
+		}
 	}
-}
-</script>
-<script type="text/javascript">
-
-function isNumberKey(evt)
-{
-   var error = document.getElementById("errorDiv");
-   var groupToSearch = document.getElementById("householdGroup");
-   var charCode = (evt.which) ? evt.which : event.keyCode;
-   if (charCode > 31 && (charCode < 48 || charCode > 57)){
-	   error.style.display='';
-      return false;
-   }
-      else{
-   return true;
-      }
-}
-
-</script>
-<script>
-<!-- Begin
-var index="";
-function getRadios(what){
-// get the index value
-j=what.index.length; //alert(j)
-	for (i=0; i<j; i++){
-		if(what.index[i].checked) var index = what.index[i].value
+	function inputValidatorIndexSelect() {
+		var errorDivIndexSelect = document.getElementById("errorDivIndexSelect");
+		var indexVal = document.getElementById("indexVal").value;
+		if (indexVal == "") {
+			errorDivIndexSelect.style.display = '';
+			return false;
+		}else{
+			return true;
+		}
 	}
-what.indexVal.value = (index)
-}
-// End -->
+	function inputValidatorClosehouse() {
+		var errorDivClosehsld = document.getElementById("closehousehold");
+		var closersn = document.getElementById("closeReason").value;
+		if (closersn == "") {
+			errorDivClosehsld.style.display = '';
+			return false;
+		}else{
+			return true;
+		}
+	}
+	var index="";
+	function getRadios(what){
+	// get the index value
+	j=what.index.length; //alert(j)
+		for (i=0; i<j; i++){
+			if(what.index[i].checked) var index = what.index[i].value
+		}
+	what.indexVal.value = (index)
+	}
 </script>
 
 <b class="boxHeader"><spring:message code="household.householdSearch.header"/></b>
@@ -81,15 +78,15 @@ what.indexVal.value = (index)
 
 	<a href="../../findPatient.htm">Register Individuals</a>&nbsp;|&nbsp;
 	<a href="householdSearch.form">Search for a Household</a>&nbsp;|&nbsp;
-	<a href="householdResume.form">Resume Care</a>&nbsp;|&nbsp;
-	<a href="householdIndexPerson.form">Change Household Head</a>
+	<a href="householdResume.form">Resume Household</a>&nbsp;|&nbsp;
+	<a href="householdIndexPerson.form">Change Index/Head</a>
 	
 	<form method="POST" name="checkedIndex">
 
 		<table border="0" cellpadding="0" cellspacing="0">
 		  <tr>
 		    <td><spring:message code="household.householdSearch.identifier" /></td>
-		    <td><input type="text" name="householdGroup" id="householdGroup"  onkeypress="return isNumberKey(event)" /></td>
+		    <td><input type="text" name="householdGroup" id="householdGroup"/></td>
 		    <td><input type="submit" name="findMembers" onClick="return inputValidator()" value="<spring:message code="household.householdSearch.header"/>"></td>
 		    <td>
 		     <div class="error" id="errorDivEmpty" style="display: none"><spring:message code="household.householdsearch.errorEmpty" /></div>
@@ -191,6 +188,5 @@ what.indexVal.value = (index)
 			</c:otherwise>
 			</c:choose>
 	</form>
-</div>		
-</form>
+</div>
 	

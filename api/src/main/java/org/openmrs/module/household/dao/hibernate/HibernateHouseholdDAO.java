@@ -104,7 +104,10 @@ public class HibernateHouseholdDAO implements HouseholdDAO {
 	 */
 	
 	public Household saveHouseholdGroup(Household householdGroups) {
-		sessionFactory.getCurrentSession().saveOrUpdate(householdGroups);
+		System.out.print("**********" + householdGroups.getUuid());
+		System.out.print("\n**********" + householdGroups.getHouseholdIdentifier());
+		sessionFactory.getCurrentSession().save(householdGroups);
+		
 		return householdGroups;
 	}
 
@@ -116,6 +119,21 @@ public class HibernateHouseholdDAO implements HouseholdDAO {
 	public Household getHouseholdGroup(Integer id) {
 		return (Household) sessionFactory.getCurrentSession().get(
 				Household.class, id);
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.openmrs.module.household.dao.HouseholdDAO#getHouseholdGroupByUuid(java.lang.Integer)
+	 */
+	public Household getHouseholdGroupByIdentifier(String householdIdentifier){
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Household.class).add(
+			    Expression.eq("householdIdentifier", householdIdentifier));
+			
+		@SuppressWarnings("unchecked")
+		List<Household> hhold = criteria.list();
+		if (null == hhold || hhold.isEmpty()) {
+			return null;
+		}
+		return hhold.get(0);
 	}
 
 
@@ -152,6 +170,17 @@ public class HibernateHouseholdDAO implements HouseholdDAO {
 		return (HouseholdMembership) sessionFactory.getCurrentSession().get(
 				HouseholdMembership.class, id);
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.openmrs.module.household.dao.HouseholdDAO#getHouseholdMembershipByUuid(java.lang.String)
+	 */
+	
+	@SuppressWarnings("unchecked")
+	public List<HouseholdMembership> getHouseholdMembershipByUuid(String householdUuid) {
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(HouseholdMembership.class).add(
+			    Expression.eq("householdMembershipGroups", householdUuid));
+		return criteria.list();
+	}
 
 
 	/* (non-Javadoc)
@@ -170,7 +199,6 @@ public class HibernateHouseholdDAO implements HouseholdDAO {
 	 * @see org.openmrs.module.household.dao.HouseholdDAO#getAllHouseholdMembershipsByID(int id)
 	 */
 	@SuppressWarnings("unchecked")
-	
 	public List<HouseholdMembership> getAllHouseholdMembershipsByGroup(Household grp) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(HouseholdMembership.class)
 					

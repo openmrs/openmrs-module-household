@@ -5,9 +5,8 @@
 	redirect="/module/household/householdSearch.form" />
 
 <%@ include file="/WEB-INF/template/header.jsp"%>
-<h3><spring:message code="household.householdsearch.title"/></h3>
+<h3><spring:message code="household.title"/></h3>
 <%@ include file="localHeader.jsp"%>
-
 
 <openmrs:htmlInclude file="/scripts/jquery/dataTables/js/jquery.dataTables.min.js" />
 <openmrs:htmlInclude file="/scripts/jquery-ui/js/jquery-ui.custom.min.js" />
@@ -18,43 +17,55 @@
 <link href="<openmrs:contextPath/>/scripts/jquery-ui/css/<spring:theme code='jqueryui.theme.name' />/jquery-ui.custom.css" type="text/css" rel="stylesheet" />
 <openmrs:htmlInclude file="/scripts/jquery/dataTables/css/dataTables_jui.css" />
 <link href="${pageContext.request.contextPath}/moduleResources/household/css/tablestyles.css" type="text/css" rel="stylesheet" />
+<openmrs:htmlInclude file="/dwr/interface/DWRHouseholdService.js"/>
 
 <script type="text/javascript">
-function inputValidator() {
-	var errorDivElement = document.getElementById("errorDivEmpty");
-	var householdGroup = document.getElementById("householdGroup").value;
-	if (householdGroup == "") {
-		errorDivElement.style.display = '';
-		return false;
-	}else{
-		return true;
+	function inputValidator() {
+		var errorDivElement = document.getElementById("errorDivEmpty");
+		var householdGroup = document.getElementById("householdGroup").value;
+		if (householdGroup == "") {
+			document.getElementById("errorDivEmpty").innerHTML = "Empty Household";
+			errorDivElement.style.display = '';
+			return false;
+		}else{
+			isValidHouseholdIdentifier();
+		}
 	}
-}
-
-function inputValidatorVoidReason() {
-	var errorDivVoidReason = document.getElementById("errorDivVoidReason");
-	var voidReason = document.getElementById("voidReason").value;
-	if (voidReason == "") {
-		errorDivVoidReason.style.display = '';
-		return false;
-	}else{
-		return true;
+	
+	function fnRetCheckDigit(val){
+		alert("Hey:" + val);
+		if(val)
+			return true;
+		else{
+			document.getElementById("errorDivEmpty").innerHTML = "Invalid Household Identifier";
+			errorDivElement.style.display = '';
+			return false;
+		}
 	}
-}
-
-function isNumberKey(evt){
-   var error = document.getElementById("errorDiv");
-   var groupToSearch = document.getElementById("householdGroup");
-   var charCode = (evt.which) ? evt.which : event.keyCode;
-   if (charCode > 31 && (charCode < 48 || charCode > 57)){
-	   error.style.display='';
-      return false;
-   }
-      else{
-   return true;
-      }
-}
-
+	
+	function inputValidatorVoidReason() {
+		var errorDivVoidReason = document.getElementById("errorDivVoidReason");
+		var voidReason = document.getElementById("voidReason").value;
+		if (voidReason == "") {
+			errorDivVoidReason.style.display = '';
+			return false;
+		}else{
+			return true;
+		}
+	}
+	
+	function isValidHouseholdIdentifier(){
+		var hhVal = document.getElementById("householdGroup").value;
+		var errorDivElement = document.getElementById("errorDivEmpty");
+		if (hhVal == "") {
+			document.getElementById("errorDivEmpty").innerHTML = "Empty Household";
+			errorDivElement.style.display = '';
+			return false;
+		}else{
+			DWRHouseholdService.getCheckDigit(hhVal,fnRetCheckDigit);
+		}
+	}
+	
 	function listMem(c,n,z) {
 		s=document.checked.marktext.value;
 		if (c.checked) {
@@ -76,11 +87,7 @@ function isNumberKey(evt){
 		
 		for (i = 0; i < field.length; i++){
 			field[i].checked = true ;
-			//for(j=0;j<field[i].length;j++){
-				//document.checked.marktext.value +=field[i].checked.value;
-				listMem(field.length);
-			//}
-		
+			listMem(field.length);
 			document.checked.voidMembers.disabled=false;
 		}
 	}
@@ -95,18 +102,19 @@ function isNumberKey(evt){
 
 <body onload="document.checked.voidMembers.disabled=true">
 <div id="dialog" title="Saved Information"></div>
-<b class="boxHeader"><spring:message code="household.householdSearch.header"/></b>
+
+<b class="boxHeader"><spring:message code="household.householdsearch.title"/></b>
 
 <div class="box">
 	<a href="../../findPatient.htm">Register Individuals</a>&nbsp;|&nbsp;
 	<a href="householdSearch.form">Search for a Household</a>&nbsp;|&nbsp;
-	<a href="householdResume.form">Resume Care</a>&nbsp;|&nbsp;
-	<a href="householdIndexPerson.form">Change Household Head</a><br />
+	<a href="householdResume.form">Resume Household</a>&nbsp;|&nbsp;
+	<a href="householdIndexPerson.form">Change Index/Head</a><br />
   	<form method="POST" name="checked">
 		<table border="0" cellpadding="0" cellspacing="0">
 		  <tr>
 		    <td><spring:message code="household.householdSearch.identifier" /></td>
-		    <td><input type="text" name="householdGroup" id="householdGroup" items="${hhmembers}"  onkeypress="return isNumberKey(event)" /></td>
+		    <td><input type="text" name="householdGroup" id="householdGroup" items="${hhmembers}" /></td>
 		    <td><input type="submit" name="findMembers" id="findMembers" onClick="return inputValidator()" value="<spring:message code="household.householdSearch.header"/>"></td>
 		    <div class="error" id="errorDiv" style="display: none"><spring:message code="household.householdsearch.errorNumbersOnly"/></div> 
 		    

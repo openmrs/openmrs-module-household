@@ -17,103 +17,97 @@
 <openmrs:htmlInclude file="/scripts/jquery/dataTables/js/jquery.dataTables.filteringDelay.js" />
 <link href="<openmrs:contextPath/>/scripts/jquery-ui/css/<spring:theme code='jqueryui.theme.name' />/jquery-ui.custom.css" type="text/css" rel="stylesheet" />
 <openmrs:htmlInclude file="/scripts/jquery/dataTables/css/dataTables_jui.css" />
+<openmrs:htmlInclude file="/dwr/interface/DWRHouseholdService.js"/>
 
 <script type="text/javascript">
-function inputValidator() {
-	var errorDivElement = document.getElementById("errorDivEmpty");
-	var householdGroup = document.getElementById("householdGroup").value;
-	if (householdGroup == "") {
-		errorDivElement.style.display = '';
-		return false;
-	}else{
-		return true;
+	function inputValidator() {
+		var errorDivElement = document.getElementById("errorDivEmpty");
+		var householdGroup = document.getElementById("householdGroup").value;
+		if (householdGroup == "") {
+			document.getElementById("errorDivEmpty").innerHTML = "Empty Household";
+			errorDivElement.style.display = '';
+			return false;
+		}else{
+			isValidHouseholdIdentifier();
+		}
 	}
-}
-</script>
-<script type="text/javascript">
-function inputValidatorResumeReason() {
-	var errorDivResumeReason = document.getElementById("errorDivResumeReason");
-	var ResumeReason = document.getElementById("resumeReason").value;
-	if (ResumeReason == "") {
-		errorDivResumeReason.style.display = '';
-		return false;
-	}else{
-		return true;
+	function fnRetCheckDigit(val){
+		alert("Hey:" + val);
+		if(val)
+			return true;
+		else{
+			document.getElementById("errorDivEmpty").innerHTML = "Invalid Household Identifier";
+			errorDivElement.style.display = '';
+			return false;
+		}
 	}
-}
-</script>
-<script type="text/javascript">
-
-function isNumberKey(evt)
-{
-   var error = document.getElementById("errorDiv");
-   var groupToSearch = document.getElementById("householdGroup");
-   var charCode = (evt.which) ? evt.which : event.keyCode;
-   if (charCode > 31 && (charCode < 48 || charCode > 57)){
-	   error.style.display='';
-      return false;
-   }
-      else{
-   return true;
-      }
-}
-
-</script>
-
-<script type="text/javascript">
-function list(c,n,z) {
-s=document.checked.marktext.value;
-if (c.checked) {
-if (s.indexOf(n)<0) s+=','+n;
-} else {
-s=document.checked.marktext.value.replace(','+n,'');
-}
-z=",";
-if (s.substring(2) == z) s=s.substring(2);
-
-document.checked.marktext.value=s;
-	if(document.checked.marktext.value=='')
-		document.checked.resumeMembers.disabled=true;
-	else
-		document.checked.resumeMembers.disabled=false;
-} 
-</script>
-<script type="text/javascript" charset="utf-8">
-			$j(document).ready(function() {
-				$j('#householdMembers').dataTable( {
-					"bAutoWidth": false,
-				    "bLengthChange":true,
-				    "bJQueryUI": false
-				    
-				    
-				} );
-			} );
-</script>
-<script type="text/javascript" charset="utf-8">
-		function checkAll(field)
-		{
-			
+	
+	function isValidHouseholdIdentifier(){
+		var hhVal = document.getElementById("householdGroup").value;
+		var errorDivElement = document.getElementById("errorDivEmpty");
+		if (hhVal == "") {
+			document.getElementById("errorDivEmpty").innerHTML = "Empty Household";
+			errorDivElement.style.display = '';
+			return false;
+		}else{
+			DWRHouseholdService.getCheckDigit(hhVal,fnRetCheckDigit);
+		}
+	}
+	
+	function inputValidatorResumeReason() {
+		var errorDivResumeReason = document.getElementById("errorDivResumeReason");
+		var ResumeReason = document.getElementById("resumeReason").value;
+		if (ResumeReason == "") {
+			errorDivResumeReason.style.display = '';
+			return false;
+		}else{
+			return true;
+		}
+	}
+	
+	function list(c,n,z) {
+		s=document.checked.marktext.value;
+		if (c.checked) {
+			if (s.indexOf(n)<0) s+=','+n;
+		} else {
+			s=document.checked.marktext.value.replace(','+n,'');
+		}
+		z=",";
+		if (s.substring(2) == z) s=s.substring(2);
+		
+		document.checked.marktext.value=s;
+		if(document.checked.marktext.value=='')
+			document.checked.resumeMembers.disabled=true;
+		else
+			document.checked.resumeMembers.disabled=false;
+	}
+	
+	/* $j(document).ready(function() {
+		$j('#householdMembers').dataTable( {
+			"bAutoWidth": false,
+		    "bLengthChange":true,
+		    "bJQueryUI": false
+		} );
+	} ); */
+	
+	function checkAll(field)
+	{
 		for (i = 0; i < field.length; i++){
 			field[i].checked = true ;
-			//for(j=0;j<field[i].length;j++){
-				//document.checked.marktext.value +=field[i].checked.value;
-				list(field.length);
-			//}
-		
-		document.checked.resumeMembers.disabled=false;
+			list(field.length);
+			document.checked.resumeMembers.disabled=false;
 		}		
 	}
 	
 	function uncheckAll(field)
 	{
-	for (i = 0; i < field.length; i++)
-		field[i].checked = false ;
-	document.checked.marktext.value="";
-	document.checked.resumeMembers.disabled=true;
+		for (i = 0; i < field.length; i++)
+			field[i].checked = false ;
+		document.checked.marktext.value="";
+		document.checked.resumeMembers.disabled=true;
 	}
-
-
 </script>
+
 <body onload="document.checked.resumeMembers.disabled=true">
 <b class="boxHeader"><spring:message code="household.householdSearch.header"/></b>
 
@@ -121,14 +115,14 @@ document.checked.marktext.value=s;
 
 	<a href="../../findPatient.htm">Register Individuals</a>&nbsp;|&nbsp;
 	<a href="householdSearch.form">Search for a Household</a>&nbsp;|&nbsp;
-	<a href="householdResume.form">Resume Care</a>&nbsp;|&nbsp;
-	<a href="householdIndexPerson.form">Change Household Head</a>
+	<a href="householdResume.form">Resume Household</a>&nbsp;|&nbsp;
+	<a href="householdIndexPerson.form">Change Index/Head</a>
 	
   	<form method="POST" name="checked">
 		<table border="0" cellpadding="0" cellspacing="0">
 		  <tr>
 		    <td><spring:message code="household.householdSearch.identifier" /></td>
-		    <td><input type="text" name="householdGroup" id="householdGroup" items="${hhmembers}"  onkeypress="return isNumberKey(event)" /></td>
+		    <td><input type="text" name="householdGroup" id="householdGroup" items="${hhmembers}" /></td>
 		    <td><input type="submit" name="findMembers" onClick="return inputValidator()" value="<spring:message code="household.householdSearch.header"/>"></td>
 		    <div class="error" id="errorDiv" style="display: none"><spring:message code="household.householdsearch.errorNumbersOnly"/></div> 
 		    
@@ -157,36 +151,32 @@ document.checked.marktext.value=s;
 		<input type="button" name="CheckAll" value="Check All" onClick="checkAll(document.checked.id)" />
 		<input type="button" name="UnCheckAll" value="Check All" onClick="uncheckAll(document.checked.id)" />
 						
-			<table border="0" id="householdMembers1" cellpadding="0" cellspacing="5">
+			<table border="0"id="mytable"" cellpadding="0" cellspacing="5">
 				<thead>
-				  		<tr>
-				  			<th>Resume?</th>
-				  			<th>Names</th>
-				  			<th>Gender</th>
-				  			<th>Birth Date</th>
-				  			<th>Head/Index</th>
-				  			<th>Start Date</th>
-				  			
-				  			
-				  			
-				  		</tr>
+			  		<tr>
+			  			<th class="tbClass">Resume?</th>
+			  			<th class="tbClass">Names</th>
+			  			<th class="tbClass">Gender</th>
+			  			<th class="tbClass">Birth Date</th>
+			  			<th class="tbClass">Head/Index</th>
+			  			<th class="tbClass">Start Date</th>
+			  		</tr>
 				 </thead>
 				 <tbody>	
-				  		<c:forEach var="householdMembers" items="${hhmembers}">
-				  		
+			  		<c:forEach var="householdMembers" items="${hhmembers}">
 				  		<tr>
-				  			<td><input type="checkbox" name="id" onclick="list(this,'${householdMembers.id}')"></td>
-				  			<td>${householdMembers.householdMembershipMember.names}</td>
-				   			<td align="center">${householdMembers.householdMembershipMember.gender}</td>
-				  			<td align="center">${fn:substring(householdMembers.householdMembershipMember.birthdate,0,10)}</td>
-				  			<td align="center">${householdMembers.householdMembershipHeadship}</td>
-				  			<td align="center">${fn:substring(householdMembers.startDate,0,10)}</td>
+				  			<td class="tdClass"><input type="checkbox" name="id" onclick="list(this,'${householdMembers.id}')"></td>
+				  			<td class="tdClass">${householdMembers.householdMembershipMember.names}</td>
+				   			<td class="tdClass" align="center">${householdMembers.householdMembershipMember.gender}</td>
+				  			<td class="tdClass" align="center">${fn:substring(householdMembers.householdMembershipMember.birthdate,0,10)}</td>
+				  			<td class="tdClass" align="center">${householdMembers.householdMembershipHeadship}</td>
+				  			<td class="tdClass" align="center">${fn:substring(householdMembers.startDate,0,10)}</td>
 				  			
 				  		</tr>
-				  		</c:forEach>
+			  		</c:forEach>
 				 </tbody> 		
 				</table>
-				<hr />
+				<!-- <hr /> -->
 				<table>
 					<tr>
 						<td>Date Resumed</td>

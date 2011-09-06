@@ -11,7 +11,7 @@
 <openmrs:htmlInclude file="/scripts/jquery/dataTables/css/dataTables_jui.css" />
 <openmrs:htmlInclude file="/scripts/jquery/dataTables/js/jquery.dataTables.filteringDelay.js" />
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="t" %>
-<%-- <link href="${pageContext.request.contextPath}/moduleResources/household/css/tablestyles.css" type="text/css" rel="stylesheet" /> --%>
+<link href="${pageContext.request.contextPath}/moduleResources/household/css/tablestyles.css" type="text/css" rel="stylesheet" />
 <script type="text/javascript">
 var strHH = "";
 
@@ -47,15 +47,15 @@ function toggle_visibility(hItemid) {
 
 
 <b class="boxHeader"><spring:message code="household.definitions.header"/></b>
-	
-	<table id="patientDetail" cellpadding="5" width="100%">
+<div class="box">
+	<table id="patientDetail" cellpadding="5" width="80%">
 		<thead>
 		<tr>
-			<th>No</th>
-			<th>Household</th>
-			<th>Start Date</th>
-			<th>End Date</th>
-			<th>Members</th>
+			<th class="tbClass">No</th>
+			<th class="tbClass">Household</th>
+			<th class="tbClass">Start Date</th>
+			<th class="tbClass">End Date</th>
+			<th class="tbClass">Members</th>
 		</tr>
 		</thead>
 		<!--<t:out value="${model.householdTypessize}"/>
@@ -63,18 +63,16 @@ function toggle_visibility(hItemid) {
 		<tbody>
 			<t:forEach var="household" items="${model.household}" varStatus="state">
 				<tr>
-								
-					<td><t:out value="${state.index + 1}"/></td>
-					<td><a href="module/household/householdSearch.form?grpids=${household.householdMembershipGroups.id}"> <t:out value="${household.householdMembershipGroups.householdDef.householdDefinitionsCode}"/>:<t:out value="${household.householdMembershipGroups.householdDef.id}"/>-<t:out value="${household.householdMembershipGroups.id}"/></a></td>
-					<td> <t:out value="${household.startDate}"/></td>
-					<td> <t:out value="${household.endDate}"/><input type="hidden" name="householdId" id="householdId" value="${household.householdMembershipGroups.id}"></td>
-					<td><a href="#" onclick="getMem(${household.householdMembershipGroups.id},foo);">View Members</a>
+					<td class="tdClass"><t:out value="${state.index + 1}"/></td>
+					<td class="tdClass"><a href="module/household/householdSearch.form?grpids=${household.householdMembershipGroups.id}"> <t:out value="${household.householdMembershipGroups.householdDef.householdDefinitionsCode}"/>:<t:out value="${household.householdMembershipGroups.householdDef.id}"/>-<t:out value="${household.householdMembershipGroups.id}"/></a></td>
+					<td class="tdClass"> <t:out value="${household.startDate}"/></td>
+					<td class="tdClass"> <t:out value="${household.endDate}"/><input type="hidden" name="householdId" id="householdId" value="${household.householdMembershipGroups.id}"></td>
+					<td class="tdClass"><a href="#" onclick="getMem(${household.householdMembershipGroups.id},foo);">View Members</a>
 					</td>
 				</tr>
 			</t:forEach>
 		</tbody>
 	</table>
-
-
-<div id="foo" style="display:none;">
+	<div id="foo" style="display:none;">
+	</div>
 </div>

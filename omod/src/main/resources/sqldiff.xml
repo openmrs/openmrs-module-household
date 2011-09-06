@@ -11,12 +11,14 @@
 			drop table `household_membership`, `household`,`household_definition`
 		</description>
 		<sql>
+			Drop TABLE IF EXISTS `household_obs`,`household_encounter`,`household_encounter_type`,`household_location`,`household_location_entry`,`household_location_level`,`household_attrib_value`,`household_attribute`;
 			Drop TABLE IF EXISTS `household_membership`, `household`,`household_definition`;
 			CREATE TABLE `household_definition` (
 				`household_definition_id` int(10) NOT NULL auto_increment,
 				`household_definition_code` varchar(45) NOT NULL,
 				`household_definition_codeinfull` varchar(255) DEFAULT NULL,
 				`household_definition_description` varchar(255) DEFAULT NULL,
+				`uuid` char(38) NOT NULL,
 				`program_id` int(11) DEFAULT '0',
 				`voided` smallint(6) NOT NULL DEFAULT '0',
 				`voided_by` int(11) DEFAULT NULL,
@@ -27,6 +29,7 @@
 				`date_changed` datetime DEFAULT NULL,
 				`changed_by` int(11) DEFAULT NULL,
 				PRIMARY KEY (`household_definition_id`),
+				UNIQUE KEY `hduuid` (`uuid`),
 				KEY `user_who_created_definitions` (`creator`),
 				KEY `user_who_changed_definitions` (`changed_by`),
 				KEY `user_who_voided_definitions` (`voided_by`),
@@ -35,19 +38,36 @@
 				CONSTRAINT `user_who_changed_definitions` FOREIGN KEY (`changed_by`) REFERENCES `users` (`user_id`),
 				CONSTRAINT `user_who_voided_definitions` FOREIGN KEY (`voided_by`) REFERENCES `users` (`user_id`),
 				CONSTRAINT `definition_program` FOREIGN KEY (`program_id`) REFERENCES `program` (`program_id`)
-			) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+			) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 			
 			CREATE TABLE `household` (
 				`household_group_id` int(10) NOT NULL auto_increment,
-				`household_def_id` int(10) NOT NULL DEFAULT '0',
+				`household_def_uuid` char(38) NOT NULL,
+				`household_identifier` varchar(50) DEFAULT NULL,
+				`uuid` char(38) NOT NULL,
+				`voided` smallint(6) NOT NULL DEFAULT '0',
+				`voided_by` int(11) DEFAULT NULL,
+				`date_voided` datetime DEFAULT NULL,
+				`void_reason` varchar(255) DEFAULT NULL,
+				`creator` int(11) NOT NULL DEFAULT '0',
+				`date_created` datetime DEFAULT NULL,
+				`date_changed` datetime DEFAULT NULL,
+				`changed_by` int(11) DEFAULT NULL,
 				PRIMARY KEY (`household_group_id`),
-				KEY `household_definition_idno` (`household_def_id`),
-				CONSTRAINT `household_definition_idno` FOREIGN KEY (`household_def_id`) REFERENCES `household_definition` (`household_definition_id`)
-			) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+				KEY `hhuuid` (`uuid`),
+				KEY `household_def_uuid` (`household_def_uuid`),
+				KEY `user_who_changed_household` (`changed_by`),
+				KEY `user_who_created_household` (`creator`),
+				KEY `user_who_voided_household` (`voided_by`),
+				CONSTRAINT `user_who_created_household` FOREIGN KEY (`creator`) REFERENCES `users` (`user_id`),
+                CONSTRAINT `user_who_changed_household` FOREIGN KEY (`changed_by`) REFERENCES `users` (`user_id`),
+                CONSTRAINT `user_who_voided_household` FOREIGN KEY (`voided_by`) REFERENCES `users` (`user_id`),
+                CONSTRAINT `household_def_uuid` FOREIGN KEY (`household_def_uuid`) REFERENCES `household_definition` (`uuid`)
+			) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 			
 			CREATE TABLE `household_membership` (
 	                `household_membership_id` int(10) NOT NULL auto_increment,
-	                `household_membership_group_id` int(10) NOT NULL,
+	                `household_uuid` char(38) NOT NULL,
 	                `household_membership_headship` smallint(6) NOT NULL DEFAULT '0',
 	                `household_membership_person_uuid` varchar(38) NOT NULL,
 	                `start_date` datetime DEFAULT NULL,
@@ -65,13 +85,13 @@
 	                KEY `user_who_changed_membership` (`changed_by`),
 	                KEY `user_who_voided_membership` (`voided_by`),
 	                KEY `household_membership_person_uuid` (`household_membership_person_uuid`),
-	                KEY `household_membership_group_id` (`household_membership_group_id`),
-	                CONSTRAINT `household_membership_group_id` FOREIGN KEY (`household_membership_group_id`) REFERENCES `household` (`household_group_id`),
+	                KEY `household_uuid` (`household_uuid`),
+	                CONSTRAINT `household_uuid` FOREIGN KEY (`household_uuid`) REFERENCES `household` (`uuid`),
 	                CONSTRAINT `user_who_created_membership` FOREIGN KEY (`creator`) REFERENCES `users` (`user_id`),
 	                CONSTRAINT `user_who_changed_membership` FOREIGN KEY (`changed_by`) REFERENCES `users` (`user_id`),
 	                CONSTRAINT `user_who_voided_membership` FOREIGN KEY (`voided_by`) REFERENCES `users` (`user_id`),
 	                CONSTRAINT `household_membership_person_uuid` FOREIGN KEY (`household_membership_person_uuid`) REFERENCES `person` (`uuid`)
-	        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	        ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 		</sql>
 	</diff>
 	<diff>
@@ -118,7 +138,7 @@
 			
 			CREATE TABLE `household_attrib_value` (
 				`household_attribute_id` int(11) NOT NULL AUTO_INCREMENT,
-				`household_group_id` int(11) NOT NULL DEFAULT '0',
+				`household_group_uuid` char(38) DEFAULT NULL,
 				`household_value` varchar(50) NOT NULL DEFAULT '',
 				`household_attribute_type_id` int(11) NOT NULL DEFAULT '0',
 				`creator` int(11) NOT NULL DEFAULT '0',
@@ -135,13 +155,13 @@
 				KEY `household_attribute_changer` (`changed_by`),
 				KEY `household_attribute_creator` (`creator`),
 				KEY `household_defines_attribute_type` (`household_attribute_type_id`),
-				KEY `identifies_household` (`household_group_id`),
+				KEY `identifies_household` (`household_group_uuid`),
 				KEY `household_attribute_voider` (`voided_by`),
 				CONSTRAINT `household_attribute_changer` FOREIGN KEY (`changed_by`) REFERENCES `users` (`user_id`),
 				CONSTRAINT `household_attribute_creator` FOREIGN KEY (`creator`) REFERENCES `users` (`user_id`),
 				CONSTRAINT `household_attribute_voider` FOREIGN KEY (`voided_by`) REFERENCES `users` (`user_id`),
 				CONSTRAINT `household_defines_attribute_type` FOREIGN KEY (`household_attribute_type_id`) REFERENCES `household_attribute` (`household_attribute_type_id`),
-				CONSTRAINT `identifies_household` FOREIGN KEY (`household_group_id`) REFERENCES `household` (`household_group_id`)
+				CONSTRAINT `identifies_household` FOREIGN KEY (`household_group_uuid`) REFERENCES `household` (`uuid`)
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 			
 			CREATE TABLE `household_location` (
@@ -176,8 +196,6 @@
 			  KEY `household_retired_status` (`retired`),
 			  KEY `user_who_created_household_location` (`creator`),
 			  KEY `user_who_retired_household_location` (`retired_by`),
-			  KEY `parent_household_location` (`parent_household_location`),
-			  CONSTRAINT `parent_household_location` FOREIGN KEY (`parent_household_location`) REFERENCES `household_location` (`household_location_id`),
 			  CONSTRAINT `user_who_created_household_location` FOREIGN KEY (`creator`) REFERENCES `users` (`user_id`),
 			  CONSTRAINT `user_who_retired_household_location` FOREIGN KEY (`retired_by`) REFERENCES `users` (`user_id`)
 			) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
@@ -237,9 +255,9 @@
 			CREATE TABLE `household_encounter` (
 			  `household_encounter_id` int(11) NOT NULL AUTO_INCREMENT,
 			  `household_encounter_type` int(11) NOT NULL,
-			  `household_group_id` int(11) NOT NULL DEFAULT '0',
+			  `household_group_uuid` char(38) NOT NULL,
 			  `provider_id` int(11) NOT NULL DEFAULT '0',
-			  `location_id` int(11) DEFAULT NULL,
+			  `location_uuid` char(38) DEFAULT NULL,
 			  `form_id` int(11) DEFAULT NULL,
 			  `household_encounter_datetime` datetime NOT NULL DEFAULT '0002-11-30 00:00:00',
 			  `creator` int(11) NOT NULL DEFAULT '0',
@@ -256,8 +274,8 @@
 			  KEY `household_encounter_ibfk_1` (`creator`),
 			  KEY `household_encounter_type_id` (`household_encounter_type`),
 			  KEY `household_encounter_form` (`form_id`),
-			  KEY `household_encounter_location` (`location_id`),
-			  KEY `household_encounter_patient` (`household_group_id`),
+			  KEY `household_encounter_location` (`location_uuid`),
+			  KEY `household_encounter_patient` (`household_group_uuid`),
 			  KEY `user_who_voided_household_encounter` (`voided_by`),
 			  KEY `household_encounter_changed_by` (`changed_by`),
 			  KEY `household_encounter_provider` (`provider_id`),
@@ -265,8 +283,8 @@
 			  CONSTRAINT `household_encounter_changed_by` FOREIGN KEY (`changed_by`) REFERENCES `users` (`user_id`),
 			  CONSTRAINT `household_encounter_form` FOREIGN KEY (`form_id`) REFERENCES `form` (`form_id`),
 			  CONSTRAINT `household_encounter_ibfk_1` FOREIGN KEY (`creator`) REFERENCES `users` (`user_id`),
-			  CONSTRAINT `household_encounter_location` FOREIGN KEY (`location_id`) REFERENCES `household_location` (`household_location_id`),
-			  CONSTRAINT `household_encounter_patient` FOREIGN KEY (`household_group_id`) REFERENCES `household` (`household_group_id`) ON UPDATE CASCADE,
+			  CONSTRAINT `household_encounter_location` FOREIGN KEY (`location_uuid`) REFERENCES `household_location` (`uuid`),
+			  CONSTRAINT `household_encounter_patient` FOREIGN KEY (`household_group_uuid`) REFERENCES `household` (`uuid`) ON UPDATE CASCADE,
 			  CONSTRAINT `household_encounter_provider` FOREIGN KEY (`provider_id`) REFERENCES `person` (`person_id`),
 			  CONSTRAINT `household_encounter_type_id` FOREIGN KEY (`household_encounter_type`) REFERENCES `household_encounter_type` (`household_encounter_type_id`),
 			  CONSTRAINT `user_who_voided_household_encounter` FOREIGN KEY (`voided_by`) REFERENCES `users` (`user_id`)
@@ -274,12 +292,12 @@
 			
 			CREATE TABLE `household_obs` (
 			  `household_obs_id` int(11) NOT NULL AUTO_INCREMENT,
-			  `household_group_id` int(11) NOT NULL,
+			  `household_group_uuid` char(38) NOT NULL,
 			  `concept_id` int(11) NOT NULL DEFAULT '0',
-			  `household_encounter_id` int(11) DEFAULT NULL,
+			  `household_encounter_uuid` char(38) DEFAULT NULL,
 			  `household_obs_datetime` datetime NOT NULL DEFAULT '0002-11-30 00:00:00',
-			  `location_id` int(11) DEFAULT NULL,
-			  `household_obs_group_id` int(11) DEFAULT NULL,
+			  `location_uuid` char(38) DEFAULT NULL,
+			  `household_obs_group_uuid` char(38) DEFAULT NULL,
 			  `value_group_id` int(11) DEFAULT NULL,
 			  `value_boolean` tinyint(4) DEFAULT NULL,
 			  `value_coded` int(11) DEFAULT NULL,
@@ -302,36 +320,24 @@
 			  UNIQUE KEY `household_obs_uuid_index` (`uuid`),
 			  KEY `household_obs_concept` (`concept_id`),
 			  KEY `household_obs_enterer` (`creator`),
-			  KEY `household_encounter_observations` (`household_encounter_id`),
-			  KEY `household_obs_location` (`location_id`),
-			  KEY `household_obs_grouping_id` (`household_obs_group_id`),
-			  KEY `household_group_obs` (`household_group_id`),
+			  KEY `household_encounter_observations` (`household_encounter_uuid`),
+			  KEY `household_obs_location` (`location_uuid`),
+			  KEY `household_obs_grouping_uuid` (`household_obs_group_uuid`),
+			  KEY `household_group_obs` (`household_group_uuid`),
 			  KEY `household_answer_concept` (`value_coded`),
 			  KEY `household_obs_name_of_coded_value` (`value_coded_name_id`),
 			  KEY `household_user_who_voided_obs` (`voided_by`),
 			  KEY `household_obs_datetime` (`household_obs_datetime`),
 			  CONSTRAINT `household_answer_concept` FOREIGN KEY (`value_coded`) REFERENCES `concept` (`concept_id`),
-			  CONSTRAINT `household_encounter_observations` FOREIGN KEY (`household_encounter_id`) REFERENCES `household_encounter` (`household_encounter_id`),
+			  CONSTRAINT `household_encounter_observations` FOREIGN KEY (`household_encounter_uuid`) REFERENCES `household_encounter` (`uuid`),
 			  CONSTRAINT `household_obs_concept` FOREIGN KEY (`concept_id`) REFERENCES `concept` (`concept_id`),
 			  CONSTRAINT `household_obs_enterer` FOREIGN KEY (`creator`) REFERENCES `users` (`user_id`),
-			  CONSTRAINT `household_obs_grouping_id` FOREIGN KEY (`household_obs_group_id`) REFERENCES `household_obs` (`household_obs_id`),
-			  CONSTRAINT `household_obs_location` FOREIGN KEY (`location_id`) REFERENCES `household_location` (`household_location_id`),
+			  CONSTRAINT `household_obs_grouping_uuid` FOREIGN KEY (`household_obs_group_uuid`) REFERENCES `household_obs` (`uuid`),
+			  CONSTRAINT `household_obs_location` FOREIGN KEY (`location_uuid`) REFERENCES `household_location` (`uuid`),
 			  CONSTRAINT `household_obs_name_of_coded_value` FOREIGN KEY (`value_coded_name_id`) REFERENCES `concept_name` (`concept_name_id`),
-			  CONSTRAINT `household_group_obs` FOREIGN KEY (`household_group_id`) REFERENCES `household` (`household_group_id`) ON UPDATE CASCADE,
+			  CONSTRAINT `household_group_obs` FOREIGN KEY (`household_group_uuid`) REFERENCES `household` (`uuid`) ON UPDATE CASCADE,
 			  CONSTRAINT `household_user_who_voided_obs` FOREIGN KEY (`voided_by`) REFERENCES `users` (`user_id`)
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-		</sql>
-	</diff>
-	<diff>
-		<version>1.0.2</version>
-		<author>Jonah S. Mwogi</author>
-		<date>August 29, 2011</date>
-		<description>
-			Modify table `household` to use uuid
-		</description>
-		<sql>
-			ALTER TABLE `household` ADD COLUMN `uuid` char(38) DEFAULT NULL; 
-			UPDATE `household` SET uuid = UUID();
 		</sql>
 	</diff>
 </sqldiff>

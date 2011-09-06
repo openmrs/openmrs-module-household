@@ -73,7 +73,7 @@
 						<th class="tbClass">Household Code</th>
 						<th class="tbClass">Household Code In Full</th>
 						<th class="tbClass">Household Description</th>
-						<th>Action</th>
+						<th class="tbClass">Action</th>
 					</tr>
 					<c:forEach var="household" items="${householdsTypes}">
 						<form method="POST" name="${household.id}">
