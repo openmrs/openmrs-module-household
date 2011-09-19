@@ -962,9 +962,9 @@ public class HouseholdServiceImpl extends BaseOpenmrsService implements Househol
 	 * @see org.openmrs.module.household.service.HouseholdEncounterService#getAllHouseholdEncountersByHouseholdId(java.lang.Integer)
 	 */
 	
-	public List<HouseholdEncounter> getAllHouseholdEncountersByHouseholdId(
-			Integer id) {
-		return householdDAO.getAllHouseholdEncountersByHouseholdId(id);
+	public List<HouseholdEncounter> getAllHouseholdEncountersByHouseholdUuid(
+			Household household) {
+		return householdDAO.getEncountersByHouseholdUuid(household.getUuid());
 	}
 
 	/* (non-Javadoc)

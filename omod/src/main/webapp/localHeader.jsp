@@ -8,11 +8,6 @@
 				Definitions/Groups
 			</a>
 		</li>
-		<li <c:if test='<%= request.getRequestURI().contains("householdEncounterType") %>'>class="active"</c:if>>
-			<a href="${pageContext.request.contextPath}/module/household/householdEncounterTypeList.list">
-				Encounters
-			</a>
-		</li>
 	</openmrs:hasPrivilege>
 	<openmrs:hasPrivilege privilege="View Household">
 		<li <c:if test='<%= request.getRequestURI().contains("householdRegistration") %>'>class="active"</c:if>>
@@ -26,10 +21,11 @@
 			 Upload Sites
 			</a>
 		</li> --%>
-		
-		<li <c:if test='<%= request.getRequestURI().contains("householdCHWInitial") %>'>class="active"</c:if>>
-			<a href="${pageContext.request.contextPath}/module/household/householdCHWInitial.form">
-			 CHW Initial Encounter
+	</openmrs:hasPrivilege>
+	<openmrs:hasPrivilege privilege="Manage Household">
+		<li <c:if test='<%= request.getRequestURI().contains("householdEncounterType") %>'>class="active"</c:if>>
+			<a href="${pageContext.request.contextPath}/module/household/householdEncounterTypeList.list">
+				Encounters
 			</a>
 		</li>
 	</openmrs:hasPrivilege>
@@ -47,4 +43,11 @@
 			</a>
 		</li>
 	</openmrs:hasPrivilege>	
+	<openmrs:hasPrivilege privilege="View Household">
+		<li <c:if test='<%= request.getRequestURI().contains("householdCHWInitial") %>'>class="active"</c:if>>
+			<a href="${pageContext.request.contextPath}/module/household/householdCHWInitial.form">
+			 CHW Initial Encounter
+			</a>
+		</li>
+	</openmrs:hasPrivilege>
 </ul>

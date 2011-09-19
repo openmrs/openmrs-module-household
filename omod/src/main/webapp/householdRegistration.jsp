@@ -28,7 +28,8 @@ function inputValidator() {
 	var errorDivElement = document.getElementById("errorDiv");
 	var indexPerson = document.getElementById("hiddenIndex").value;
 	var listToSave = document.getElementById("hiddenbox").value;
-	if ((indexPerson == "" )||(listToSave == "" )) {
+	var startDT = document.getElementById("startDate").value;
+	if ((indexPerson == "" )||(listToSave == "" )||(startDT == "" )) {
 		errorDivElement.style.display = '';
 		return false;
 	}else{
@@ -99,7 +100,7 @@ function inputValidator() {
 									</tr>
 									<tr>
 										<td>Start Date</td>	
-										<td><input type="text" name="startDate" onClick="showCalendar(this)" /></td>
+										<td><input type="text" name="startDate" id="startDate" onClick="showCalendar(this)" /></td>
 									</tr>
 									<tr>
 										<td colspan="2">

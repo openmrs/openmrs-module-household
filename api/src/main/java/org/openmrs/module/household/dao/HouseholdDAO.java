@@ -521,7 +521,7 @@ public interface HouseholdDAO {
 	 * @return all encounters for the given household identifer
 	 * @throws DAOException
 	 */
-	public List<HouseholdEncounter> getEncountersByHouseholdId(Integer householdId) throws DAOException;
+	public List<HouseholdEncounter> getEncountersByHouseholdUuid(String householdUuid) throws DAOException;
 	
 	/**
 	 * Get all HouseholdEncounter records

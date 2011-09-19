@@ -140,12 +140,12 @@
 			<table border="0" id="householdMembers" cellpadding="0" cellspacing="5">
 				<thead>
 				  		<tr>
-				  			<th>Index?</th>
-				  			<th>Names</th>
-				  			<th>Gender</th>
-				  			<th>Birth Date</th>
-				  			<th>Head/Index</th>
-				  			<th>Start Date</th>
+				  			<th class="tbClass">Index?</th>
+				  			<th class="tbClass">Names</th>
+				  			<th class="tbClass">Gender</th>
+				  			<th class="tbClass">Birth Date</th>
+				  			<th class="tbClass">Head/Index</th>
+				  			<th class="tbClass">Start Date</th>
 				  			
 				  			
 				  			
@@ -160,14 +160,14 @@
 				  		
 				  		<tr>
 				  			
-				  			<td onClick='getRadios(document.checkedIndex)'>
+				  			<td class="tdClass" onClick='getRadios(document.checkedIndex)'>
 				  			<input type="radio" name="index" value="${householdMembers.id}">
 				  			</td>
-				  			<td>${fn:substring(householdMembers.householdMembershipMember.names,1,25)}</td>
-				   			<td align="center">${householdMembers.householdMembershipMember.gender}</td>
-				  			<td align="center">${fn:substring(householdMembers.householdMembershipMember.birthdate,0,10)}</td>
-				  			<td align="center">${householdMembers.householdMembershipHeadship}</td>
-				  			<td align="center">${fn:substring(householdMembers.startDate,0,10)}</td>
+				  			<td class="tdClass">${fn:substring(householdMembers.householdMembershipMember.names,1,25)}</td>
+				   			<td class="tdClass" align="center">${householdMembers.householdMembershipMember.gender}</td>
+				  			<td class="tdClass" align="center">${fn:substring(householdMembers.householdMembershipMember.birthdate,0,10)}</td>
+				  			<td class="tdClass" align="center">${householdMembers.householdMembershipHeadship}</td>
+				  			<td class="tdClass" align="center">${fn:substring(householdMembers.startDate,0,10)}</td>
 				  			
 				  		</tr>
 				  		</c:forEach>

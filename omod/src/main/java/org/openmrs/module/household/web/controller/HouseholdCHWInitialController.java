@@ -91,11 +91,12 @@ public class HouseholdCHWInitialController {
 		householdLocation.setCityLocation(location);
 		householdLocation.setCitySubLocation(subLocation);
 		householdLocation.setCityVillage(village);
+		householdLocation.setName(village);
 		
 		service.saveHouseholdLocation(householdLocation);
 		
 		encounterType = service.getHouseholdEncounterType(x);
-		householdGroups = service.getHouseholdGroup(Integer.parseInt(household));
+		householdGroups = service.getHouseholdGroupByIdentifier(household);
 		
 		encounter.setHouseholdEncounterType(encounterType);
 		encounter.setHouseholdEncounterDatetime(dateHelper(visitDate) );
@@ -296,15 +297,9 @@ public class HouseholdCHWInitialController {
 		}
 		for (HouseholdObs ob : obs){
 			ob.setHouseholdEncounter(encounter);
-			//try {
-				service.saveHouseholdObs(ob, "msg");
-				httpSession.setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Observations Saved Successfully");
-				log.info("\n ....NO...:" + ob.getHouseholdEncounter().getId());
-				
-			/*} catch (Exception e) {
-				// TODO: handle exception
-				log.info("ERR_Here");
-			}*/
+			service.saveHouseholdObs(ob, "msg");
+			httpSession.setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Observations Saved Successfully");
+			log.info("\n ....NO...:" + ob.getHouseholdEncounter().getId());
 		}
 	}
 	

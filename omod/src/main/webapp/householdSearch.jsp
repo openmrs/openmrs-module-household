@@ -145,12 +145,12 @@
 			<table border="0" id="householdMembers1" cellpadding="0" cellspacing="5">
 				<thead>
 				  		<tr>
-				  			<th>Void?</th>
-				  			<th>Names</th>
-				  			<th>Gender</th>
-				  			<th>Birth Date</th>
-				  			<th>Head/Index</th>
-				  			<th>Start Date</th>
+				  			<th class="tbClass">Void?</th>
+				  			<th class="tbClass">Names</th>
+				  			<th class="tbClass">Gender</th>
+				  			<th class="tbClass">Birth Date</th>
+				  			<th class="tbClass">Head/Index</th>
+				  			<th class="tbClass">Start Date</th>
 				  			
 				  			
 				  			
@@ -160,12 +160,12 @@
 				  		<c:forEach var="householdMembers" items="${hhmembers}">
 				  		
 				  		<tr>
-				  			<td><input type="checkbox" name="id" onclick="listMem(this,'${householdMembers.id}')"></td>
-				  			<td>${householdMembers.householdMembershipMember.names}</td>
-				   			<td align="center">${householdMembers.householdMembershipMember.gender}</td>
-				  			<td align="center">${fn:substring(householdMembers.householdMembershipMember.birthdate,0,10)}</td>
-				  			<td align="center">${householdMembers.householdMembershipHeadship}</td>
-				  			<td align="center">${fn:substring(householdMembers.startDate,0,10)}</td>
+				  			<td class="tdClass"><input type="checkbox" name="id" onclick="listMem(this,'${householdMembers.id}')"></td>
+				  			<td class="tdClass">${householdMembers.householdMembershipMember.names}</td>
+				   			<td class="tdClass" align="center">${householdMembers.householdMembershipMember.gender}</td>
+				  			<td class="tdClass" align="center">${fn:substring(householdMembers.householdMembershipMember.birthdate,0,10)}</td>
+				  			<td class="tdClass" align="center">${householdMembers.householdMembershipHeadship}</td>
+				  			<td class="tdClass" align="center">${fn:substring(householdMembers.startDate,0,10)}</td>
 				  			
 				  		</tr>
 				  		</c:forEach>

@@ -11,9 +11,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.household.model.Household;
+import org.openmrs.module.household.model.HouseholdEncounter;
 import org.openmrs.module.household.model.HouseholdLocationEntry;
 import org.openmrs.module.household.model.HouseholdLocationLevel;
 import org.openmrs.module.household.model.HouseholdMembership;
+import org.openmrs.module.household.model.HouseholdObs;
 import org.openmrs.module.household.service.HouseholdService;
 import org.openmrs.module.household.util.HouseholdCheckDigit;
 
@@ -100,7 +102,7 @@ public class DWRHouseholdService {
 	public String getHousehold(String strHh) {
 		HouseholdService service = Context.getService(HouseholdService.class);
 		Household hh = new Household();
-		hh = service.getHouseholdGroup(Integer.parseInt(strHh));
+		hh = service.getHouseholdGroupByIdentifier(strHh);
 		List<HouseholdMembership> hm = service.getAllHouseholdMembershipsByGroup(hh);
 		
 		String strHousehold = null;
@@ -116,19 +118,31 @@ public class DWRHouseholdService {
 				
 				strHousehold = householdMembership.getHouseholdMembershipMember().getNames() +
 					"," +
-					householdMembership.getHouseholdMembershipMember().getAddresses();
+					householdMembership.getHouseholdMembershipMember().getAttribute(10);//"Contact Phone Number"
 			}
 		}
 		
 		return strHousehold;
 	}
 	
-	public List<HouseholdMembership> getHouseholdMembers(String grpids){
+	public String getHouseholdEncounters(String encUuid){
 		HouseholdService service = Context.getService(HouseholdService.class);
 		Context.clearSession();
-		Household grp=service.getHouseholdGroup(Integer.parseInt(grpids));
-		List<HouseholdMembership> householdsMem = service.getAllHouseholdMembershipsByGroup(grp);
-		return householdsMem;
+		HouseholdEncounter he = service.getHouseholdEncounterByUUID(encUuid);
+		@SuppressWarnings("unchecked")
+		List<HouseholdObs> obsList = (List<HouseholdObs>) he.getAllHouseholdObs();
+		
+		String toRet = "";
+		for (int i=0; i<obsList.size(); i++) {
+			if(StringUtils.isEmpty(toRet))
+				toRet="";
+			else
+				toRet+=",";
+			toRet += obsList.get(i).getConcept().getDisplayString() +
+			"," + obsList.get(i).getConcept().getAnswers(false);
+		}
+		
+		return toRet;
 	}
 	
 	public String getHouseholdMembersPortlet(String grpids){
@@ -143,7 +157,7 @@ public class DWRHouseholdService {
 				strHousehold="";
 			else
 				strHousehold+=",";
-			strHousehold += householdsMem.get(i).getHouseholdMembershipMember().getNames() +
+			strHousehold += householdsMem.get(i).getHouseholdMembershipMember().getPersonName() +
 					"," + householdsMem.get(i).getHouseholdMembershipMember().getGender() +
 					"," + householdsMem.get(i).getHouseholdMembershipMember().getBirthdate();
 		}

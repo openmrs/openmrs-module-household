@@ -20,11 +20,11 @@ import org.openmrs.User;
  */
 public class HouseholdEncounter extends BaseOpenmrsData {
 
-	private Integer encounterId;
+	private Integer householdEncounterId;
 	
-	private Date encounterDatetime;
+	private Date householdEncounterDatetime;
 	
-	private Household householdGroups;
+	//private Household householdGroups;
 	
 	private Household householdGroupId;
 	
@@ -48,8 +48,8 @@ public class HouseholdEncounter extends BaseOpenmrsData {
 	 * @param encounterId
 	 * @should set encounter id
 	 */
-	public HouseholdEncounter(Integer encounterId) {
-		this.encounterId = encounterId;
+	public HouseholdEncounter(Integer householdEncounterId) {
+		this.householdEncounterId = householdEncounterId;
 	}
 	
 	/**
@@ -97,28 +97,29 @@ public class HouseholdEncounter extends BaseOpenmrsData {
 	 * @return Returns the encounterDatetime.
 	 */
 	public Date getHouseholdEncounterDatetime() {
-		return encounterDatetime;
+		return householdEncounterDatetime;
 	}
 	
 	/**
 	 * @param encounterDatetime The encounterDatetime to set.
 	 */
 	public void setHouseholdEncounterDatetime(Date encounterDatetime) {
-		this.encounterDatetime = encounterDatetime;
+		this.householdEncounterDatetime = encounterDatetime;
 	}
 	
 	/**
 	 * @return Returns the encounterId.
 	 */
 	public Integer getHouseholdEncounterId() {
-		return encounterId;
+		return householdEncounterId;
 	}
 	
 	/**
 	 * @param encounterId The encounterId to set.
+	 *
 	 */
 	public void setHouseholdEncounterId(Integer encounterId) {
-		this.encounterId = encounterId;
+		this.householdEncounterId = encounterId;
 	}
 	
 	/**
@@ -288,7 +289,7 @@ public class HouseholdEncounter extends BaseOpenmrsData {
 			if (observation.getHouseholdObsDatetime() == null)
 				observation.setHouseholdObsDatetime(getHouseholdEncounterDatetime());
 			if (observation.getHouseholdGroups() == null)
-				observation.setHouseholdGroups(getHouseholdGroups());
+				observation.setHouseholdGroups(getHouseholdGroupId());
 			if (observation.getHouseholdLocation() == null)
 				observation.setHouseholdLocation(getHouseholdLocation());
 			householdObs.add(observation);
@@ -310,17 +311,17 @@ public class HouseholdEncounter extends BaseOpenmrsData {
 	
 	/**
 	 * @return Returns the householdGroups.
-	 */
+	 *//*
 	public Household getHouseholdGroups() {
 		return householdGroups;
 	}
 	
-	/**
+	*//**
 	 * @param householdGroups The householdGroups to set.
-	 */
+	 *//*
 	public void setHouseholdGroups(Household householdGroups) {
 		this.householdGroups = householdGroups;
-	}
+	}*/
 	
 	/**
 	 * @return the householdGroupId
@@ -380,11 +381,11 @@ public class HouseholdEncounter extends BaseOpenmrsData {
 	@Override
 	public String toString() {
 		String ret = "";
-		ret += encounterId == null ? "(no ID) " : encounterId.toString() + " ";
+		ret += householdEncounterId == null ? "(no ID) " : householdEncounterId.toString() + " ";
 		ret += this.getHouseholdEncounterDatetime() == null ? "(no Date) " : this.getHouseholdEncounterDatetime().toString() + " ";
 		ret += this.getHouseholdEncounterType() == null ? "(no Type) " : this.getHouseholdEncounterType().getName() + " ";
 		ret += this.getHouseholdLocation() == null ? "(no HouseholdLocation) " : this.getHouseholdLocation().getName() + " ";
-		ret += this.getHouseholdGroups() == null ? "(no Household Groups) " : this.getHouseholdGroups().getId().toString() + " ";
+		ret += this.getHouseholdGroupId() == null ? "(no Household Groups) " : this.getHouseholdGroupId().getId().toString() + " ";
 		ret += this.getForm() == null ? "(no Form) " : this.getForm().getName() + " ";
 		ret += this.getHouseholdObsAtTopLevel(false) == null ? "(no HouseholdObss) " : "num HouseholdObs: " + this.getHouseholdObsAtTopLevel(false) + " ";
 		return "Household Encounter: [" + ret + "]";

@@ -756,7 +756,7 @@ public interface HouseholdService extends OpenmrsService{
 	 * @param HouseholdEncounter householdEncounter object to be saved
 	 * @return saved HouseholdEncounter object
 	 */
-	@Authorized("Manage Encounters")
+	@Authorized("Manage Household Encounters")
 	public HouseholdEncounter saveHouseholdEncounter(HouseholdEncounter householdEncounter);
 	
 	/**
@@ -795,7 +795,7 @@ public interface HouseholdService extends OpenmrsService{
 	 */
 	@Transactional(readOnly = true)
 	@Authorized("View Household")
-	public List<HouseholdEncounter> getAllHouseholdEncountersByHouseholdId(Integer id);
+	public List<HouseholdEncounter> getAllHouseholdEncountersByHouseholdUuid(Household household);
 	
 	/**
 	 * Get all HouseholdEncounter records
@@ -844,7 +844,7 @@ public interface HouseholdService extends OpenmrsService{
 	 * @should cascade to orders
 	 * @should throw error with null reason parameter
 	 */
-	@Authorized("Manage Encounters")
+	@Authorized("Manage Household Encounters")
 	public HouseholdEncounter voidHouseholdEncounter(HouseholdEncounter householdEncounter, String reason);
 	
 	/**
@@ -855,7 +855,7 @@ public interface HouseholdService extends OpenmrsService{
 	 * @should cascade unvoid to orders
 	 * @should unvoid and unmark all attributes
 	 */
-	@Authorized("Manage Encounters")
+	@Authorized("Manage Household Encounters")
 	public HouseholdEncounter unvoidHouseholdEncounter(HouseholdEncounter householdEncounter) throws APIException;
 	
 	/**
@@ -865,7 +865,7 @@ public interface HouseholdService extends OpenmrsService{
 	 * @param encounter encounter object to be purged
 	 * @should purgeEncounter
 	 */
-	@Authorized("Manage Encounters")
+	@Authorized("Manage Household Encounters")
 	public void purgeHouseholdEncounter(HouseholdEncounter householdEncounter) throws APIException;
 	
 	/**
@@ -876,7 +876,7 @@ public interface HouseholdService extends OpenmrsService{
 	 * @param cascade Purge any related observations as well?
 	 * @should cascade purge to obs and orders
 	 */
-	@Authorized("Manage Encounters")
+	@Authorized("Manage Household Encounters")
 	public void purgeHouseholdEncounter(HouseholdEncounter householdEncounter, boolean cascade) throws APIException;
 	
 	
@@ -892,7 +892,7 @@ public interface HouseholdService extends OpenmrsService{
 	 * @should not overwrite date created
 	 * @should update an existing encounter type name
 	 */
-	@Authorized("Manage Encounters")
+	@Authorized("Manage Household Encounters")
 	public HouseholdEncounterType saveHouseholdEncounterType(HouseholdEncounterType encounterType);
 	
 	/**
@@ -970,7 +970,7 @@ public interface HouseholdService extends OpenmrsService{
 	 * @should retire type and set attributes
 	 * @should throw error if given null reason parameter
 	 */
-	@Authorized("Manage Encounters")
+	@Authorized("Manage Household Encounters")
 	public HouseholdEncounterType retireHouseholdEncounterType(HouseholdEncounterType encounterType, String reason) throws APIException;
 	
 	/**
@@ -981,7 +981,7 @@ public interface HouseholdService extends OpenmrsService{
 	 * @throws APIException
 	 * @should unretire type and unmark attributes
 	 */
-	@Authorized("Manage Encounters")
+	@Authorized("Manage Household Encounters")
 	public HouseholdEncounterType unretireEncounterType(HouseholdEncounterType encounterType) throws APIException;
 	
 	/**
@@ -991,7 +991,7 @@ public interface HouseholdService extends OpenmrsService{
 	 * @throws APIException
 	 * @should purge type
 	 */
-	@Authorized("Manage Encounters")
+	@Authorized("Manage Household Encounters")
 	public void purgeHouseholdEncounterType(HouseholdEncounterType encounterType) throws APIException;
 	
 	/**

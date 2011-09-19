@@ -42,7 +42,7 @@
 	</privilege>
 	
 	<privilege>
-	    <name>Manage Encounters</name>
+	    <name>Manage Household Encounters</name>
 	    <description>This is privilege for user who can save or delete or modify a household encounters</description>
 	</privilege>
 	
@@ -89,11 +89,10 @@
 	<dwr>
 		<allow>
 			<create creator="new" javascript="DWRHouseholdService">
-				<param name="class" value="@MODULE_PACKAGE@.@MODULE_ID@.web.dwr.DWRHouseholdService"/>
+				<param name="class" value="@MODULE_PACKAGE@.web.dwr.DWRHouseholdService"/>
 				<include method="getSubLocations"/>
 				<include method="getVillage"/>
 				<include method="getHousehold"/>
-				<include method="getHouseholdMembers"/>
 				<include method="getHouseholdMembersPortlet"/>
 				<include method="getCheckDigit"/>
 			</create>
@@ -105,7 +104,7 @@
 			DWRHouseholdService.getSubLocations(String strLoc);
 			DWRHouseholdService.getVillage(String strSubLoc, String strLoc);
 			DWRHouseholdService.getHousehold(String strHouseholdID);
-			DWRHouseholdService.getHouseholdMembers(String grpids);
+			<!-- DWRHouseholdService.getHouseholdMembers(String grpids); -->
 			DWRHouseholdService.getHouseholdMembersPortlet(String grpids);
 			DWRHouseholdService.getCheckDigit(String hhold);
 			]]>

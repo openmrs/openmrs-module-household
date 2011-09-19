@@ -56,18 +56,7 @@
 	//Household
 	function getHouseH(household){
 		var valHousehold = household.value;
-		var anum=/(^\d+$)|(^\d+\.\d+$)/
-		if (anum.test(valHousehold))
-			DWRHouseholdService.getHousehold(valHousehold,postDetails);
-		else{
-			try{
-				var strHou = new Array();
-				strHou = valHousehold.split("-");
-				DWRHouseholdService.getHousehold(strHou[1],postDetails);
-			}catch(err){
-				alert("In-Valid Household!");
-			}
-		}
+		DWRHouseholdService.getHousehold(valHousehold,postDetails);
 	}
 	
 	function postDetails(householdMem){
@@ -86,7 +75,7 @@
 		var errorDivElement = document.getElementById("errorDiv");
 		var revisitItems = document.getElementById("revisitItems").value;
 		var returnVisitDate = document.getElementById("returnVisitDate").value;
-		var latrineType = document.getElementById("latrineType").value;
+		//var latrineType = document.getElementById("latrineType").value;
 		var waterTreatMethod = document.getElementById("waterTreatMethod").value;
 		var waterSources = document.getElementById("waterSources").value;
 		var noOfBedNets = document.getElementById("noOfBedNets").value;
@@ -102,7 +91,7 @@
 			x="has";
 		}else
 			document.getElementById("here11").style.display = 'none';
-		if(returnVisitDate==""){
+		/* if(returnVisitDate==""){
 			document.getElementById("here10").style.display = '';
 			x="has";
 		}else
@@ -111,7 +100,7 @@
 			document.getElementById("here9").style.display = '';
 			x="has";
 		}else
-			document.getElementById("here9").style.display = 'none';
+			document.getElementById("here9").style.display = 'none'; */
 		if(waterTreatMethod==""){
 			document.getElementById("here8").style.display = '';
 			x="has";
@@ -233,7 +222,7 @@
 					</tr>
 					<tr> 
 					  <td><b>Provider ID for CHW:</b></td>
-					  <td><input type=text name="ident" id="ident" readonly="readonly" />
+					  <td><input type="text" name="ident" id="ident" readonly="readonly" />
 					  	<input type="hidden" name="chwID" id="chwID" /></td>
 					</tr>
 					
@@ -265,21 +254,21 @@
 				<b>Number of sleeping spaces:</b><input type="text" name="noOfSleepingSpaces" id="noOfSleepingSpaces" /> <div id="here5" class="error" style="display: none" >*</div><br />
 				<b>Number of bed nets:</b><input type="text" name="noOfBedNets" id="noOfBedNets" /> <div id="here6" class="error" style="display: none" >*</div><br />
 				<b>Bed nets Observed? :</b> 
-					<input type="radio" name="bednetsObserved" title="Yes" value="1065" checked="true"/>Yes
+					<input type="radio" name="bednetsObserved" title="Yes" value="1065"/>Yes
 					<input type="radio" name="bednetsObserved" title="No" value="1066"/>No<br />
 				<b>General Condition of bed nets:</b><br />
-					<input type="radio" name="bednetsCondition" title="Good" value="6343" checked="true"/>Good
+					<input type="radio" name="bednetsCondition" title="Good" value="6343"/>Good
 					<input type="radio" name="bednetsCondition" title="Few Holes" value="6868"/>Few Holes
 					<input type="radio" name="bednetsCondition" title="Poor" value="6656"/>Poor<br />
 				<b>Bed nets Education? :</b> 
-					<input type="radio" name="bednetsEducation" title="Yes" value="1065" checked="true"/>Yes
+					<input type="radio" name="bednetsEducation" title="Yes" value="1065"/>Yes
 					<input type="radio" name="bednetsEducation" title="No" value="1066"/>No
 			</td>
 		</tr>
 		<tr>
 			<td>
 				<b>Stable food available?</b><br />
-					<input type="radio" name="stableFoodAvailable" title="Yes" value="1065" checked="true"/>Yes
+					<input type="radio" name="stableFoodAvailable" title="Yes" value="1065"/>Yes
 					<input type="radio" name="stableFoodAvailable" title="No" value="1066"/>No
 			</td>
 		</tr>
@@ -295,7 +284,7 @@
 						<option value="5622">Other</option>
 					</select><div id="here7" class="error" style="display: none" >*</div><br />
 				<b>Do you treat water?</b><br />
-					<input type="radio" name="treatWater" title="Yes" value="1065" checked="true"/>Yes
+					<input type="radio" name="treatWater" title="Yes" value="1065"/>Yes
 					<input type="radio" name="treatWater" title="No" value="1066"/>No<br />
 				<b>Water treatment method :</b><br />
 					<select name="waterTreatMethod" id="waterTreatMethod" multiple="multiple" size="5">
@@ -308,7 +297,7 @@
 			</td>
 			<td bgcolor="#cecece">
 				<b>Do you have latrine?</b><br />
-					<input type="radio" name="hasLatrine" title="Yes" value="1065" checked="true"/>Yes
+					<input type="radio" name="hasLatrine" title="Yes" value="1065"/>Yes
 					<input type="radio" name="hasLatrine" title="No" value="1066"/>No<br />
 				<b>Type of latrine :</b><br />
 					<select name="latrineType" id="latrineType" multiple="multiple" size="4">
@@ -318,13 +307,13 @@
 						<option value="6389">VIP</option>
 					</select><div id="here9" class="error" style="display: none" >*</div><br />
 				<b>Shared?</b><br />
-					<input type="radio" name="sharedLatrine" title="Yes" value="1065" checked="true"/>Yes
+					<input type="radio" name="sharedLatrine" title="Yes" value="1065"/>Yes
 					<input type="radio" name="sharedLatrine" title="No" value="1066"/>No<br />
 				<b>Hand washing facilities?</b><br />
-					<input type="radio" name="handWashFacility" title="Yes" value="1065" checked="true"/>Yes
+					<input type="radio" name="handWashFacility" title="Yes" value="1065"/>Yes
 					<input type="radio" name="handWashFacility" title="No" value="1066"/>No<br />
 				<b>Safe water education?</b><br />
-					<input type="radio" name="waterEducation" title="Yes" value="1065" checked="true"/>Yes
+					<input type="radio" name="waterEducation" title="Yes" value="1065"/>Yes
 					<input type="radio" name="waterEducation" title="No" value="1066"/>No<br />
 			</td>
 		</tr>

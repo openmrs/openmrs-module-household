@@ -104,10 +104,7 @@ public class HibernateHouseholdDAO implements HouseholdDAO {
 	 */
 	
 	public Household saveHouseholdGroup(Household householdGroups) {
-		System.out.print("**********" + householdGroups.getUuid());
-		System.out.print("\n**********" + householdGroups.getHouseholdIdentifier());
-		sessionFactory.getCurrentSession().save(householdGroups);
-		
+		sessionFactory.getCurrentSession().saveOrUpdate(householdGroups);
 		return householdGroups;
 	}
 
@@ -710,9 +707,9 @@ public class HibernateHouseholdDAO implements HouseholdDAO {
 
 	@SuppressWarnings("unchecked")
 	
-	public List<HouseholdEncounter> getEncountersByHouseholdId(Integer householdId) throws DAOException {
-		Criteria crit = sessionFactory.getCurrentSession().createCriteria(HouseholdEncounter.class).createAlias("household", "h").add(
-			    Expression.eq("h.Id", householdId)).add(Expression.eq("voided", false)).addOrder(
+	public List<HouseholdEncounter> getEncountersByHouseholdUuid(String householdUuid) throws DAOException {
+		Criteria crit = sessionFactory.getCurrentSession().createCriteria(HouseholdEncounter.class).createAlias("householdGroupId", "h").add(
+			    Expression.eq("h.uuid", householdUuid)).add(Expression.eq("voided", false)).addOrder(
 			    Order.desc("householdEncounterDatetime"));
 			
 			return crit.list();
