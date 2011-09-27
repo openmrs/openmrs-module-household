@@ -718,7 +718,7 @@ public class HibernateHouseholdDAO implements HouseholdDAO {
 
 	
 	public HouseholdEncounter getHouseholdEncounterByUUID(String uuid) {
-		return (HouseholdEncounter) sessionFactory.getCurrentSession().createQuery("from Household_Encounter e where e.uuid = :uuid")
+		return (HouseholdEncounter) sessionFactory.getCurrentSession().createQuery("from HouseholdEncounter e where e.uuid = :uuid")
         .setString("uuid", uuid).uniqueResult();
 	}
 

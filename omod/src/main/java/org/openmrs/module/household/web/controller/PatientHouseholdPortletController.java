@@ -48,7 +48,6 @@ public class PatientHouseholdPortletController extends PortletController{
 			//model.put("householdEncounter", he);
 
 			if(hEncs.size()>0){
-				System.out.println("\n-------------encounters: " + household.getId());
 				householdEncounters.put(household.getId(), hEncs);
 			}
 			

@@ -125,13 +125,18 @@ public class DWRHouseholdService {
 		return strHousehold;
 	}
 	
-	public String getHouseholdEncounters(String encUuid){
+	public String getHouseholdEncountersObs(String encUuid){
 		HouseholdService service = Context.getService(HouseholdService.class);
 		Context.clearSession();
+		log.info("\n:::::::::>0>" + encUuid);
 		HouseholdEncounter he = service.getHouseholdEncounterByUUID(encUuid);
+		log.info("\n:::::::::>1>" + he.getUuid());
+		
+		/*List<HouseholdObs> obsList = (List<HouseholdObs>) service.getObservations(h,e, 
+				null, null, null, null, null, null, null, null, false);*/
 		@SuppressWarnings("unchecked")
 		List<HouseholdObs> obsList = (List<HouseholdObs>) he.getAllHouseholdObs();
-		
+		log.info("\n:::::::::>2" + obsList.size());
 		String toRet = "";
 		for (int i=0; i<obsList.size(); i++) {
 			if(StringUtils.isEmpty(toRet))
@@ -141,7 +146,7 @@ public class DWRHouseholdService {
 			toRet += obsList.get(i).getConcept().getDisplayString() +
 			"," + obsList.get(i).getConcept().getAnswers(false);
 		}
-		
+		log.info("\n:::::::::>"+ toRet);
 		return toRet;
 	}
 	

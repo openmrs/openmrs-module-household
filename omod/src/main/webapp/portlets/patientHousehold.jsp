@@ -39,7 +39,7 @@ function toggle_visibility() {
 		info.style.display = 'block';
     }
  }
- 
+ b
  function getMem(strHID){
 	 DWRHouseholdService.getHouseholdMembersPortlet(strHID,getMemDisp);
 	 //toggle_visibility(hItemid)
@@ -58,14 +58,25 @@ function toggle_visibility() {
 	document.getElementById("foo").innerHTML=strHH;
 	toggle_visibility();
  }
+ 
+ function getEncObs(strUuid){
+	 DWRHouseholdService.getHouseholdEncountersObs(strUuid,getEncObsDisp);
+ }
+ function getEncObsDisp(strVal){
+	 strHH = "<table cellpadding='5'><tr><th>Obs Name</th><th>Value</th></tr>";
+	 var strHou = new Array();
+	 strHou = strVal.split(",");
+	 var i;
+
+	for(i = 0; i < strHou.length; i++) {
+		strHH = strHH + "<tr><td>" + strHou[i] + "</td><td>" + strHou[i+1] + "</td></tr>";
+		i+=1;
+	}
+	strHH = strHH + "</table>";
+ }
+ 
 </script>
 
-<style>
-	.encountersForHousehold{
-		border-style:solid;
-		border-color:#CDCDCD;
-	}
-</style>
 <b class="boxHeader"><spring:message code="household.definitions.header"/></b>
 <div class="box">
 	<table id="patientDetail" cellpadding="5" width="80%">
@@ -90,7 +101,7 @@ function toggle_visibility() {
 					<td class="tdClass">
 						<div class="encountersForHousehold">
 							<t:forEach var="enc" items="${model.encounters[householdMem.householdMembershipGroups.id]}" varStatus="states">
-								<a href="#">${states.index + 1} . View - ${enc.householdEncounterId}</a> <br />
+								<a href="#">${states.index + 1} . View - ${enc.householdEncounterId}</a> <br /> <%-- onclick="javascript:getEncObs('${enc.uuid}');" --%>
 							</t:forEach>
 						</div>
 					</td>

@@ -93,6 +93,7 @@
 				<include method="getSubLocations"/>
 				<include method="getVillage"/>
 				<include method="getHousehold"/>
+				<include method="getHouseholdEncountersObs"/>
 				<include method="getHouseholdMembersPortlet"/>
 				<include method="getCheckDigit"/>
 			</create>
@@ -104,7 +105,7 @@
 			DWRHouseholdService.getSubLocations(String strLoc);
 			DWRHouseholdService.getVillage(String strSubLoc, String strLoc);
 			DWRHouseholdService.getHousehold(String strHouseholdID);
-			<!-- DWRHouseholdService.getHouseholdMembers(String grpids); -->
+			DWRHouseholdService.getHouseholdEncountersObs(String encUuid)
 			DWRHouseholdService.getHouseholdMembersPortlet(String grpids);
 			DWRHouseholdService.getCheckDigit(String hhold);
 			]]>
