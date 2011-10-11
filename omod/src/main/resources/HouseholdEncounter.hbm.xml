@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>
+    <class name="org.openmrs.module.household.model.HouseholdEncounter" table="household_encounter">
+
+		<id name="householdEncounterId" type="int" column="household_encounter_id"
+			unsaved-value="0">
+			<generator class="native" />
+		</id>
+
+		<discriminator column="household_encounter_id" insert="false" />
+
+		<property name="uuid" type="string" length="38" not-null="true" unique="true"/>
+
+		<property name="householdEncounterDatetime" type="java.util.Date"
+			column="household_encounter_datetime" not-null="true" length="19" />
+
+		<property name="dateCreated" type="java.util.Date"
+			column="date_created" not-null="true" length="19" />
+
+		<property name="voided" type="java.lang.Boolean" column="voided"
+			length="1" not-null="true" />
+
+		<property name="dateVoided" type="java.util.Date"
+			column="date_voided" length="19" />
+
+		<property name="voidReason" type="java.lang.String"
+			column="void_reason" length="255" />
+
+		<property name="dateChanged" type="java.util.Date"
+			column="date_changed" not-null="false" length="19" />
+
+		<!-- Associations -->
+		<!-- bi-directional many-to-one association to User -->
+		<many-to-one name="changedBy" class="org.openmrs.User" not-null="false">
+			<column name="changed_by" />
+		</many-to-one>
+
+		<!-- bi-directional many-to-one association to HouseholdGroups -->
+		<many-to-one name="householdGroupId" class="org.openmrs.module.household.model.Household" not-null="true"  property-ref="uuid">
+			<column name="household_group_uuid" />
+		</many-to-one>
+
+		<!-- bi-directional many-to-one association to Location -->
+		<many-to-one name="householdLocation" class="org.openmrs.module.household.model.HouseholdLocation" property-ref="uuid" not-null="false">
+			<column name="location_uuid" />
+		</many-to-one>
+
+		<!-- bi-directional many-to-one association to Form -->
+		<many-to-one name="form" class="org.openmrs.Form" not-null="false">
+			<column name="form_id" />
+		</many-to-one>
+
+		<!-- bi-directional one-to-many association to Ob -->
+		<set name="householdObs" inverse="true" cascade="all" order-by="concept_id" access="field">
+
+			<key property-ref="uuid" column="household_encounter_uuid" />
+			<one-to-many class="org.openmrs.module.household.model.HouseholdObs" />
+		</set>
+
+		<!-- bi-directional many-to-one association to EncounterType -->
+		<many-to-one name="householdEncounterType" class="org.openmrs.module.household.model.HouseholdEncounterType"
+			not-null="true">
+			<column name="household_encounter_type" />
+		</many-to-one>
+
+		<!-- bi-directional many-to-one association to User -->
+		<many-to-one name="creator" class="org.openmrs.User" not-null="true">
+			<column name="creator" />
+		</many-to-one>
+
+		<!-- bi-directional many-to-one association to Person -->
+		<many-to-one name="provider" class="org.openmrs.Person" not-null="true">
+			<column name="provider_id" />
+		</many-to-one>
+
+		<many-to-one name="voidedBy" class="org.openmrs.User">
+			<column name="voided_by" />
+		</many-to-one>
+
+	</class>
+</hibernate-mapping>

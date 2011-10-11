@@ -5,6 +5,7 @@ package org.openmrs.module.household.web.dwr;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -134,18 +135,33 @@ public class DWRHouseholdService {
 		
 		/*List<HouseholdObs> obsList = (List<HouseholdObs>) service.getObservations(h,e, 
 				null, null, null, null, null, null, null, null, false);*/
-		@SuppressWarnings("unchecked")
-		List<HouseholdObs> obsList = (List<HouseholdObs>) he.getAllHouseholdObs();
-		log.info("\n:::::::::>2" + obsList.size());
+		Set<HouseholdObs> obsList = he.getAllHouseholdObs();
+        log.info("\n:::::::::>2" + obsList.size());
 		String toRet = "";
-		for (int i=0; i<obsList.size(); i++) {
+        for (HouseholdObs householdObs : obsList) {
+
 			if(StringUtils.isEmpty(toRet))
 				toRet="";
 			else
-				toRet+=",";
-			toRet += obsList.get(i).getConcept().getDisplayString() +
-			"," + obsList.get(i).getConcept().getAnswers(false);
-		}
+				toRet+="|";
+			/*toRet += householdObs.getConcept().getDisplayString() +
+			"," + householdObs.getConcept().getAnswers(false);  */
+			String ans = "";
+			//valueDatetime,valueNumeric,valueText,valueCoded
+			if(householdObs.getValueDatetime()!= null)
+				ans = householdObs.getValueDatetime()+ "";
+			else if(householdObs.getValueNumeric()!= null)
+				ans = householdObs.getValueNumeric() + "";
+			else if(householdObs.getValueText()!= null)
+				ans = householdObs.getValueText();
+			else if(householdObs.getValueCoded()!= null)
+				ans = householdObs.getValueCoded().getName().toString();
+			
+			log.info("\n:::::::::>"+ householdObs.getConcept().getName() + "|" + ans);
+			
+            toRet += householdObs.getConcept().getName() +
+			"|" + ans;
+        }
 		log.info("\n:::::::::>"+ toRet);
 		return toRet;
 	}
@@ -161,10 +177,10 @@ public class DWRHouseholdService {
 			if(StringUtils.isEmpty(strHousehold))
 				strHousehold="";
 			else
-				strHousehold+=",";
+				strHousehold+="|";
 			strHousehold += householdsMem.get(i).getHouseholdMembershipMember().getPersonName() +
-					"," + householdsMem.get(i).getHouseholdMembershipMember().getGender() +
-					"," + householdsMem.get(i).getHouseholdMembershipMember().getBirthdate();
+					"|" + householdsMem.get(i).getHouseholdMembershipMember().getGender() +
+					"|" + householdsMem.get(i).getHouseholdMembershipMember().getBirthdate();
 		}
 		return strHousehold;
 	}

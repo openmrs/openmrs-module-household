@@ -12,10 +12,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -43,6 +45,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 public class HouseholdCHWInitialController {
 	private static final Log log = LogFactory.getLog(HouseholdCHWInitialController.class);
+    private static String obsGrpUuid = "";
 	
 	@RequestMapping(method=RequestMethod.GET, value="module/household/householdCHWInitial")
 	public void preparePage(ModelMap map) {
@@ -50,18 +53,24 @@ public class HouseholdCHWInitialController {
 		
 		// get the ordered address hierarchy levels and add them to the map
 		List<HouseholdLocationLevel> levels = service.getOrderedHouseholdLocationLevels(false);
-		map.addAttribute("hierarchyLevels", levels);
 		
-		log.info("\n ....SIZE...:" + levels.size());
-		
-		//Get HouseholdLocations top Hierarchy
-		List<HouseholdLocationEntry> entries = Context.getService(HouseholdService.class).getHouseholdLocationEntriesByLevel(levels.get(0));
-		String strLoc = "";
-		for(int i=0; i < entries.size(); i++){
-			strLoc += entries.get(i).getName().toString() + ",";
+		if (CollectionUtils.isNotEmpty(levels)){
+			map.addAttribute("hierarchyLevels", levels);
+			
+			log.info("\n ....SIZE...:" + levels.size());
+			
+			//Get HouseholdLocations top Hierarchy
+			try {
+				List<HouseholdLocationEntry> entries = Context.getService(HouseholdService.class).getHouseholdLocationEntriesByLevel(levels.get(0));
+				String strLoc = "";
+				for(int i=0; i < entries.size(); i++){
+					strLoc += entries.get(i).getName().toString() + ",";
+				}
+				map.addAttribute("loci", entries);
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
 		}
-		map.addAttribute("loci", entries);
-		//log.info("\n ....SIZE...:" + strLoc);
 	}
 	
 	@RequestMapping(method=RequestMethod.POST, value="module/household/householdCHWInitial")
@@ -115,29 +124,6 @@ public class HouseholdCHWInitialController {
 		//Save Obs
 		HouseholdObsHandler(request, encounter, householdGroups,httpSession);
 		
-		/*
-		
-		//Save Obs - > Encounter,householdObsDatetime,valueGroupId,
-		
-		//List<HouseholdObs> obs = (List<HouseholdObs>) new HouseholdObs();
-		
-		HouseholdObs o = new HouseholdObs();
-		
-		
-		o.setHouseholdEncounter(encounter);
-		//TO LOOP
-		Concept question = new Concept();
-		question = Context.getConceptService().getConcept(100); //6865 = noOfSleepingSpaces
-		o.setConcept(question);
-		o.setHouseholdGroups(householdGroups);
-		o.setValueNumeric(Double.parseDouble(noOfSleepingSpaces));
-		o.setHouseholdObsDatetime(new Date());
-		
-		
-		service.saveHouseholdObs(o, "Test");*/
-		/*}
-		catch(Exception ex){}*/
-		
 	}
 	
 	static DateFormat df = new SimpleDateFormat("dd/MM/yyyy"); 
@@ -183,63 +169,8 @@ public class HouseholdCHWInitialController {
 		int grpObs = 1;
 		
 		List<HouseholdObs> obs = new ArrayList<HouseholdObs>();
-		
-		
-		//o.setHouseholdEncounter(encounter);
-		
-		/*for(int i=0; i<sizeOfArrays; i++){
-			if(i<arrayItems.length){
-				//handle the string arrayItems
-				if((arrayItems[i].equals(bednetsObserved)) && !(StringUtils.isEmpty(bednetsObserved))){
-					obs.add(putObsToList(100, householdGroups, Integer.parseInt(bednetsObserved), false, 0));
-				}else if((arrayItems[i].equals(bednetsCondition)) && !(StringUtils.isEmpty(bednetsCondition))){
-					obs.add(putObsToList(100, householdGroups, Integer.parseInt(bednetsCondition), false, 0));
-				}else if((arrayItems[i].equals(bednetsEducation)) && !(StringUtils.isEmpty(bednetsEducation))){
-					obs.add(putObsToList(100, householdGroups, Integer.parseInt(bednetsEducation), false, 0));
-				}else if((arrayItems[i].equals(stableFoodAvailable)) && !(StringUtils.isEmpty(stableFoodAvailable))){
-					obs.add(putObsToList(100, householdGroups, Integer.parseInt(stableFoodAvailable), false, 0));
-				}else if((arrayItems[i].equals(treatWater)) && !(StringUtils.isEmpty(treatWater))){
-					obs.add(putObsToList(100, householdGroups, Integer.parseInt(treatWater), false, 0));
-				}else if((arrayItems[i].equals(hasLatrine)) && !(StringUtils.isEmpty(hasLatrine))){
-					obs.add(putObsToList(100, householdGroups, Integer.parseInt(hasLatrine), false, 0));
-				}else if((arrayItems[i].equals(sharedLatrine)) && !(StringUtils.isEmpty(sharedLatrine))){
-					obs.add(putObsToList(100, householdGroups, Integer.parseInt(sharedLatrine), false, 0));
-				}else if((arrayItems[i].equals(handWashFacility)) && !(StringUtils.isEmpty(handWashFacility))){
-					obs.add(putObsToList(100, householdGroups, Integer.parseInt(handWashFacility), false, 0));
-				}else if((arrayItems[i].equals(waterEducation)) && !(StringUtils.isEmpty(waterEducation))){
-					obs.add(putObsToList(100, householdGroups, Integer.parseInt(waterEducation), false, 0));
-				}else if((arrayItems[i].equals(returnVisitDate)) && !(StringUtils.isEmpty(returnVisitDate))){
-					obs.add(putObsToListDate(100, householdGroups, returnVisitDate, false, 2));
-				}
-				
-				
-			}else if((i>=arrayItems.length)&&(i<(arrayItems.length + arrayItems2.length))){
-				//handle arrayItems2 arrayarrayItems2 = {, , , }
-				if(arrayItems2[i-arrayItems.length].equals(waterSources)){
-					for(int x=0;x<waterSources.length;x++)
-						obs.add(putObsToList(100, householdGroups, Integer.parseInt(waterSources[x]), true, grpObs));
-					grpObs++;
-				}else if(arrayItems2[i-arrayItems.length].equals(waterTreatMethod)){
-					for(int x=0;x<waterTreatMethod.length;x++)
-						obs.add(putObsToList(100, householdGroups, Integer.parseInt(waterTreatMethod[x]), true, grpObs));
-					grpObs++;
-				}else if(arrayItems2[i-arrayItems.length].equals(latrineType)){
-					for(int x=0;x<latrineType.length;x++)
-						obs.add(putObsToList(100, householdGroups, Integer.parseInt(latrineType[x]), true, grpObs));
-					grpObs++;
-				}else if(arrayItems2[i-arrayItems.length].equals(revisitItems)){
-					for(int x=0;x<revisitItems.length;x++)
-						obs.add(putObsToList(100, householdGroups, Integer.parseInt(revisitItems[x]), true, grpObs));
-					grpObs++;
-				} 
-			}else{
-				//handle arrayItems3 array arrayItems3 = {, };
-				if((arrayItems3[i-(arrayItems.length + arrayItems2.length)] == noOfSleepingSpaces)&& (!StringUtils.isEmpty(strNoOfSleepingSpaces))){
-					obs.add(putObsToList(100, householdGroups, noOfSleepingSpaces, false, 1));
-				}else if((arrayItems3[i-(arrayItems.length + arrayItems2.length)] == noOfBedNets)&& (!StringUtils.isEmpty(strNoOfBedNets))){
-					obs.add(putObsToList(100, householdGroups, noOfBedNets, false, 1));
-				}
-			}*/
+
+
 		for(int i=0; i<sizeOfArrays; i++){
 			if(i<arrayItems.length){
 				//handle the string arrayItems
@@ -269,21 +200,23 @@ public class HouseholdCHWInitialController {
 			}else if((i>=arrayItems.length)&&(i<(arrayItems.length + arrayItems2.length))){
 				//handle arrayItems2 arrayarrayItems2 = {, , , }
 				if(arrayItems2[i-arrayItems.length].equals(waterSources)){
+                    obsGrpUuid = UUID.randomUUID() + "";
 					for(int x=0;x<waterSources.length;x++)
 						obs.add(putObsToList(6386, householdGroups, Integer.parseInt(waterSources[x]), true, grpObs));
 					grpObs++;
 				}else if(arrayItems2[i-arrayItems.length].equals(waterTreatMethod)){
-					for(int x=0;x<waterTreatMethod.length;x++)
+					obsGrpUuid = UUID.randomUUID() + "";
+                    for(int x=0;x<waterTreatMethod.length;x++)
 						obs.add(putObsToList(6864, householdGroups, Integer.parseInt(waterTreatMethod[x]), true, grpObs));
 					grpObs++;
 				}else if(arrayItems2[i-arrayItems.length].equals(latrineType)){
+                    obsGrpUuid = UUID.randomUUID() + "";
 					for(int x=0;x<latrineType.length;x++)
 						obs.add(putObsToList(6390, householdGroups, Integer.parseInt(latrineType[x]), true, grpObs));
 					grpObs++;
 				}else if(arrayItems2[i-arrayItems.length].equals(revisitItems)){
-					for(int x=0;x<revisitItems.length;x++)
-						obs.add(putObsToList(6889, householdGroups, Integer.parseInt(revisitItems[x]), true, grpObs));
-					grpObs++;
+					obsGrpUuid = UUID.randomUUID() + "";
+                    grpObs++;
 				} 
 			}else{
 				//handle arrayItems3 array arrayItems3 = {, };
@@ -310,8 +243,11 @@ public class HouseholdCHWInitialController {
 		o.setHouseholdGroups(householdGroups);
 		if((obsGrp==1) && !hasGrp)
 			o.setValueNumeric(Double.parseDouble(ans + ""));
-		else
+		else{
 			o.setValueCoded(Context.getConceptService().getConcept(ans));
+            if (hasGrp)
+                o.setHouseholdObsGroupUuid(obsGrpUuid);
+        }
 		//o.setValueCoded(Context.getConceptService().getConcept(ans));
 		o.setHouseholdObsDatetime(new Date());
 		if (hasGrp){
@@ -319,7 +255,7 @@ public class HouseholdCHWInitialController {
 		}
 		return o;
 	}
-	
+
 	private HouseholdObs putObsToListDate(int quiz, Household householdGroups, String ans, boolean hasGrp, int obsGrp){
 		HouseholdObs o = new HouseholdObs();
 		o.setConcept(Context.getConceptService().getConcept(quiz));

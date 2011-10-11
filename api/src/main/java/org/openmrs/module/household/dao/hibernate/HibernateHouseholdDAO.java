@@ -856,14 +856,14 @@ public class HibernateHouseholdDAO implements HouseholdDAO {
 	
 	public HouseholdObs saveHouseholdObs(HouseholdObs obs)
 			throws APIException {
-		if (obs.hasGroupMembers() && obs.getId() != null) {
+		/*if (obs.hasGroupMembers() && obs.getId() != null) {
 			// hibernate has a problem updating child collections
 			// if the parent object was already saved so we do it
 			// explicitly here
 			for (HouseholdObs member : obs.getHouseholdGroupMembers())
 				if (member.getId() == null)
 					saveHouseholdObs(member);
-		}
+		}*/
 		
 		sessionFactory.getCurrentSession().saveOrUpdate(obs);
 		

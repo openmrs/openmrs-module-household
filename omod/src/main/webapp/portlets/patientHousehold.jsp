@@ -47,7 +47,7 @@ function toggle_visibility() {
  function getMemDisp(strVal){
 	 strHH = "<table cellpadding='5'><tr><th>Names</th><th>Gender</th><th>Birth Date</th></tr>";
 	 var strHou = new Array();
-	 strHou = strVal.split(",");
+	 strHou = strVal.split("|");
 	 var i;
 
 	for(i = 0; i < strHou.length; i++) {
@@ -65,7 +65,7 @@ function toggle_visibility() {
  function getEncObsDisp(strVal){
 	 strHH = "<table cellpadding='5'><tr><th>Obs Name</th><th>Value</th></tr>";
 	 var strHou = new Array();
-	 strHou = strVal.split(",");
+	 strHou = strVal.split("|");
 	 var i;
 
 	for(i = 0; i < strHou.length; i++) {
@@ -73,9 +73,43 @@ function toggle_visibility() {
 		i+=1;
 	}
 	strHH = strHH + "</table>";
+    document.getElementById("foo").innerHTML=strHH;
+	toggle_visibility();
  }
  
 </script>
+
+
+
+<script language="javascript">
+
+    $j = jQuery.noConflict();
+
+    function view(id, title) {
+		console.log("Viewing encounter");
+		var data = "id=" + id;
+		$j.ajax({
+			url: "viewHouseholdEncounter.form",
+			type: "POST",
+			dataType: 'json',
+			data: data,
+			success: function(data) {
+				$j("#status").hide();
+				var url = "${pageContext.request.contextPath}/admin/encounters/encounterDisplay.list?encounterId=" + data;
+				$j("#displayEncounterPopupIframe").attr("src", url);
+				$j('#displayEncounterPopup')
+					.dialog('option', 'title', title)
+					.dialog('option', 'height', $j(window).height() - 50)
+					.dialog('open');
+			}
+		});
+	}
+
+
+</script>
+
+
+
 
 <b class="boxHeader"><spring:message code="household.definitions.header"/></b>
 <div class="box">
@@ -101,7 +135,8 @@ function toggle_visibility() {
 					<td class="tdClass">
 						<div class="encountersForHousehold">
 							<t:forEach var="enc" items="${model.encounters[householdMem.householdMembershipGroups.id]}" varStatus="states">
-								<a href="#">${states.index + 1} . View - ${enc.householdEncounterId}</a> <br /> <%-- onclick="javascript:getEncObs('${enc.uuid}');" --%>
+								<%-- <a href='#' onclick='javascript:view(${enc.householdEncounterId})'> ${states.index + 1} . View - ${enc.householdEncounterId}</a><br /> --%>
+                                <a href="#" id="getHouseholdEncObs" onclick="javascript:getEncObs('${enc.uuid}');">${states.index + 1} . View - ${enc.householdEncounterId}</a> <br />  
 							</t:forEach>
 						</div>
 					</td>

@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>
+    <class name="org.openmrs.module.household.model.HouseholdLocationLevel" table="household_location_level">
+
+		<id name="levelId" type="int" column="household_location_level_id"
+			unsaved-value="0">
+			<generator class="native" />
+		</id>
+
+		<many-to-one name="parent" class="org.openmrs.module.household.model.HouseholdLocationLevel"
+			column="parent_level_id" />
+
+		<property name="name" type="string" column="name" length="255" />
+
+
+		<property name="householdLocationField" column="household_location_field" length="50">
+			<type name="org.openmrs.module.household.util.HibernateEnumType">
+		    	<param name="enumClassName">org.openmrs.module.household.HouseholdLocationField</param>
+		    </type>
+		</property>
+
+		<property name="required" type="java.lang.Boolean" length="1"
+			not-null="true" />
+
+		<property name="uuid" type="string" length="38" not-null="true" unique="true"/>
+	</class>
+</hibernate-mapping>

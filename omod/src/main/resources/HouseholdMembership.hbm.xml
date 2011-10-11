@@ -1,25 +1,31 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
-
-	<class name="org.openmrs.module.household.model.Household" table="household">
+    <class name="org.openmrs.module.household.model.HouseholdMembership" table="household_membership">
 
         <cache usage="read-write"/>
 
-		<id name="id" type="java.lang.Integer" unsaved-value="0" column="household_group_id">
+		<id name="id" type="java.lang.Integer" unsaved-value="0" column="household_membership_id">
 			<generator class="org.openmrs.api.db.hibernate.NativeIfNotAssignedIdentityGenerator" />
 		</id>
-		
-		<discriminator column="household_group_id" insert="false"/>
-		
-		<many-to-one name="householdDef" class="org.openmrs.module.household.model.HouseholdDefinition"
-			property-ref="uuid" column="household_def_uuid"/>
-		
-		<property name="uuid" type="string" length="38" not-null="true" unique="true"/>
-			
-		<property name="householdIdentifier" type="java.lang.String"
-			column="household_identifier" length="50" />
-			
+
+		<discriminator column="household_membership_id" insert="false"/>
+
+		<many-to-one name="householdMembershipMember" class="org.openmrs.Person" property-ref="uuid"
+			column="household_membership_person_uuid"/>
+
+		<many-to-one name="householdMembershipGroups" class="org.openmrs.module.household.model.Household"  property-ref="uuid"
+			column="household_uuid"/>
+
+		<property name="householdMembershipHeadship" type="boolean"
+			column="household_membership_headship" not-null="false" length="1"/>
+
+		<property name="startDate" type="java.util.Date"
+			column="start_date" length="19" />
+
+		<property name="endDate" type="java.util.Date"
+			column="end_date" length="19" />
+
 		<many-to-one name="creator" class="org.openmrs.User" />
 
 		<property name="dateCreated" type="java.util.Date"
@@ -41,5 +47,4 @@
 		<property name="voided" type="boolean" column="voided"
 			length="1" not-null="true" />
 	</class>
-
 </hibernate-mapping>

@@ -186,7 +186,7 @@ public class HouseholdEncounter extends BaseOpenmrsData {
 	private List<HouseholdObs> getHouseholdObsLeaves(HouseholdObs obsParent) {
 		List<HouseholdObs> leaves = new ArrayList<HouseholdObs>();
 		
-		if (obsParent.hasGroupMembers()) {
+		/*if (obsParent.hasGroupMembers()) {
 			for (HouseholdObs child : obsParent.getHouseholdGroupMembers()) {
 				if (child.isVoided() == false) {
 					if (child.isHouseholdObsGrouping() == false)
@@ -196,7 +196,7 @@ public class HouseholdEncounter extends BaseOpenmrsData {
 						leaves.addAll(getHouseholdObsLeaves(child));
 				}
 			}
-		} else if (obsParent.isVoided() == false) {
+		} else */if (obsParent.isVoided() == false) {
 			leaves.add(obsParent);
 		}
 		

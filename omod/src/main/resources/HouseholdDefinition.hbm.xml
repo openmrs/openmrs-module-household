@@ -2,24 +2,30 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
 
-	<class name="org.openmrs.module.household.model.Household" table="household">
+	<class name="org.openmrs.module.household.model.HouseholdDefinition" table="household_definition">
 
         <cache usage="read-write"/>
 
-		<id name="id" type="java.lang.Integer" unsaved-value="0" column="household_group_id">
+		<id name="id" type="java.lang.Integer" unsaved-value="0" column="household_definition_id">
 			<generator class="org.openmrs.api.db.hibernate.NativeIfNotAssignedIdentityGenerator" />
 		</id>
-		
-		<discriminator column="household_group_id" insert="false"/>
-		
-		<many-to-one name="householdDef" class="org.openmrs.module.household.model.HouseholdDefinition"
-			property-ref="uuid" column="household_def_uuid"/>
-		
+
+		<discriminator column="household_definition_id" insert="false"/>
+
+		<property name="householdDefinitionsCode" type="java.lang.String"
+			column="household_definition_code" not-null="true" length="45"/>
+
+		<property name="householdDefinitionsCodeinfull" type="java.lang.String"
+			column="household_definition_codeinfull" not-null="true" length="255"/>
+
+		<property name="householdDefinitionsDescription" type="java.lang.String"
+			column="household_definition_description" not-null="true" length="255"/>
+
 		<property name="uuid" type="string" length="38" not-null="true" unique="true"/>
-			
-		<property name="householdIdentifier" type="java.lang.String"
-			column="household_identifier" length="50" />
-			
+
+		<many-to-one name="program" class="org.openmrs.Program"
+			column="program_id"/>
+
 		<many-to-one name="creator" class="org.openmrs.User" />
 
 		<property name="dateCreated" type="java.util.Date"
@@ -40,6 +46,6 @@
 
 		<property name="voided" type="boolean" column="voided"
 			length="1" not-null="true" />
-	</class>
 
+	</class>
 </hibernate-mapping>

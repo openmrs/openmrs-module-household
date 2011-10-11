@@ -8,10 +8,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
+//import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
+//import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -50,7 +50,9 @@ public class HouseholdObs extends BaseOpenmrsData {
 	/**
 	 * The list of obs grouped under this obs.
 	 */
-	protected Set<HouseholdObs> householdGroupMembers;
+	//protected Set<HouseholdObs> householdGroupMembers;
+
+    protected String householdObsGroupUuid;
 	
 	protected Concept valueCoded;
 	
@@ -136,14 +138,14 @@ public class HouseholdObs extends BaseOpenmrsData {
 		newHouseholdObs.setDateVoided(obsToCopy.getDateVoided());
 		newHouseholdObs.setVoidReason(obsToCopy.getVoidReason());
 		
-		if (obsToCopy.getHouseholdGroupMembers() != null)
+		/*if (obsToCopy.getHouseholdGroupMembers() != null)
 			for (HouseholdObs member : obsToCopy.getHouseholdGroupMembers()) {
 				// if the obs hasn't been saved yet, no need to duplicate it
 				if (member.getHouseholdObsId() == null)
 					newHouseholdObs.addGroupMember(member);
 				else
 					newHouseholdObs.addGroupMember(HouseholdObs.newInstance(member));
-			}
+			}*/
 		
 		return newHouseholdObs;
 	}
@@ -329,9 +331,9 @@ public class HouseholdObs extends BaseOpenmrsData {
 	 * 
 	 * @return true if this is the parent group of other obs
 	 */
-	public boolean isHouseholdObsGrouping() {
+	/*public boolean isHouseholdObsGrouping() {
 		return hasGroupMembers();
-	}
+	}*/
 	
 	/**
 	 * Convenience method that checks for nullity and length of the (@link #getGroupMembers())
@@ -339,9 +341,9 @@ public class HouseholdObs extends BaseOpenmrsData {
 	 * 
 	 * @return true if this is the parent group of other obs
 	 */
-	public boolean hasGroupMembers() {
+	/*public boolean hasGroupMembers() {
 		return getHouseholdGroupMembers() != null && getHouseholdGroupMembers().size() > 0;
-	}
+	}*/
 	
 	/**
 	 * Get the members of the obs group, if this obs is a group.
@@ -353,9 +355,9 @@ public class HouseholdObs extends BaseOpenmrsData {
 	 * @see #addGroupMember(HouseholdObs)
 	 * @see #hasGroupMembers()
 	 */
-	public Set<HouseholdObs> getHouseholdGroupMembers() {
+	/*public Set<HouseholdObs> getHouseholdGroupMembers() {
 		return householdGroupMembers;
-	}
+	}*/
 	
 	/**
 	 * Set the members of the obs group, if this obs is a group.
@@ -367,9 +369,9 @@ public class HouseholdObs extends BaseOpenmrsData {
 	 * @see #addGroupMember(HouseholdObs)
 	 * @see #hasGroupMembers()
 	 */
-	public void setHouseholdGroupMembers(Set<HouseholdObs> groupMembers) {
+	/*public void setHouseholdGroupMembers(Set<HouseholdObs> groupMembers) {
 		this.householdGroupMembers = groupMembers;
-	}
+	}*/
 	
 	/**
 	 * Convenience method to add the given <code>obs</code> to this grouping. Will implicitly make
@@ -379,7 +381,7 @@ public class HouseholdObs extends BaseOpenmrsData {
 	 * @see #setGroupMembers(Set)
 	 * @see #getGroupMembers()
 	 */
-	public void addGroupMember(HouseholdObs member) {
+	/*public void addGroupMember(HouseholdObs member) {
 		if (member == null)
 			return;
 		
@@ -394,7 +396,7 @@ public class HouseholdObs extends BaseOpenmrsData {
 		
 		member.setHouseholdObsGroup(this);
 		householdGroupMembers.add(member);
-	}
+	}*/
 	
 	/**
 	 * Convenience method to remove an HouseholdObs from this grouping This also removes the link in the
@@ -404,13 +406,13 @@ public class HouseholdObs extends BaseOpenmrsData {
 	 * @see #setGroupMembers(Set)
 	 * @see #getGroupMembers()
 	 */
-	public void removeGroupMember(HouseholdObs member) {
+	/*public void removeGroupMember(HouseholdObs member) {
 		if (member == null || getHouseholdGroupMembers() == null)
 			return;
 		
 		if (householdGroupMembers.remove(member))
 			member.setHouseholdObsGroup(null);
-	}
+	}*/
 	
 	/**
 	 * Convenience method that returns related HouseholdObs If the HouseholdObs argument is not an HouseholdObsGroup: a
@@ -422,7 +424,7 @@ public class HouseholdObs extends BaseOpenmrsData {
 	 * 
 	 * @return Set<HouseholdObs>
 	 */
-	public Set<HouseholdObs> getRelatedHouseholdObservations() {
+	/*public Set<HouseholdObs> getRelatedHouseholdObservations() {
 		Set<HouseholdObs> ret = new HashSet<HouseholdObs>();
 		if (this.isHouseholdObsGrouping()) {
 			ret.addAll(this.getHouseholdGroupMembers());
@@ -441,7 +443,7 @@ public class HouseholdObs extends BaseOpenmrsData {
 			}
 		}
 		return ret;
-	}
+	}*/
 	
 	/**
 	 * @return Returns the obsId.
@@ -502,6 +504,20 @@ public class HouseholdObs extends BaseOpenmrsData {
 		this.householdGroups = householdGroups;
 		if (householdGroups != null)
 			this.householdGroupId = householdGroups.getId();
+	}
+
+    /**
+	 * @return Returns the householdObsGroupUuid
+	 */
+	public String getHouseholdObsGroupUuid() {
+		return householdObsGroupUuid;
+	}
+
+	/**
+	 * @param householdObsGroupUuid The valueCoded to set.
+	 */
+	public void setHouseholdObsGroupUuid(String householdObsGroupUuid) {
+		this.householdObsGroupUuid = householdObsGroupUuid;
 	}
 
 	/**
@@ -704,7 +720,7 @@ public class HouseholdObs extends BaseOpenmrsData {
 			return Format.format(getValueDatetime(), locale, FORMAT_TYPE.DATE);
 		else if (getValueText() != null)
 			return getValueText();
-		else if (hasGroupMembers()) {
+		/*else if (hasGroupMembers()) {
 			// all of the values are null and we're an obs group...so loop
 			// over the members and just do a getValueAsString on those
 			// this could potentially cause an infinite loop if an obs group
@@ -716,7 +732,7 @@ public class HouseholdObs extends BaseOpenmrsData {
 				sb.append(groupMember.getValueAsString(locale));
 			}
 			return sb.toString();
-		}
+		}*/
 		
 		return "";
 	}

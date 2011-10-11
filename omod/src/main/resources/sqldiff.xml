@@ -340,4 +340,15 @@
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 		</sql>
 	</diff>
+	<diff>
+		<version>1.0.2</version>
+		<author>Jonah S. Mwogi</author>
+		<date>Oct 1, 2011</date>
+		<description>
+			Drop constraint to allow for household grouping uuid
+		</description>
+		<sql>
+			ALTER TABLE `household_obs` DROP FOREIGN KEY `household_obs_grouping_uuid`;
+		</sql>
+	</diff>
 </sqldiff>
