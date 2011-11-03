@@ -28,7 +28,7 @@ public class HouseholdAdminExt extends AdministrationSectionExt {
 		Map<String, String> map = new LinkedHashMap<String, String>();
 		map.put("module/household/householdDefinitions.form", "Definitions/Groups");
 		map.put("module/household/householdRegistration.form", "Registration");
-		map.put("module/household/householdEncounterTypeList.list", "Encounters");
+		map.put("module/household/householdEncounterTypeList.list", "Encounters Types");
 		map.put("module/household/householdEnctypeSetting.htm", "Settings");
 		map.put("module/household/manageHouseholdLocation.form", "Locations/Sites");
 		map.put("module/household/householdCHWInitial.form", "CHW Initial Encounter");

@@ -39,7 +39,7 @@ function toggle_visibility() {
 		info.style.display = 'block';
     }
  }
- b
+ 
  function getMem(strHID){
 	 DWRHouseholdService.getHouseholdMembersPortlet(strHID,getMemDisp);
 	 //toggle_visibility(hItemid)
@@ -111,13 +111,13 @@ function toggle_visibility() {
 
 
 
-<b class="boxHeader"><spring:message code="household.definitions.header"/></b>
+<b class="boxHeader">Household</b>
 <div class="box">
 	<table id="patientDetail" cellpadding="5" width="80%">
 		<thead>
 		<tr>
 			<th class="tbClass">No</th>
-			<th class="tbClass">Household</th>
+			<th class="tbClass">Household Name</th>
 			<th class="tbClass">Start Date</th>
 			<th class="tbClass">End Date</th>
 			<th class="tbClass">Encounters</th>
@@ -128,15 +128,15 @@ function toggle_visibility() {
 		<tbody>
 			<t:forEach var="householdMem" items="${model.householdMems}" varStatus="state">
 				<tr>
-					<td class="tdClass"><t:out value="${state.index + 1}"/></td>
-					<td class="tdClass"><a href="#" onclick="javascript:getMem(${householdMem.householdMembershipGroups.id});">View Members</a></td>
-					<td class="tdClass"> <t:out value="${householdMem.startDate}"/></td>
-					<td class="tdClass"> <t:out value="${householdMem.endDate}"/><input type="hidden" name="householdId" id="householdId" value="${householdMem.householdMembershipGroups.id}"></td>
-					<td class="tdClass">
+					<td class="tdClass" valign="top"><t:out value="${state.index + 1}"/></td>
+					<td class="tdClass" valign="top"><a href="#" onclick="javascript:getMem(${householdMem.householdMembershipGroups.id});">${householdMem.householdMembershipGroups.householdIdentifier}</a></td>
+					<td class="tdClass" valign="top"> <t:out value="${householdMem.startDate}"/></td>
+					<td class="tdClass" valign="top"> <t:out value="${householdMem.endDate}"/><input type="hidden" name="householdId" id="householdId" value="${householdMem.householdMembershipGroups.id}"></td>
+					<td class="tdClass" valign="top">
 						<div class="encountersForHousehold">
 							<t:forEach var="enc" items="${model.encounters[householdMem.householdMembershipGroups.id]}" varStatus="states">
 								<%-- <a href='#' onclick='javascript:view(${enc.householdEncounterId})'> ${states.index + 1} . View - ${enc.householdEncounterId}</a><br /> --%>
-                                <a href="#" id="getHouseholdEncObs" onclick="javascript:getEncObs('${enc.uuid}');">${states.index + 1} . View - ${enc.householdEncounterId}</a> <br />  
+                                <a href="#" id="getHouseholdEncObs" onclick="javascript:getEncObs('${enc.uuid}');">${states.index + 1} . Encounter - ${enc.dateCreated}</a> <br />  
 							</t:forEach>
 						</div>
 					</td>
@@ -147,8 +147,6 @@ function toggle_visibility() {
 	
 	<div id="infoMem" style="display:none;">
 
-		<h2>Members</h2>
-	
 		<div id="xsnazzy">
 			<b class="xtop"><b class="xb1"></b><b class="xb2"></b><b class="xb3"></b><b class="xb4"></b></b>
 			<div class="xboxcontent">

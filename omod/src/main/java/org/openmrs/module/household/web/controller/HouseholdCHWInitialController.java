@@ -158,81 +158,91 @@ public class HouseholdCHWInitialController {
 		String returnVisitDate = request.getParameter("returnVisitDate");//5096C
 		String []revisitItems = request.getParameterValues("revisitItems");//6889C[]
 		
-		String []arrayItems = {bednetsObserved, bednetsCondition,
+		/*String []arrayItems = {bednetsObserved, bednetsCondition,
 				bednetsEducation, stableFoodAvailable, treatWater, hasLatrine, sharedLatrine,
-				handWashFacility, waterEducation, returnVisitDate};
-		String[][] arrayItems2 = {waterSources, waterTreatMethod, latrineType, revisitItems};
-		int []arrayItems3 = {noOfSleepingSpaces, noOfBedNets};
-		
-		int sizeOfArrays = arrayItems.length + arrayItems2.length + arrayItems3.length;
-		
+				handWashFacility, waterEducation, returnVisitDate};*/
 		int grpObs = 1;
 		
 		List<HouseholdObs> obs = new ArrayList<HouseholdObs>();
 
 
-		for(int i=0; i<sizeOfArrays; i++){
-			if(i<arrayItems.length){
-				//handle the string arrayItems
-				if((arrayItems[i].equals(bednetsObserved)) && !(StringUtils.isEmpty(bednetsObserved))){
-					obs.add(putObsToList(6869, householdGroups, Integer.parseInt(bednetsObserved), false, 0));
-				}else if((arrayItems[i].equals(bednetsCondition)) && !(StringUtils.isEmpty(bednetsCondition))){
-					obs.add(putObsToList(6870, householdGroups, Integer.parseInt(bednetsCondition), false, 0));
-				}else if((arrayItems[i].equals(bednetsEducation)) && !(StringUtils.isEmpty(bednetsEducation))){
-					obs.add(putObsToList(6871, householdGroups, Integer.parseInt(bednetsEducation), false, 0));
-				}else if((arrayItems[i].equals(stableFoodAvailable)) && !(StringUtils.isEmpty(stableFoodAvailable))){
-					obs.add(putObsToList(6872, householdGroups, Integer.parseInt(stableFoodAvailable), false, 0));
-				}else if((arrayItems[i].equals(treatWater)) && !(StringUtils.isEmpty(treatWater))){
-					obs.add(putObsToList(6860, householdGroups, Integer.parseInt(treatWater), false, 0));
-				}else if((arrayItems[i].equals(hasLatrine)) && !(StringUtils.isEmpty(hasLatrine))){
-					obs.add(putObsToList(6874, householdGroups, Integer.parseInt(hasLatrine), false, 0));
-				}else if((arrayItems[i].equals(sharedLatrine)) && !(StringUtils.isEmpty(sharedLatrine))){
-					obs.add(putObsToList(6875, householdGroups, Integer.parseInt(sharedLatrine), false, 0));
-				}else if((arrayItems[i].equals(handWashFacility)) && !(StringUtils.isEmpty(handWashFacility))){
-					obs.add(putObsToList(6876, householdGroups, Integer.parseInt(handWashFacility), false, 0));
-				}else if((arrayItems[i].equals(waterEducation)) && !(StringUtils.isEmpty(waterEducation))){
-					obs.add(putObsToList(6877, householdGroups, Integer.parseInt(waterEducation), false, 0));
-				}else if((arrayItems[i].equals(returnVisitDate)) && !(StringUtils.isEmpty(returnVisitDate))){
-					obs.add(putObsToListDate(5096, householdGroups, returnVisitDate, false, 2));
-				}
-				
-				
-			}else if((i>=arrayItems.length)&&(i<(arrayItems.length + arrayItems2.length))){
-				//handle arrayItems2 arrayarrayItems2 = {, , , }
-				if(arrayItems2[i-arrayItems.length].equals(waterSources)){
-                    obsGrpUuid = UUID.randomUUID() + "";
-					for(int x=0;x<waterSources.length;x++)
-						obs.add(putObsToList(6386, householdGroups, Integer.parseInt(waterSources[x]), true, grpObs));
-					grpObs++;
-				}else if(arrayItems2[i-arrayItems.length].equals(waterTreatMethod)){
-					obsGrpUuid = UUID.randomUUID() + "";
-                    for(int x=0;x<waterTreatMethod.length;x++)
-						obs.add(putObsToList(6864, householdGroups, Integer.parseInt(waterTreatMethod[x]), true, grpObs));
-					grpObs++;
-				}else if(arrayItems2[i-arrayItems.length].equals(latrineType)){
-                    obsGrpUuid = UUID.randomUUID() + "";
-					for(int x=0;x<latrineType.length;x++)
-						obs.add(putObsToList(6390, householdGroups, Integer.parseInt(latrineType[x]), true, grpObs));
-					grpObs++;
-				}else if(arrayItems2[i-arrayItems.length].equals(revisitItems)){
-					obsGrpUuid = UUID.randomUUID() + "";
-                    grpObs++;
-				} 
-			}else{
-				//handle arrayItems3 array arrayItems3 = {, };
-				if((arrayItems3[i-(arrayItems.length + arrayItems2.length)] == noOfSleepingSpaces)&& (!StringUtils.isEmpty(strNoOfSleepingSpaces))){
-					obs.add(putObsToList(6865, householdGroups, noOfSleepingSpaces, false, 1));
-				}else if((arrayItems3[i-(arrayItems.length + arrayItems2.length)] == noOfBedNets)&& (!StringUtils.isEmpty(strNoOfBedNets))){
-					obs.add(putObsToList(6866, householdGroups, noOfBedNets, false, 1));
-				}
-			}
-			
+		//handle the string arrayItems
+		if(!(StringUtils.isEmpty(bednetsObserved))){
+			obs.add(putObsToList(6869, householdGroups, Integer.parseInt(bednetsObserved), false, 0));
 		}
+		if(!(StringUtils.isEmpty(bednetsCondition))){
+			obs.add(putObsToList(6870, householdGroups, Integer.parseInt(bednetsCondition), false, 0));
+		}
+		if(!(StringUtils.isEmpty(bednetsEducation))){
+			obs.add(putObsToList(6871, householdGroups, Integer.parseInt(bednetsEducation), false, 0));
+		}
+		if(!(StringUtils.isEmpty(stableFoodAvailable))){
+			obs.add(putObsToList(6872, householdGroups, Integer.parseInt(stableFoodAvailable), false, 0));
+		}
+		if(!(StringUtils.isEmpty(treatWater))){
+			obs.add(putObsToList(6860, householdGroups, Integer.parseInt(treatWater), false, 0));
+		}
+		if(!(StringUtils.isEmpty(hasLatrine))){
+			obs.add(putObsToList(6874, householdGroups, Integer.parseInt(hasLatrine), false, 0));
+		}
+		if(!(StringUtils.isEmpty(sharedLatrine))){
+			obs.add(putObsToList(6875, householdGroups, Integer.parseInt(sharedLatrine), false, 0));
+		}
+		if(!(StringUtils.isEmpty(handWashFacility))){
+			obs.add(putObsToList(6876, householdGroups, Integer.parseInt(handWashFacility), false, 0));
+		}
+		if(!(StringUtils.isEmpty(waterEducation))){
+			obs.add(putObsToList(6877, householdGroups, Integer.parseInt(waterEducation), false, 0));
+		}
+		if(!(StringUtils.isEmpty(returnVisitDate))){
+			obs.add(putObsToListDate(5096, householdGroups, returnVisitDate, false, 2));
+		}
+		try{
+			if(waterSources.length != 0){
+	            obsGrpUuid = UUID.randomUUID() + "";
+				for(int x=0;x<waterSources.length;x++)
+					obs.add(putObsToList(6386, householdGroups, Integer.parseInt(waterSources[x]), true, grpObs));
+				grpObs++;
+			}
+		}
+		catch (Exception e) {}
+		try{
+			if(waterTreatMethod.length != 0){
+				obsGrpUuid = UUID.randomUUID() + "";
+	            for(int x=0;x<waterTreatMethod.length;x++)
+					obs.add(putObsToList(6864, householdGroups, Integer.parseInt(waterTreatMethod[x]), true, grpObs));
+				grpObs++;
+			}
+		}
+		catch (Exception e) {}
+		try{
+			if(latrineType.length != 0){
+	            obsGrpUuid = UUID.randomUUID() + "";
+				for(int x=0;x<latrineType.length;x++)
+					obs.add(putObsToList(6390, householdGroups, Integer.parseInt(latrineType[x]), true, grpObs));
+				grpObs++;
+			}
+		}catch (Exception e) {}
+		try{
+			if(revisitItems.length != 0){
+				obsGrpUuid = UUID.randomUUID() + "";
+				for(int x=0;x<revisitItems.length;x++)
+					obs.add(putObsToList(6390, householdGroups, Integer.parseInt(revisitItems[x]), true, grpObs));
+	            grpObs++;
+			}
+		}catch (Exception e) {}
+		if(!StringUtils.isEmpty(strNoOfSleepingSpaces)){
+			obs.add(putObsToList(6865, householdGroups, noOfSleepingSpaces, false, 1));
+		}
+		if(!StringUtils.isEmpty(strNoOfBedNets)){
+			obs.add(putObsToList(6866, householdGroups, noOfBedNets, false, 1));
+		}
+		
 		for (HouseholdObs ob : obs){
 			ob.setHouseholdEncounter(encounter);
 			service.saveHouseholdObs(ob, "msg");
+			log.info("\n .......:>>" + ob.getConcept().getConceptId());
 			httpSession.setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Observations Saved Successfully");
-			log.info("\n ....NO...:" + ob.getHouseholdEncounter().getId());
 		}
 	}
 	

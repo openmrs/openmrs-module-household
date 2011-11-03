@@ -99,7 +99,11 @@ public class DWRHouseholdService {
 		//log.info("\n =====" + strVal);
 		return strVal;
 	}
-	
+	/**
+	 * This method return the household members for an household
+	 * @param strHh
+	 * @return
+	 */
 	public String getHousehold(String strHh) {
 		HouseholdService service = Context.getService(HouseholdService.class);
 		Household hh = new Household();
@@ -124,6 +128,23 @@ public class DWRHouseholdService {
 		}
 		
 		return strHousehold;
+	}
+	/**
+	 * This method returns all households that belong to a given definition/group.
+	 * @param strUuid
+	 * @return household identifiers list
+	 */
+	public String getHouseholds(String strUuid){
+		HouseholdService service = Context.getService(HouseholdService.class);
+		List<Household> hholds = service.getAllHouseholdsByDefinitionUuid(strUuid);
+		String toRet = "";
+		toRet = hholds.get(0).getHouseholdDef().getHouseholdDefinitionsCodeinfull();
+		for (@SuppressWarnings("rawtypes")
+				Iterator iterator = hholds.iterator(); iterator.hasNext();) {
+			Household household = (Household) iterator.next();
+			toRet +="|" + household.getHouseholdIdentifier();
+		}
+		return toRet;
 	}
 	
 	public String getHouseholdEncountersObs(String encUuid){

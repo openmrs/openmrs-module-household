@@ -118,6 +118,13 @@ public class HouseholdServiceImpl extends BaseOpenmrsService implements Househol
 	public List<Household> getAllHouseholdGroups() {
 		return householdDAO.getAllHouseholdGroups();
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.openmrs.module.household.service.getAllHouseholdsByDefinitionUuid#getAllHouseholdsByDefinitionUuid(String definitionUuid)
+	 */
+	public List<Household> getAllHouseholdsByDefinitionUuid(String definitionUuid){
+		return householdDAO.getAllHouseholdsByDefinitionUuid(definitionUuid);
+	}
 
 	/* (non-Javadoc)
 	 * @see org.openmrs.module.household.service.HouseholdService#saveHouseholdMembership(org.openmrs.module.household.model.HouseholdMembership)
@@ -187,11 +194,9 @@ public class HouseholdServiceImpl extends BaseOpenmrsService implements Househol
 	public List<HouseholdMembership> getIndexPerson(Integer id) {
 		return householdDAO.getIndexPerson(id);
 	}
-	@Override
 	public List<HouseholdMembership> getAllNonVoidedHouseholdMembershipsByGroupNotIndex(Household grp){
 		return householdDAO.getAllNonVoidedHouseholdMembershipsByGroupNotIndex(grp);
 	}
-	@Override
 	public List<HouseholdMembership> getHouseholdIndexByGroup(Household grp){
 		return householdDAO.getHouseholdIndexByGroup(grp);
 	}
@@ -249,7 +254,6 @@ public class HouseholdServiceImpl extends BaseOpenmrsService implements Househol
 	/* (non-Javadoc)
 	 * @see org.openmrs.module.household.service.HouseholdService#saveHouseholdLocation(org.openmrs.module.household.model.HouseholdLocation)
 	 */
-	@Override
 	public HouseholdLocation saveHouseholdLocation(HouseholdLocation location)
 			throws APIException {
 		return householdDAO.saveHouseholdLocation(location);
@@ -258,7 +262,6 @@ public class HouseholdServiceImpl extends BaseOpenmrsService implements Househol
 	/* (non-Javadoc)
 	 * @see org.openmrs.module.household.service.HouseholdService#getHouseholdLocation(java.lang.Integer)
 	 */
-	@Override
 	public HouseholdLocation getHouseholdLocation(Integer locationId)
 			throws APIException {
 		return householdDAO.getHouseholdLocation(locationId);
@@ -267,7 +270,6 @@ public class HouseholdServiceImpl extends BaseOpenmrsService implements Househol
 	/* (non-Javadoc)
 	 * @see org.openmrs.module.household.service.HouseholdService#getHouseholdLocation(java.lang.String)
 	 */
-	@Override
 	public HouseholdLocation getHouseholdLocation(String name)
 			throws APIException {
 		return householdDAO.getHouseholdLocation(name);
@@ -276,7 +278,6 @@ public class HouseholdServiceImpl extends BaseOpenmrsService implements Househol
 	/* (non-Javadoc)
 	 * @see org.openmrs.module.household.service.HouseholdService#getDefaultHouseholdLocation()
 	 */
-	@Override
 	public HouseholdLocation getDefaultHouseholdLocation() throws APIException {
 		// TODO Auto-generated method stub
 		return null;
@@ -285,7 +286,6 @@ public class HouseholdServiceImpl extends BaseOpenmrsService implements Househol
 	/* (non-Javadoc)
 	 * @see org.openmrs.module.household.service.HouseholdService#getHouseholdLocationByUuid(java.lang.String)
 	 */
-	@Override
 	public HouseholdLocation getHouseholdLocationByUuid(String uuid)
 			throws APIException {
 		return householdDAO.getHouseholdLocationByUuid(uuid);
@@ -294,7 +294,6 @@ public class HouseholdServiceImpl extends BaseOpenmrsService implements Househol
 	/* (non-Javadoc)
 	 * @see org.openmrs.module.household.service.HouseholdService#getAllHouseholdLocations()
 	 */
-	@Override
 	public List<HouseholdLocation> getAllHouseholdLocations()
 			throws APIException {
 		return householdDAO.getAllHouseholdLocations(true);
@@ -303,7 +302,6 @@ public class HouseholdServiceImpl extends BaseOpenmrsService implements Househol
 	/* (non-Javadoc)
 	 * @see org.openmrs.module.household.service.HouseholdService#getAllHouseholdLocations(boolean)
 	 */
-	@Override
 	public List<HouseholdLocation> getAllHouseholdLocations(
 			boolean includeRetired) throws APIException {
 		return householdDAO.getAllHouseholdLocations(includeRetired);
@@ -312,7 +310,6 @@ public class HouseholdServiceImpl extends BaseOpenmrsService implements Househol
 	/* (non-Javadoc)
 	 * @see org.openmrs.module.household.service.HouseholdService#getHouseholdLocations(java.lang.String)
 	 */
-	@Override
 	public List<HouseholdLocation> getHouseholdLocations(String nameFragment)
 			throws APIException {
 		return getHouseholdLocations(nameFragment, false, null, null);
@@ -321,7 +318,6 @@ public class HouseholdServiceImpl extends BaseOpenmrsService implements Househol
 	/* (non-Javadoc)
 	 * @see org.openmrs.module.household.service.HouseholdService#getHouseholdLocations(java.lang.String, boolean, java.lang.Integer, java.lang.Integer)
 	 */
-	@Override
 	public List<HouseholdLocation> getHouseholdLocations(String nameFragment,
 			boolean includeRetired, Integer start, Integer length)
 			throws APIException {
@@ -331,7 +327,6 @@ public class HouseholdServiceImpl extends BaseOpenmrsService implements Househol
 	/* (non-Javadoc)
 	 * @see org.openmrs.module.household.service.HouseholdService#retireHouseholdLocation(org.openmrs.module.household.model.HouseholdLocation, java.lang.String)
 	 */
-	@Override
 	public HouseholdLocation retireHouseholdLocation(
 			HouseholdLocation location, String reason) throws APIException {
 		location.setRetired(true);
@@ -342,7 +337,6 @@ public class HouseholdServiceImpl extends BaseOpenmrsService implements Househol
 	/* (non-Javadoc)
 	 * @see org.openmrs.module.household.service.HouseholdService#unretireHouseholdLocation(org.openmrs.module.household.model.HouseholdLocation)
 	 */
-	@Override
 	public HouseholdLocation unretireHouseholdLocation(
 			HouseholdLocation location) throws APIException {
 		location.setRetired(false);
@@ -352,7 +346,6 @@ public class HouseholdServiceImpl extends BaseOpenmrsService implements Househol
 	/* (non-Javadoc)
 	 * @see org.openmrs.module.household.service.HouseholdService#purgeHouseholdLocation(org.openmrs.module.household.model.HouseholdLocation)
 	 */
-	@Override
 	public void purgeHouseholdLocation(HouseholdLocation location)
 			throws APIException {
 		householdDAO.deleteHouseholdLocation(location);
@@ -361,7 +354,6 @@ public class HouseholdServiceImpl extends BaseOpenmrsService implements Househol
 	/* (non-Javadoc)
 	 * @see org.openmrs.module.household.service.HouseholdService#getCountOfHouseholdLocations(java.lang.String, java.lang.Boolean)
 	 */
-	@Override
 	public Integer getCountOfHouseholdLocations(String nameFragment,
 			Boolean includeRetired) {
 		return householdDAO.getCountOfHouseholdLocations(nameFragment, includeRetired);

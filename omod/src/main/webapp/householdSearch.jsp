@@ -100,7 +100,6 @@
 	}
 </script>
 
-<body onload="document.checked.voidMembers.disabled=true">
 <div id="dialog" title="Saved Information"></div>
 
 <b class="boxHeader"><spring:message code="household.householdsearch.title"/></b>
@@ -110,7 +109,7 @@
 	<a href="householdSearch.form">Search for a Household</a>&nbsp;|&nbsp;
 	<a href="householdResume.form">Resume Household</a>&nbsp;|&nbsp;
 	<a href="householdIndexPerson.form">Change Index/Head</a><br />
-  	<form method="POST" name="checked">
+  	<form method="POST" name="checkedForm">
 		<table border="0" cellpadding="0" cellspacing="0">
 		  <tr>
 		    <td><spring:message code="household.householdSearch.identifier" /></td>
@@ -140,8 +139,8 @@
 		<c:choose>
 			<c:when test="${not empty hhmembers}">
 		<input type="button" name="CheckAll" value="Check All" onClick="checkAll(document.checked.id)" />
-		<input type="button" name="UnCheckAll" value="Check All" onClick="uncheckAll(document.checked.id)" />
-						
+		<input type="button" name="UnCheckAll" value="Uncheck All" onClick="uncheckAll(document.checked.id)" />
+			<br /> <b> ____________________________${hhold}___________________ </b><br />			
 			<table border="0" id="householdMembers1" cellpadding="0" cellspacing="5">
 				<thead>
 				  		<tr>
@@ -151,9 +150,6 @@
 				  			<th class="tbClass">Birth Date</th>
 				  			<th class="tbClass">Head/Index</th>
 				  			<th class="tbClass">Start Date</th>
-				  			
-				  			
-				  			
 				  		</tr>
 				 </thead>
 				 <tbody>	
@@ -161,7 +157,29 @@
 				  		
 				  		<tr>
 				  			<td class="tdClass"><input type="checkbox" name="id" onclick="listMem(this,'${householdMembers.id}')"></td>
-				  			<td class="tdClass">${householdMembers.householdMembershipMember.names}</td>
+				  			<td class="tdClass">
+				  			<c:choose>
+								<c:when test="${not empty householdMembers.householdMembershipMember.givenName }">
+								${householdMembers.householdMembershipMember.givenName} &nbsp;
+								</c:when>
+								<c:otherwise>
+								</c:otherwise>
+							</c:choose>
+							<c:choose>
+								<c:when test="${not empty householdMembers.householdMembershipMember.middleName }">
+								${householdMembers.householdMembershipMember.middleName} &nbsp;
+								</c:when>
+								<c:otherwise>
+								</c:otherwise>
+							</c:choose>
+							<c:choose>
+								<c:when test="${not empty householdMembers.householdMembershipMember.familyName }">
+								${householdMembers.householdMembershipMember.familyName} &nbsp;
+								</c:when>
+								<c:otherwise>
+								</c:otherwise>
+							</c:choose>
+				  			</td>
 				   			<td class="tdClass" align="center">${householdMembers.householdMembershipMember.gender}</td>
 				  			<td class="tdClass" align="center">${fn:substring(householdMembers.householdMembershipMember.birthdate,0,10)}</td>
 				  			<td class="tdClass" align="center">${householdMembers.householdMembershipHeadship}</td>
@@ -216,11 +234,20 @@
 				</table>
 			</c:when>
 			<c:otherwise>
+				<c:choose>
+					<c:when test="${not empty hhold}">
+						<div class="error" id="errorDiv">
+							${hhold} - doesn't have members registered to.
+						</div>
+					</c:when>
+					<c:otherwise>
+						Enter something to search.
+					</c:otherwise>
+				</c:choose>
 			</c:otherwise>
 			</c:choose>
 			  		
 	</form>	
 			
 </div>
-</body>
 <%@ include file="/WEB-INF/template/footer.jsp"%>

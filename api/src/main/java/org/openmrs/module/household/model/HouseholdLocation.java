@@ -59,7 +59,6 @@ public class HouseholdLocation extends BaseOpenmrsMetadata implements java.io.Se
 	/** (non-Javadoc)
 	 * @see org.openmrs.OpenmrsObject#getId()
 	 */
-	@Override
 	public Integer getId() {
 		// TODO Auto-generated method stub
 		return getHouseholdLocationId();
@@ -68,7 +67,6 @@ public class HouseholdLocation extends BaseOpenmrsMetadata implements java.io.Se
 	/** (non-Javadoc)
 	 * @see org.openmrs.OpenmrsObject#setId(java.lang.Integer)
 	 */
-	@Override
 	public void setId(Integer id) {
 		setHouseholdLocationId(id);
 	}
@@ -389,7 +387,6 @@ public class HouseholdLocation extends BaseOpenmrsMetadata implements java.io.Se
 		return false;
 	}
 
-	@Override
 	public List<HouseholdLocation> findPossibleValues(String searchText) {
 		return null;
 	}
@@ -399,24 +396,20 @@ public class HouseholdLocation extends BaseOpenmrsMetadata implements java.io.Se
 		return getName();
 	}
 	
-	@Override
 	public String getDisplayString() {
 		return getName();
 	}
 
-	@Override
 	public List<HouseholdLocation> getPossibleValues() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
 	public HouseholdLocation hydrate(String arg0) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
 	public String serialize() {
 		if (getHouseholdLocationId() != null)
 			return "" + getHouseholdLocationId();

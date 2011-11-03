@@ -48,8 +48,7 @@ public class HouseholdSearchController {
 		{
 		HouseholdService service = Context.getService(HouseholdService.class);
 		Household grp=null;
-		//Integer householdGroup1=0;
-		log.info("Processing post request ..." + householdGroup);
+		map.addAttribute("hhold", householdGroup);
 		
 		if(request.getParameter("findMembers") !=null && StringUtils.hasText(householdGroup)){
 			 //householdGroup1=(Integer.parseInt( householdGroup));

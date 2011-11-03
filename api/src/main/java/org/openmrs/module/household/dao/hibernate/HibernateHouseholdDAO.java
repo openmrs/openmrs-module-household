@@ -145,7 +145,14 @@ public class HibernateHouseholdDAO implements HouseholdDAO {
 		return criteria.list();
 	}
 
-
+	@SuppressWarnings("unchecked")
+	public List<Household> getAllHouseholdsByDefinitionUuid(String definitionUuid){
+		HouseholdDefinition hd = new HouseholdDefinition();
+		hd.setUuid(definitionUuid);
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Household.class).add(
+			    Expression.eq("householdDef", hd));
+		return criteria.list();
+	}
 
 	/* (non-Javadoc)
 	 * @see org.openmrs.module.household.dao.HouseholdDAO#saveHouseholdMembership(
@@ -342,7 +349,6 @@ public class HibernateHouseholdDAO implements HouseholdDAO {
 	 * @see org.openmrs.module.household.dao.HouseholdDAO#getHouseholdLocation(java.lang.String)
 	 */
 	@SuppressWarnings("unchecked")
-	@Override
 	public HouseholdLocation getHouseholdLocation(String name) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(HouseholdLocation.class).add(
 			    Expression.eq("name", name));
@@ -359,7 +365,6 @@ public class HibernateHouseholdDAO implements HouseholdDAO {
 	 * @see org.openmrs.module.household.dao.HouseholdDAO#getAllHouseholdLocations(boolean)
 	 */
 	@SuppressWarnings("unchecked")
-	@Override
 	public List<HouseholdLocation> getAllHouseholdLocations(
 			boolean includeRetired) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(HouseholdLocation.class);
@@ -375,7 +380,6 @@ public class HibernateHouseholdDAO implements HouseholdDAO {
 	 * @see org.openmrs.module.household.dao.HouseholdDAO#getHouseholdLocations(java.lang.String, boolean, java.lang.Integer, java.lang.Integer)
 	 */
 	@SuppressWarnings("unchecked")
-	@Override
 	public List<HouseholdLocation> getHouseholdLocations(String nameFragment,
 			boolean includeRetired, Integer start, Integer length)
 			throws DAOException {
@@ -399,7 +403,6 @@ public class HibernateHouseholdDAO implements HouseholdDAO {
 	/* (non-Javadoc)
 	 * @see org.openmrs.module.household.dao.HouseholdDAO#deleteHouseholdLocation(org.openmrs.module.household.model.HouseholdLocation)
 	 */
-	@Override
 	public void deleteHouseholdLocation(HouseholdLocation location) {
 		sessionFactory.getCurrentSession().delete(location);
 	}
@@ -408,7 +411,6 @@ public class HibernateHouseholdDAO implements HouseholdDAO {
 	/* (non-Javadoc)
 	 * @see org.openmrs.module.household.dao.HouseholdDAO#getHouseholdLocationByUuid(java.lang.String)
 	 */
-	@Override
 	public HouseholdLocation getHouseholdLocationByUuid(String uuid) {
 		return (HouseholdLocation) sessionFactory.getCurrentSession().createQuery("from Household_Location l where l.uuid = :uuid").setString(
 			    "uuid", uuid).uniqueResult();
@@ -418,7 +420,6 @@ public class HibernateHouseholdDAO implements HouseholdDAO {
 	/* (non-Javadoc)
 	 * @see org.openmrs.module.household.dao.HouseholdDAO#getCountOfHouseholdLocations(java.lang.String, java.lang.Boolean)
 	 */
-	@Override
 	public Integer getCountOfHouseholdLocations(String nameFragment,
 			Boolean includeRetired) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(HouseholdLocation.class);
@@ -710,7 +711,7 @@ public class HibernateHouseholdDAO implements HouseholdDAO {
 	public List<HouseholdEncounter> getEncountersByHouseholdUuid(String householdUuid) throws DAOException {
 		Criteria crit = sessionFactory.getCurrentSession().createCriteria(HouseholdEncounter.class).createAlias("householdGroupId", "h").add(
 			    Expression.eq("h.uuid", householdUuid)).add(Expression.eq("voided", false)).addOrder(
-			    Order.desc("householdEncounterDatetime"));
+			    Order.desc("householdEncounterId"));
 			
 			return crit.list();
 	}
@@ -718,8 +719,8 @@ public class HibernateHouseholdDAO implements HouseholdDAO {
 
 	
 	public HouseholdEncounter getHouseholdEncounterByUUID(String uuid) {
-		return (HouseholdEncounter) sessionFactory.getCurrentSession().createQuery("from HouseholdEncounter e where e.uuid = :uuid")
-        .setString("uuid", uuid).uniqueResult();
+		return (HouseholdEncounter) sessionFactory.getCurrentSession().createQuery("from HouseholdEncounter e where e.uuid = " +
+				":uuid order by e.householdEncounterDatetime").setString("uuid", uuid).uniqueResult();
 	}
 
 

@@ -103,6 +103,15 @@ public interface HouseholdService extends OpenmrsService{
 	public List<Household> getAllHouseholdGroups();
 	
 	/**
+	 * Get all Household records via definition uuid
+	 * 
+	 * @return all Households in the system with the matching definitions uuid
+	 */
+	@Transactional(readOnly = true)
+	@Authorized("View Household")
+	public List<Household> getAllHouseholdsByDefinitionUuid(String definitionUuid);
+	
+	/**
 	 * Save one HouseholdMembership object to the database
 	 * 
 	 * @param householdMemberships HouseholdMemberships object to be saved

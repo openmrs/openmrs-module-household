@@ -73,8 +73,8 @@
 	
 	function validateInput(){
 		var errorDivElement = document.getElementById("errorDiv");
-		var revisitItems = document.getElementById("revisitItems").value;
-		var returnVisitDate = document.getElementById("returnVisitDate").value;
+		//var revisitItems = document.getElementById("revisitItems").value;
+		//var returnVisitDate = document.getElementById("returnVisitDate").value;
 		//var latrineType = document.getElementById("latrineType").value;
 		var waterTreatMethod = document.getElementById("waterTreatMethod").value;
 		var waterSources = document.getElementById("waterSources").value;

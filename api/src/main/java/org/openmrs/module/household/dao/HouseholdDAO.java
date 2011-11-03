@@ -88,6 +88,13 @@ public interface HouseholdDAO {
 	public List<Household> getAllHouseholdGroups();
 	
 	/**
+	 * Get all Household records by DefinitionUuid
+	 * 
+	 * @return all Household record in the system that match the uuid
+	 */
+	public List<Household> getAllHouseholdsByDefinitionUuid(String definitionUuid);
+	
+	/**
 	 * Save one HouseholdMembership object to the database
 	 * 
 	 * @param householdMemberships HouseholdMemberships object to be saved

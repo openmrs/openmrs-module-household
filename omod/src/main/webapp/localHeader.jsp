@@ -25,7 +25,7 @@
 	<openmrs:hasPrivilege privilege="Manage Household">
 		<li <c:if test='<%= request.getRequestURI().contains("householdEncounterType") %>'>class="active"</c:if>>
 			<a href="${pageContext.request.contextPath}/module/household/householdEncounterTypeList.list">
-				Encounters
+				Encounters Types
 			</a>
 		</li>
 	</openmrs:hasPrivilege>

@@ -18,7 +18,6 @@ public class HouseholdActivator implements Activator {
 	/* (non-Javadoc)
 	 * @see org.openmrs.module.Activator#startup()
 	 */
-	@Override
 	public void startup() {
 		log.info("Starting Household module");
 	}
@@ -26,7 +25,6 @@ public class HouseholdActivator implements Activator {
 	/* (non-Javadoc)
 	 * @see org.openmrs.module.Activator#shutdown()
 	 */
-	@Override
 	public void shutdown() {
 		log.info("Stopping Household module");
 	}
