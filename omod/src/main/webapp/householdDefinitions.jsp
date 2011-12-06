@@ -9,7 +9,16 @@
 <h3><spring:message code="household.title"/></h3>
 
 <%@ include file="localHeader.jsp"%>
-<link href="${pageContext.request.contextPath}/moduleResources/household/css/tablestyles.css" type="text/css" rel="stylesheet" />
+
+﻿<openmrs:htmlInclude file="/scripts/jquery-ui/js/jquery-ui.custom.min.js" />
+<openmrs:htmlInclude file="/scripts/jquery/dataTables/js/jquery.dataTables.min.js" />
+<openmrs:htmlInclude file="/scripts/jquery/highlight/jquery.highlight-3.js" />
+<openmrs:htmlInclude file="/scripts/jquery/dataTables/js/jquery.dataTables.filteringDelay.js" />
+<openmrs:htmlInclude file="/scripts/jquery/dataTables/css/dataTables_jui.css" /> 
+<openmrs:htmlInclude file="/scripts/jquery/dataTables/css/dataTables.css" />
+<link href="<openmrs:contextPath/>/scripts/jquery-ui/css/<spring:theme code='jqueryui.theme.name' />/jquery-ui.custom.css" type="text/css" rel="stylesheet" />
+
+
 
 <script type="text/javascript">
 function toggle_visibility() {
@@ -58,13 +67,21 @@ function toggle_visibility() {
 	toggle_visibility();
  }
 </script>
+<script type="text/javascript">
+$j(document).ready(function(){
+    $j('#houseDefs').dataTable({
+    	"bLengthChange":true
+    	
+    });
+});
+</script>
 
 <b class="boxHeader"><spring:message code="household.definitions.header"/></b>
 <div class="box">
 
-	<table>
+	<table border="0">
 		<tr>
-			<td>
+			<td valign="top">
 				<form method="POST" name="householdDefinitions">
 				<table>
 					<c:choose>
@@ -114,32 +131,46 @@ function toggle_visibility() {
 				</table>
 				</form>
 			</td>
-			<td width="1" bgcolor="#C0C0C0"><BR></td>
+			<td width="1" bgcolor="#C0C0C0">&nbsp;</td>
 			<td valign="top">
-				<table cellpadding="5" width="100%" id="mytable">
+				<table  id="houseDefs">
+					<thead>
 					<tr>
-						<th class="tbClass">No</th>
-						<th class="tbClass">Household Code</th>
-						<th class="tbClass">Household Code In Full</th>
-						<th class="tbClass">Household Description</th>
-						<th class="tbClass">View Households</th>
-						<th class="tbClass">Action</th>
+						<th>No</th>
+						<th>Household Code</th>
+						<th>Household Code In Full</th>
+						<th>Household Description</th>
+						<th>View Households</th>
+						<th>Action</th>
+						<th>&nbsp;</th>
+					
 					</tr>
+					</thead>
+					
+					<tbody>
 					<c:forEach var="household" items="${householdsTypes}" varStatus="ind">
 						<form method="POST" name="${household.id}">
+						
 						<tr>
-							<td class="tdClass">${ind.index + 1}</td>
-							<td class="tdClass">${household.householdDefinitionsCode}</td>
-							<td class="tdClass">${household.householdDefinitionsCodeinfull}</td>
-							<td class="tdClass">${household.householdDefinitionsDescription}</td>
-							<td class="tdClass"><a href="#" onclick="javascript:getHHolds('${household.uuid}');">View</a></td>
-							<td class="tdClass">
+							<td>${ind.index + 1}</td>
+							<td>${household.householdDefinitionsCode}</td>
+							<td>${household.householdDefinitionsCodeinfull}</td>
+							<td>${household.householdDefinitionsDescription}</td>
+							<td><a href="#" onclick="javascript:getHHolds('${household.uuid}');">View</a></td>
+							<td>
 								<input type="hidden" name="houseid" id="${household.id}" value="${household.id}" />
-								<input type="submit" value="Edit" />
+							    <input type="submit" value="Edit" />
+								<!-- <a href="#">Edit</a> -->
+							</td>
+							<td>
+							<a href="#">Delete</a>
 							</td>
 						</tr>
+						
 						</form>
 					</c:forEach>
+						</tbody>
+					
 				</table>
 			</td>
 		</tr>
