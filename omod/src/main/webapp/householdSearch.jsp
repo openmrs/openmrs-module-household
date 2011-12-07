@@ -88,15 +88,15 @@
 		for (i = 0; i < field.length; i++){
 			field[i].checked = true ;
 			listMem(field.length);
-			document.checked.voidMembers.disabled=false;
+			document.checkedForm.voidMembers.disabled=false;
 		}
 	}
 	
 	function uncheckAll(field){
 		for (i = 0; i < field.length; i++)
 			field[i].checked = false ;
-		document.checked.marktext.value="";
-		document.checked.voidMembers.disabled=true;
+		document.checkedForm.marktext.value="";
+		document.checkedForm.voidMembers.disabled=true;
 	}
 </script>
 <script type="text/javascript" language="javascript"> 
@@ -110,6 +110,10 @@ for (var i=0; i<boxgroup.length; i++) {
 if (boxgroup[i].checked) temparr[temparr.length] = boxgroup[i].value;
 // run the .join() method on the array (separator = ',') and output it to field
 f.marktext.value = temparr.join(',');
+ if(!document.checkedForm.marktext.value=='')
+	document.checkedForm.voidMembers.disabled=false;
+else
+	document.checkedForm.voidMembers.disabled=true; 
 }
 }
 
@@ -144,7 +148,7 @@ f.marktext.value = temparr.join(',');
 		   
 		   
 		  </tr>
-		  	<input type="text" name="householdgrpRef" value="${hhmembersgrp.id}" />
+		  	<input type="text" name="householdgrpRef" value="${hhold}" />
 		  	</table>
 		
 		
@@ -153,8 +157,8 @@ f.marktext.value = temparr.join(',');
 		<!-- <div class="box"> -->
 		<c:choose>
 			<c:when test="${not empty hhmembers}">
-		<!-- <input type="button" name="CheckAll" value="Check All" onClick="checkAll(document.checked.id)" />
-		<input type="button" name="UnCheckAll" value="Uncheck All" onClick="uncheckAll(document.checked.id)" /> -->
+		<!-- <input type="button" name="CheckAll" value="Check All" onClick="checkAll(document.checkedForm.id)" />
+		<input type="button" name="UnCheckAll" value="Uncheck All" onClick="uncheckAll(document.checkedForm.id)" /> -->
 			<br /> <b> ____________________________${hhold}___________________ </b><br />			
 			<table border="0" id="householdMembers1" cellpadding="0" cellspacing="5">
 				<thead>
@@ -225,7 +229,7 @@ f.marktext.value = temparr.join(',');
 						
 						
 								<td>&nbsp;</td>
-								<td><input type="submit" name="voidMembers" id="voidMembers" onClick="return inputValidatorVoidReason();inputValidatorIndexPerson()" value="Void Selected Members"/></td>
+								<td><input type="submit" name="voidMembers" id="voidMembers" onClick="return inputValidatorVoidReason();inputValidatorIndexPerson()" value="Void Selected Members" disabled="disabled"/></td>
 								<td>&nbsp;</td>		
 						
 					</tr>
@@ -234,7 +238,7 @@ f.marktext.value = temparr.join(',');
 			  			<c:choose>
 							<c:when test="${not empty hhmembersgrp.id}">
 			  				
-			  			<a href="householdRegistration.form?grpid=${hhmembersgrp.id}">Add Members</a>
+			  			<a href="householdRegistration.form?grpid=${hhold}">Add Members</a>
 			  				</c:when>
 			  				<c:otherwise>
 			  				

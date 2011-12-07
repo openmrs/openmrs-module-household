@@ -45,7 +45,11 @@ public class HouseholdRegistrationController {
 	
 	@RequestMapping(method=RequestMethod.GET, value="module/household/householdRegistration")
 	public void preparePage(ModelMap map,@RequestParam(required=false, value="grpid") String grpid) {
+		
 		HouseholdService service = Context.getService(HouseholdService.class);
+		
+		Household household=null;//used to hold the household codes
+		
 		List<HouseholdDefinition> householdsTypes = service.getAllHouseholdDefinitions();
 		map.addAttribute("householdsTypes", householdsTypes);
 		
@@ -53,9 +57,9 @@ public class HouseholdRegistrationController {
 		map.addAttribute("NumberOfHD", listCounts);
 		
 		if(StringUtils.hasText(grpid)){
-			Household grp=service.getHouseholdGroup(Integer.parseInt(grpid));
+			household=service.getHouseholdGroupByIdentifier(grpid);
 			
-			List<HouseholdMembership> householdsMem = service.getAllHouseholdMembershipsByGroup(grp);
+			List<HouseholdMembership> householdsMem = service.getAllHouseholdMembershipsByGroup(household);
 			map.addAttribute("householdSaved", householdsMem);
 			map.addAttribute("householdGrpid", grpid);
 		
