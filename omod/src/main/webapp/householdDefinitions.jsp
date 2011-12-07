@@ -163,7 +163,7 @@ $j(document).ready(function(){
 								<!-- <a href="#">Edit</a> -->
 							</td>
 							<td>
-							<a href="#">Delete</a>
+							<input type="submit" value="Delete" />
 							</td>
 						</tr>
 						

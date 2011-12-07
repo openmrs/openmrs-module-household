@@ -78,7 +78,7 @@
 		if (s.substring(2) == z) s=s.substring(2);
 		
 		document.checked.marktext.value=s;
-		if(! document.checked.marktext.value=='')
+		if(!document.checked.marktext.value=='')
 			document.checked.voidMembers.disabled=false;
 		else
 			document.checked.voidMembers.disabled=true;
@@ -99,7 +99,22 @@
 		document.checked.voidMembers.disabled=true;
 	}
 </script>
+<script type="text/javascript" language="javascript"> 
 
+function display(box) {
+// get reference to form object, and to array of same-named checkboxes
+var temparr = new Array(), f = box.form, boxgroup = f[box.name];
+// loop through it
+for (var i=0; i<boxgroup.length; i++) {
+// add the value of any checked box to next available slot in temparr
+if (boxgroup[i].checked) temparr[temparr.length] = boxgroup[i].value;
+// run the .join() method on the array (separator = ',') and output it to field
+f.marktext.value = temparr.join(',');
+}
+}
+
+</script> 
+<body onload="document.forms[0].reset()"> 
 <div id="dialog" title="Saved Information"></div>
 
 <b class="boxHeader"><spring:message code="household.householdsearch.title"/></b>
@@ -129,7 +144,7 @@
 		   
 		   
 		  </tr>
-		  	<input type="hidden" name="householdgrpRef" value="${hhmembersgrp.id}" />
+		  	<input type="text" name="householdgrpRef" value="${hhmembersgrp.id}" />
 		  	</table>
 		
 		
@@ -138,8 +153,8 @@
 		<!-- <div class="box"> -->
 		<c:choose>
 			<c:when test="${not empty hhmembers}">
-		<input type="button" name="CheckAll" value="Check All" onClick="checkAll(document.checked.id)" />
-		<input type="button" name="UnCheckAll" value="Uncheck All" onClick="uncheckAll(document.checked.id)" />
+		<!-- <input type="button" name="CheckAll" value="Check All" onClick="checkAll(document.checked.id)" />
+		<input type="button" name="UnCheckAll" value="Uncheck All" onClick="uncheckAll(document.checked.id)" /> -->
 			<br /> <b> ____________________________${hhold}___________________ </b><br />			
 			<table border="0" id="householdMembers1" cellpadding="0" cellspacing="5">
 				<thead>
@@ -156,7 +171,7 @@
 				  		<c:forEach var="householdMembers" items="${hhmembers}">
 				  		
 				  		<tr>
-				  			<td class="tdClass"><input type="checkbox" name="id" onclick="listMem(this,'${householdMembers.id}')"></td>
+				  			<td class="tdClass"><input type="checkbox" name="group" value="${householdMembers.id}" onclick="display(this)">${householdMembers.id}</td>
 				  			<td class="tdClass">
 				  			<c:choose>
 								<c:when test="${not empty householdMembers.householdMembershipMember.givenName }">
@@ -210,7 +225,7 @@
 						
 						
 								<td>&nbsp;</td>
-								<td><input type="submit" name="voidMembers" onClick="return inputValidatorVoidReason();inputValidatorIndexPerson()" value="Void Selected Members"/></td>
+								<td><input type="submit" name="voidMembers" id="voidMembers" onClick="return inputValidatorVoidReason();inputValidatorIndexPerson()" value="Void Selected Members"/></td>
 								<td>&nbsp;</td>		
 						
 					</tr>
@@ -226,8 +241,7 @@
 			  				</c:otherwise>
 			  			</c:choose>	
 			  			</td>
-			  			<!-- this inputbox controls the list for voiding -->
-			  			<td><input type="hidden" value="" name="marktext" id="marktext"></td>
+			  			<td><input type="text" value="" name="marktext" id="marktext"></td>
 			  			
 			  		 
 			  		</tr>	
@@ -250,4 +264,5 @@
 	</form>	
 			
 </div>
+</body>
 <%@ include file="/WEB-INF/template/footer.jsp"%>
