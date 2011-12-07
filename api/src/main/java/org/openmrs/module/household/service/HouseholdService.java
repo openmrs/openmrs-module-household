@@ -58,6 +58,16 @@ public interface HouseholdService extends OpenmrsService{
 	public HouseholdDefinition getHouseholdDefinition(Integer id);
 	
 	/**
+	 * Get one HouseholdDefinition record based on the household uuid
+	 * 
+	 * @param strUuid the HouseholdDefinition strUuid
+	 * @return HouseholdDefinition that match the strUuid
+	 */
+	@Transactional(readOnly = true)
+	@Authorized("View Household")
+	public HouseholdDefinition getHouseholdDefinitionByUuid(String strUuid);
+	
+	/**
 	 * Get all HouseholdDefinition records
 	 * 
 	 * @return all HouseholdDefinition record in the system

@@ -348,7 +348,18 @@
 			Drop constraint to allow for household grouping uuid
 		</description>
 		<sql>
-			ALTER TABLE `household_obs` DROP FOREIGN KEY `household_obs_grouping_uuid`;
+			ALTER TABLE `household_obs` DROP KEY `household_obs_grouping_uuid`;
+		</sql>
+	</diff>
+	<diff>
+		<version>1.0.3</version>
+		<author>Jonah S. Mwogi</author>
+		<date>Nov 29, 2011</date>
+		<description>
+			Add the collumn uuid to household_membership table
+		</description>
+		<sql>
+			ALTER TABLE `household_membership` ADD `uuid` char(38) NOT NULL;
 		</sql>
 	</diff>
 </sqldiff>

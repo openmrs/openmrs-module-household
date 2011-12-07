@@ -84,7 +84,7 @@ public class DWRHouseholdService {
 		String strVal="";
 		for (int i = 0; hln3.size()>0; i++) {
 			//Get villages for this sub-location given the id
-			List<HouseholdLocationEntry> hl1 = service.getChildHouseholdLocationEntries(hln3.get(0).getHouseholdLocationEntryId());
+			List<HouseholdLocationEntry> hl1 = service.getChildHouseholdLocationEntries(hln3.get(i).getHouseholdLocationEntryId());
 			for (int n = 0; n<hl1.size(); n++) {
 				if(!(n == hl1.size()-1))
 					strVal += hl1.get(n) + ",";

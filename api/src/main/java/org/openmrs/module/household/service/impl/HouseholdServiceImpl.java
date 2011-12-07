@@ -79,6 +79,14 @@ public class HouseholdServiceImpl extends BaseOpenmrsService implements Househol
 	public HouseholdDefinition getHouseholdDefinition(Integer id) {
 		return householdDAO.getHouseholdDefinition(id);
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.openmrs.module.household.service.HouseholdService#getHouseholdDefinitionByUuid(java.lang.String)
+	 */
+	
+	public HouseholdDefinition getHouseholdDefinitionByUuid (String strUuid) throws APIException {
+		return householdDAO.getHouseholdDefinitionByUuid(strUuid);
+	}
 
 	/* (non-Javadoc)
 	 * @see org.openmrs.module.household.service.HouseholdService#getAllHouseholdDefinitions()

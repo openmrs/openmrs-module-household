@@ -85,6 +85,21 @@ public class HibernateHouseholdDAO implements HouseholdDAO {
 				HouseholdDefinition.class, id);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.openmrs.module.household.dao.HouseholdDAO#getHouseholdDefinition(java.lang.Integer)
+	 */
+	
+	public HouseholdDefinition getHouseholdDefinitionByUuid (String strUuid){
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(HouseholdDefinition.class).add(
+		    Expression.eq("uuid", strUuid));
+		
+		@SuppressWarnings("unchecked")
+		List<HouseholdDefinition> hdef = criteria.list();
+		if (null == hdef || hdef.isEmpty()) {
+			return null;
+		}
+		return hdef.get(0);
+	}
 
 	/* (non-Javadoc)
 	 * @see org.openmrs.module.household.dao.HouseholdDAO#getAllHouseholdDefinitions()
