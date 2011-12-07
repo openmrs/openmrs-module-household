@@ -148,7 +148,7 @@ else
 		   
 		   
 		  </tr>
-		  	<input type="text" name="householdgrpRef" value="${hhold}" />
+		  	<input type="hidden" name="householdgrpRef" value="${hhold}" />
 		  	</table>
 		
 		
@@ -175,7 +175,7 @@ else
 				  		<c:forEach var="householdMembers" items="${hhmembers}">
 				  		
 				  		<tr>
-				  			<td class="tdClass"><input type="checkbox" name="group" value="${householdMembers.id}" onclick="display(this)">${householdMembers.id}</td>
+				  			<td class="tdClass"><input type="checkbox" name="group" value="${householdMembers.id}" onclick="display(this)"></td>
 				  			<td class="tdClass">
 				  			<c:choose>
 								<c:when test="${not empty householdMembers.householdMembershipMember.givenName }">
@@ -245,7 +245,7 @@ else
 			  				</c:otherwise>
 			  			</c:choose>	
 			  			</td>
-			  			<td><input type="text" value="" name="marktext" id="marktext"></td>
+			  			<td><input type="hidden" value="" name="marktext" id="marktext"></td>
 			  			
 			  		 
 			  		</tr>	

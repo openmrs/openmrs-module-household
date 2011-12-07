@@ -93,14 +93,19 @@ public class HouseholdSearchController {
 	@Transactional
 	private String voidRecords(String voidList,String voidReason){
 		HouseholdService service = Context.getService(HouseholdService.class);
-		String voidListTrimed = voidList.trim();
-		String voidListRefined=voidListTrimed.substring(1);
 		
-		String []strMembers = voidListRefined.split(",");
+		String voidListTrimed = voidList.trim();
+		//String voidListRefined=voidListTrimed.substring(1);
+		
+		
+		
+		String []strMembers = voidListTrimed.split(",");
 		Arrays.sort(strMembers);
 		
 		for(int i=0; i<strMembers.length; i++ ){
 			String strMember = strMembers[i];
+			
+			log.info("lllllllllllllllllllllllllllll "+strMember);
 			HouseholdMembership membership = service.getHouseholdMembership(Integer.parseInt(strMember));
 			membership.setVoided(true);
 			membership.setVoidReason(voidReason);
@@ -108,7 +113,7 @@ public class HouseholdSearchController {
 			service.saveHouseholdMembership(membership);
 		}
 			
-		return "\n" + voidListRefined + "\nSaved Successfully";
+		return "\n" + voidListTrimed + "\nSaved Successfully";
 		
 	}
 	/*@Transactional
