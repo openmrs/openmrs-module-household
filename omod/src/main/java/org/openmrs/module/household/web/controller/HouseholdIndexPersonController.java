@@ -89,6 +89,7 @@ public class HouseholdIndexPersonController {
 		//select where membership id is memId
 		HouseholdMembership voidIndex=service.getHouseholdMembership(memId);
 		//set the index to false
+		 voidIndex.setHouseholdMembershipMember(Context.getPatientService().getPatientByUuid(voidIndex.getHouseholdMembershipMember().getUuid()));
 		voidIndex.setHouseholdMembershipHeadship(false);
 		service.saveHouseholdMembership(voidIndex);
 		
@@ -111,6 +112,7 @@ public class HouseholdIndexPersonController {
 		//select where membership id is memId
 		HouseholdMembership getNewIndex=service.getHouseholdMembership(memId);
 		//set the index to true
+		getNewIndex.setHouseholdMembershipMember(Context.getPatientService().getPatientByUuid(getNewIndex.getHouseholdMembershipMember().getUuid()));
 		getNewIndex.setHouseholdMembershipHeadship(true);
 		service.saveHouseholdMembership(getNewIndex);
 		

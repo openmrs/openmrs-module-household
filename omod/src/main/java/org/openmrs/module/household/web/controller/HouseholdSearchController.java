@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class HouseholdSearchController {
 	private static final Log log = LogFactory.getLog(HouseholdSearchController.class);
-	
+	Household grp=null;
 	
 	@RequestMapping(method=RequestMethod.GET, value="module/household/householdSearch")
 	public void preparePage(ModelMap map,@RequestParam(required=false, value="grpids") Integer grpids) {
@@ -47,7 +47,7 @@ public class HouseholdSearchController {
 		@RequestParam(required=false, value="voidReason") String voidReason) //throws NullPointerException 
 		{
 		HouseholdService service = Context.getService(HouseholdService.class);
-		Household grp=null;
+		
 		map.addAttribute("hhold", householdGroup);
 		
 		if(request.getParameter("findMembers") !=null && StringUtils.hasText(householdGroup)){
@@ -105,8 +105,9 @@ public class HouseholdSearchController {
 		for(int i=0; i<strMembers.length; i++ ){
 			String strMember = strMembers[i];
 			
-			log.info("lllllllllllllllllllllllllllll "+strMember);
+			
 			HouseholdMembership membership = service.getHouseholdMembership(Integer.parseInt(strMember));
+			membership.setHouseholdMembershipMember(Context.getPatientService().getPatientByUuid(membership.getHouseholdMembershipMember().getUuid()));
 			membership.setVoided(true);
 			membership.setVoidReason(voidReason);
 			membership.setEndDate(new Date());

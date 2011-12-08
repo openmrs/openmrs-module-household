@@ -96,7 +96,8 @@ public class HouseholdRegistrationController {
 		//String startDate = request.getParameter("startDate");
 		if(StringUtils.hasText(grpid)){			
 			
-			Household grp=service.getHouseholdGroup(Integer.parseInt(grpid));
+			Household grp=service.getHouseholdGroupByIdentifier((grpid));
+			
 			String []strMem = householdMem.split(",");
 			
 			Arrays.sort(strMem);
@@ -118,6 +119,7 @@ public class HouseholdRegistrationController {
 				if (StringUtils.hasText(strMember)){
 					HouseholdMembership membership = new HouseholdMembership();
 					Person pn = Context.getPersonService().getPerson(Integer.parseInt(strMember));
+					//pn.setHouseholdMembershipMember(Context.getPatientService().getPatientByUuid(membership.getHouseholdMembershipMember().getUuid()));
 					
 					//used to check if a member exists with the same person id from a given group
 					
