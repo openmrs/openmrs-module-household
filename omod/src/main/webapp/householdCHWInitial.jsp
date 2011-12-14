@@ -172,7 +172,7 @@
 	
 	<form method="post" name="chwForm" onsubmit="return validateInput()">
 	<%-- <input type="hidden" name="enctype" id="enctype" value="${encounterType}" /> --%>
-	<table border="0">
+	<table border="1" cellspacing="10">
 	<tbody>
 		<tr>
 			<td valign="top">
