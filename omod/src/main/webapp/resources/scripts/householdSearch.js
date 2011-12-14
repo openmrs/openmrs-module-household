@@ -23,45 +23,23 @@ $j(document).ready(function() {
     	"sPaginationType": "full_numbers"
     	}
     );
-    
-   /* $j("#patientDetail").dataTable({
-    	"bAutoWidth": false,
-    	"bLengthChange": true,
-    	"bJQueryUI": true,
-    	"sPaginationType": "full_numbers"
-    }
-    );*/
-    
-    /*hhMem = $j("#hhMem").dataTable({
-    	"bAutoWidth": false,
-    	"bLengthChange": true,
-    	//"sPaginationType": "full_numbers",
-    	"bJQueryUI": false
-    	}
-    );*/
 });
 
 //Select a patient
 function selectedPerson(fieldId, person){
 	if (person != null)
-		householdMembersTable.fnAddData([person.personId, person.personName, "<input type=\"radio\" name=\"indexperson\" onClick=\"javascript:headPerson(" +
+		householdMembersTable.fnAddData([person.personName, "<input type=\"radio\" name=\"indexperson\" onClick=\"javascript:headPerson(" +
 		                                 person.personId + ")\">","<a href=\"javascript:removePerson(" + 
 		                                 person.personId + ")\">x</a>"]);
 	$j("#new_member_id_selection").focus();
 	$j("#new_member_id_selection").val("");
-	//TODO: Check duplicates
-	var aData = householdMembersTable.fnGetData();
-	var strPersonId="";
-	for(var i=0; i<aData.length; i++){
-		if (aData[i] instanceof Array){
-			if(i==0)
-				strPersonId = aData[i][0];// + "`" + aData[i][1] + "`" + aData[i][2] + "`" + aData[i][3]; 
-			else
-				strPersonId = strPersonId + "," + aData[i][0];// + "`" + aData[i][1] + "`" + aData[i][2] + "`" + aData[i][3];
-		}
-	}
+	var oldPersonID= document.getElementById("hiddenbox").value;
+	
 	$j("#hiddenbox").val("");
-	$j("#hiddenbox").val(strPersonId);
+	if(oldPersonID=="")
+		$j("#hiddenbox").val(person.personId);
+	else
+		$j("#hiddenbox").val(oldPersonID + "," +  person.personId);
 }
 
 //Funtion to remove the selected row.
@@ -71,23 +49,23 @@ function removePerson(person){
 	var strPersonId="";
 	var strDelete = "";
 	
-	for(var i=0; i<aData.length; i++){
-		if(aData[i][0]==person){
-			if(strDelete == "")
-				strDelete = i + ",";
+	var oldPersonID= document.getElementById("hiddenbox").value;
+	
+	var noSeleted = oldPersonID.split(",");
+	var intPlace=-1;
+	for(var x=0; x<(noSeleted.length); x++){
+		alert(intPlace + "," + noSeleted[x]);
+		if(noSeleted[x]==person){
+			intPlace= x;
+		}else
+			if(strPersonId=="")
+				strPersonId = noSeleted[x];
 			else
-				strDelete = strDelete + i + ",";
-		}else{
-			if(i==0)
-				strPersonId = aData[i][0];// + "`" + aData[i][1] + "`" + aData[i][2] + "`" + aData[i][3]; 
-			else
-				strPersonId = strPersonId + "," + aData[i][0];// + "`" + aData[i][1] + "`" + aData[i][2] + "`" + aData[i][3];
-		}
+				strPersonId = strPersonId + "," + noSeleted[x];
 	}
-	var toDel = strDelete.split(",");
-	for(var i=0; i<(toDel.length-1); i++){
-		householdMembersTable.fnDeleteRow(toDel[i], null, false);
-	}
+	
+	if(!intPlace=="")
+		householdMembersTable.fnDeleteRow(intPlace, null, false);
 	
 	$j("#hiddenbox").val("");
 	$j("#hiddenbox").val(strPersonId);

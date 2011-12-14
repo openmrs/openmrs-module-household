@@ -45,11 +45,7 @@ public class HouseholdRegistrationController {
 	
 	@RequestMapping(method=RequestMethod.GET, value="module/household/householdRegistration")
 	public void preparePage(ModelMap map,@RequestParam(required=false, value="grpid") String grpid) {
-		
 		HouseholdService service = Context.getService(HouseholdService.class);
-		
-		Household household=null;//used to hold the household codes
-		
 		List<HouseholdDefinition> householdsTypes = service.getAllHouseholdDefinitions();
 		map.addAttribute("householdsTypes", householdsTypes);
 		
@@ -57,11 +53,11 @@ public class HouseholdRegistrationController {
 		map.addAttribute("NumberOfHD", listCounts);
 		
 		if(StringUtils.hasText(grpid)){
-			household=service.getHouseholdGroupByIdentifier(grpid);
+			Household grp=service.getHouseholdGroupByIdentifier(grpid);
 			
-			List<HouseholdMembership> householdsMem = service.getAllHouseholdMembershipsByGroup(household);
+			List<HouseholdMembership> householdsMem = service.getAllHouseholdMembershipsByGroup(grp);
 			map.addAttribute("householdSaved", householdsMem);
-			map.addAttribute("householdGrpid", grpid);
+			map.addAttribute("HouseholdID", grpid);
 		
 		}
 	}
@@ -96,8 +92,7 @@ public class HouseholdRegistrationController {
 		//String startDate = request.getParameter("startDate");
 		if(StringUtils.hasText(grpid)){			
 			
-			Household grp=service.getHouseholdGroupByIdentifier((grpid));
-			
+			Household grp=service.getHouseholdGroupByIdentifier(grpid);
 			String []strMem = householdMem.split(",");
 			
 			Arrays.sort(strMem);
@@ -119,7 +114,6 @@ public class HouseholdRegistrationController {
 				if (StringUtils.hasText(strMember)){
 					HouseholdMembership membership = new HouseholdMembership();
 					Person pn = Context.getPersonService().getPerson(Integer.parseInt(strMember));
-					//pn.setHouseholdMembershipMember(Context.getPatientService().getPatientByUuid(membership.getHouseholdMembershipMember().getUuid()));
 					
 					//used to check if a member exists with the same person id from a given group
 					
@@ -130,9 +124,13 @@ public class HouseholdRegistrationController {
 					membership.setHouseholdMembershipMember(pn);
 					membership.setHouseholdMembershipGroups(grp);
 			
-						membership.setHouseholdMembershipHeadship(false);
+					membership.setHouseholdMembershipHeadship(false);
+					hgrp = grp;
 					
-					membership.setStartDate(dateFormatHelper(startDate));
+					if(!StringUtils.hasText(startDate))
+						membership.setStartDate(new Date());
+					else
+						membership.setStartDate(dateFormatHelper(startDate));
 					service.saveHouseholdMembership(membership);
 				}
 					//else write to a log file and skip these additions.
@@ -141,11 +139,7 @@ public class HouseholdRegistrationController {
 					}
 				}
 			}
-			int groupId=Integer.parseInt(grpid);
-			
-			
-			
-			return "" + groupId;
+			return grpid;
 			
 			
 		}
@@ -205,8 +199,10 @@ public class HouseholdRegistrationController {
 					membership.setHouseholdMembershipHeadship(true);
 				}else
 					membership.setHouseholdMembershipHeadship(false);
-				
-				membership.setStartDate(dateFormatHelper(startDate));
+				if(!StringUtils.hasText(startDate))
+					membership.setStartDate(new Date());
+				else
+					membership.setStartDate(dateFormatHelper(startDate));
 				service.saveHouseholdMembership(membership);
 			}
 		}

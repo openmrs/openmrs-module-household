@@ -10,7 +10,7 @@
 
 <%@ include file="localHeader.jsp"%>
 
-﻿<openmrs:htmlInclude file="/scripts/jquery-ui/js/jquery-ui.custom.min.js" />
+<openmrs:htmlInclude file="/scripts/jquery-ui/js/jquery-ui.custom.min.js" />
 <openmrs:htmlInclude file="/scripts/jquery/dataTables/js/jquery.dataTables.min.js" />
 <openmrs:htmlInclude file="/scripts/jquery/highlight/jquery.highlight-3.js" />
 <openmrs:htmlInclude file="/scripts/jquery/dataTables/js/jquery.dataTables.filteringDelay.js" />
@@ -69,10 +69,7 @@ function toggle_visibility() {
 </script>
 <script type="text/javascript">
 $j(document).ready(function(){
-    $j('#houseDefs').dataTable({
-    	"bLengthChange":true
-    	
-    });
+    $j('#houseDefs').dataTable();
 });
 </script>
 

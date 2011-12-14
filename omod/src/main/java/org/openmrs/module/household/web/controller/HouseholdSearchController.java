@@ -66,7 +66,7 @@ public class HouseholdSearchController {
 					log.info("\n..............." + householdsMem.size()+ "  "+grp.getId() );
 					
 					map.addAttribute("hhmembers",householdsMem);
-					map.addAttribute("hhmembersgrp", hm);
+					map.addAttribute("hhmembersgrp", grp);
 					map.addAttribute("hhmembersCount", householdsMemCount);
 				}
 			catch(NullPointerException ex){

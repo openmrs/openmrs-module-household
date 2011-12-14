@@ -199,8 +199,16 @@
 					
 				
 			</td>
-			<td bgcolor="#cecece" valign="top">
+			<td valign="top">
 				<table border="0">
+					<tr>
+						<td colspan="2"><b>Reason for Visit:</b><br />
+							<input type="radio" name="visitReason" title="Initial Visit" value="7250"/>Initial Visit
+							<input type="radio" name="visitReason" title="Biannual Re-visit" value="7251"/>Biannual Re-visit
+							<input type="radio" name="visitReason" title="Follow-Up" value="7247"/>Follow-Up
+							<input type="radio" name="visitReason" title="New Event" value="7252"/>New Event
+						</td>
+					</tr>
 					<tr>
 				     <td><b>Visit Date:</b></td>
 				     <td> <input type="text" name="visitDate" id="visitDate" onClick="showCalendar(this)"/></td><br />
@@ -235,7 +243,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td  bgcolor="#cecece">
+			<td >
 				<b>Location :</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					<select name="location" onchange="getSubLoci(location)" onclick="getSubLoci(location)">
 						<c:forEach var="loca" items="${loci}" varStatus="ind">
@@ -291,11 +299,12 @@
 						<option value="1107">None</option>
 						<option value="6861">Boil</option>
 						<option value="6862">Chlorinate</option>
+						<option value="7238">Ceramic Filter</option>
 						<option value="6863">Filter</option>
 						<option value="5622">other</option>
 					</select><div id="here8" class="error" style="display: none" >*</div>
 			</td>
-			<td bgcolor="#cecece">
+			<td>
 				<b>Do you have latrine?</b><br />
 					<input type="radio" name="hasLatrine" title="Yes" value="1065"/>Yes
 					<input type="radio" name="hasLatrine" title="No" value="1066"/>No<br />
@@ -318,7 +327,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td bgcolor="#cecece">
+			<td>
 				<b>Return Visit Date :</b><input type="text" name="returnVisitDate" id="returnVisitDate" onClick="showCalendar(this)" /><div id="here10" class="error" style="display: none" >*</div><br />
 				<b>Return Visit Items :</b><br />
 				<select name="revisitItems" id="revisitItems" multiple="multiple" size="7">
@@ -333,7 +342,15 @@
 				</select><div id="here11" class="error" style="display: none" >*</div>
 			</td>
 			<td align="center">
-				<br />
+				<table>
+				<tbody>
+					<tr><td>Number of Members in School</td> <td><input type="text" name="memInSchool" id="memInSchool" size="3" /></td></tr>
+					<tr><td>Number of disabled Members</td><td><input type="text" name="disabledMems" id="disabledMems" size="3"/></td></tr>
+					<tr><td>Number of Members with known HIV status</td><td><input type="text" name="memsWithKnownHIVStatus" id="memsWithKnownHIVStatus" size="3"/></td></tr>
+					<tr><td>Number of Members living away</td><td><input type="text" name="memLivingAway" id="memLivingAway" size="3"/></td></tr>
+					<tr><td>Number of Members with chronic illness or chronic cough</td><td><input type="text" name="memWithChronic" id="memWithChronic" size="3"/></td></tr>
+				</tbody>
+				</table>
 				<input type="submit" value="Submit" name="filled" id="filled1" />
 			</td>
 		</tr>

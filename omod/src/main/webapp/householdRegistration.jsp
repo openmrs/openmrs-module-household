@@ -28,8 +28,7 @@ function inputValidator() {
 	var errorDivElement = document.getElementById("errorDiv");
 	var indexPerson = document.getElementById("hiddenIndex").value;
 	var listToSave = document.getElementById("hiddenbox").value;
-	var startDT = document.getElementById("startDate").value;
-	if ((indexPerson == "" )||(listToSave == "" )||(startDT == "" )) {
+	if ((indexPerson == "" )||(listToSave == "" )) {
 		errorDivElement.style.display = '';
 		return false;
 	}else{
@@ -78,8 +77,8 @@ function inputValidator() {
 											</div>
 									        <input type="hidden" id="hiddenbox" name="hiddenbox"/>
 									        <c:choose>
-												<c:when test ="${not empty householdGrpid}">
-													<input type="hidden" id="hiddenIndex" name="hiddenIndex" value="${householdGrpid}"/>
+												<c:when test ="${not empty HouseholdID}">
+													<input type="hidden" id="hiddenIndex" name="hiddenIndex" value="${HouseholdID}"/>
 												</c:when>
 												<c:otherwise>
 													<input type="hidden" id="hiddenIndex" name="hiddenIndex"/>
@@ -87,27 +86,33 @@ function inputValidator() {
 											</c:choose>
 										</td>
 									</tr>	
-									<tr>
-										<td>Definition:</td>
-										<td>
-											<select name="defin">
-												<c:forEach var="household" items="${householdsTypes}">
-													<option id="${household.householdDefinitionsCode}" value="${household.id}">${household.householdDefinitionsCode}</option>
-												</c:forEach>
-											</select>
-											
-										</td>
-									</tr>
-									<tr>
-										<td>Start Date</td>	
-										<td><input type="text" name="startDate" id="startDate" onClick="showCalendar(this)" /></td>
-									</tr>
+									<c:choose>
+										<c:when test="${empty HouseholdID}">
+											<tr>
+												<td>Definition:</td>
+												<td>
+													<select name="defin">
+														<c:forEach var="household" items="${householdsTypes}">
+															<option id="${household.householdDefinitionsCode}" value="${household.id}">${household.householdDefinitionsCode}</option>
+														</c:forEach>
+													</select>
+													
+												</td>
+											</tr>
+											<tr>
+												<td>Start Date</td>	
+												<td><input type="text" name="startDate" id="startDate" onClick="showCalendar(this)" /></td>
+											</tr>
+										</c:when>
+										<c:otherwise>
+										</c:otherwise>
+									</c:choose>
+									
 									<tr>
 										<td colspan="2">
 											<table id="householdMembers">
 												<thead>
 													<tr> 
-														<th>Person Id</th>
 														<th>Full Name</th>
 														<th>Is Head/Index?</th>
 														<th>Action</th>
