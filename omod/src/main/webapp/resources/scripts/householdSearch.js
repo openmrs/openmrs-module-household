@@ -45,27 +45,22 @@ function selectedPerson(fieldId, person){
 //Funtion to remove the selected row.
 function removePerson(person){
 	
-	var aData = householdMembersTable.fnGetData();
 	var strPersonId="";
-	var strDelete = "";
-	
+        
 	var oldPersonID= document.getElementById("hiddenbox").value;
 	
 	var noSeleted = oldPersonID.split(",");
-	var intPlace=-1;
 	for(var x=0; x<(noSeleted.length); x++){
-		alert(intPlace + "," + noSeleted[x]);
-		if(noSeleted[x]==person){
-			intPlace= x;
-		}else
-			if(strPersonId=="")
-				strPersonId = noSeleted[x];
-			else
-				strPersonId = strPersonId + "," + noSeleted[x];
+            if(noSeleted[x]==person){
+                var intPlace= x;
+                householdMembersTable.fnDeleteRow(intPlace, null, false);
+            }else
+                if(strPersonId=="")
+                    strPersonId = noSeleted[x];
+                else
+                    strPersonId = strPersonId + "," + noSeleted[x];
 	}
 	
-	if(!intPlace=="")
-		householdMembersTable.fnDeleteRow(intPlace, null, false);
 	
 	$j("#hiddenbox").val("");
 	$j("#hiddenbox").val(strPersonId);
