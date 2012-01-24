@@ -157,20 +157,13 @@ public class HouseholdCHWInitialController {
 		String waterEducation = request.getParameter("waterEducation");//6877C
 		String returnVisitDate = request.getParameter("returnVisitDate");//5096C
 		String []revisitItems = request.getParameterValues("revisitItems");//6889C[]
-		String visitReason=request.getParameter("visitReason");//1839C
 		
-		//declaring strings
-		String strnoMemInSchool = request.getParameter("memInSchool");
-		String strnoDisabledMems = request.getParameter("disabledMems");
-		String strnomemsWithKnownHIVStatus = request.getParameter("memsWithKnownHIVStatus");
-		String strnoMemLivingAway = request.getParameter("memLivingAway");
-		String strnoMemWithChronic = request.getParameter("memWithChronic");
-		//end of registration
-		int noMemInSchool=Integer.parseInt(strnoMemInSchool);//7233
-		int noDisabledMems=Integer.parseInt(strnoDisabledMems);//7131
-		int nomemsWithKnownHIVStatus=Integer.parseInt(strnomemsWithKnownHIVStatus);//7232
-		int noMemLivingAway=Integer.parseInt(strnoMemLivingAway);//7236
-		int noMemWithChronic=Integer.parseInt(strnoMemWithChronic);//7235
+		String memInSchool = request.getParameter("memInSchool");//7233C
+		String disabledMems = request.getParameter("disabledMems");//7131C
+		String memsWithKnownHIVStatus = request.getParameter("memsWithKnownHIVStatus");//7232C
+		String memLivingAway = request.getParameter("memLivingAway");//7236C
+		String memWithChronic = request.getParameter("memWithChronic");//7235C
+		String visitReason = request.getParameter("visitReason");//1839C
 		
 		/*String []arrayItems = {bednetsObserved, bednetsCondition,
 				bednetsEducation, stableFoodAvailable, treatWater, hasLatrine, sharedLatrine,
@@ -208,13 +201,11 @@ public class HouseholdCHWInitialController {
 		if(!(StringUtils.isEmpty(waterEducation))){
 			obs.add(putObsToList(6877, householdGroups, Integer.parseInt(waterEducation), false, 0));
 		}
-		//inserting visitReason information
-		if(!(StringUtils.isEmpty(visitReason))){
-			obs.add(putObsToList(1839, householdGroups, Integer.parseInt(visitReason), false, 0));
-		}
-		////////////////////////////ends here/////////////////////////////////////
 		if(!(StringUtils.isEmpty(returnVisitDate))){
 			obs.add(putObsToListDate(5096, householdGroups, returnVisitDate, false, 2));
+		}
+		if(!(StringUtils.isEmpty(visitReason))){
+			obs.add(putObsToList(1839, householdGroups, Integer.parseInt(visitReason), false, 0));
 		}
 		try{
 			if(waterSources.length != 0){
@@ -256,24 +247,22 @@ public class HouseholdCHWInitialController {
 		if(!StringUtils.isEmpty(strNoOfBedNets)){
 			obs.add(putObsToList(6866, householdGroups, noOfBedNets, false, 1));
 		}
-		//additional numbers saving
-		if(!StringUtils.isEmpty(strnoMemInSchool)){
-			obs.add(putObsToList(7233, householdGroups, noMemInSchool, false, 1));
+		if(!StringUtils.isEmpty(memInSchool)){
+			obs.add(putObsToList(7233, householdGroups, Integer.parseInt(memInSchool), false, 1));
 		}
-		if(!StringUtils.isEmpty(strnoDisabledMems)){
-			obs.add(putObsToList(7131, householdGroups, noDisabledMems, false, 1));
+		if(!StringUtils.isEmpty(disabledMems)){
+			obs.add(putObsToList(7131, householdGroups, Integer.parseInt(disabledMems), false, 1));
 		}
-		if(!StringUtils.isEmpty(strnomemsWithKnownHIVStatus)){
-			obs.add(putObsToList(7232, householdGroups, nomemsWithKnownHIVStatus, false, 1));
+		if(!StringUtils.isEmpty(memsWithKnownHIVStatus)){
+			obs.add(putObsToList(7232, householdGroups, Integer.parseInt(memsWithKnownHIVStatus), false, 1));
 		}
-		if(!StringUtils.isEmpty(strnoMemLivingAway)){
-			obs.add(putObsToList(7236, householdGroups, noMemLivingAway, false, 1));
+		if(!StringUtils.isEmpty(memLivingAway)){
+			obs.add(putObsToList(7236, householdGroups, Integer.parseInt(memLivingAway), false, 1));
 		}
-		if(!StringUtils.isEmpty(strnoMemWithChronic)){
-			obs.add(putObsToList(7235, householdGroups, noMemWithChronic, false, 1));
+		if(!StringUtils.isEmpty(memWithChronic)){
+			obs.add(putObsToList(7235, householdGroups, Integer.parseInt(memWithChronic), false, 1));
 		}
 		
-		//end here///////////////////////////////////////////////////////////////////////////////
 		
 		for (HouseholdObs ob : obs){
 			ob.setHouseholdEncounter(encounter);
