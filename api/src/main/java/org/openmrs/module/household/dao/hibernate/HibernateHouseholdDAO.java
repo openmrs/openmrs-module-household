@@ -17,6 +17,7 @@ import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
+import org.jfree.util.Log;
 import org.openmrs.Concept;
 import org.openmrs.ConceptName;
 import org.openmrs.Form;
@@ -84,6 +85,32 @@ public class HibernateHouseholdDAO implements HouseholdDAO {
 		return (HouseholdDefinition) sessionFactory.getCurrentSession().get(
 				HouseholdDefinition.class, id);
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.openmrs.module.household.dao.HouseholdDAO#getHouseholdDefinition(HouseholdDefinition)
+	 */
+	
+	public HouseholdDefinition getHouseholdDefinition(HouseholdDefinition hd) {
+		return (HouseholdDefinition) sessionFactory.getCurrentSession().get(
+				HouseholdDefinition.class, hd.getId());
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.openmrs.module.household.dao.HouseholdDAO#getHouseholdDefinition(java.lang.Integer)
+	 */
+	
+	public HouseholdDefinition getHouseholdDefinition(String def) {
+		
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(HouseholdDefinition.class).add(
+		    Expression.eq("householdDefinitionsCode", def));
+		
+		@SuppressWarnings("unchecked")
+        List<HouseholdDefinition> defs = criteria.list();
+		if (null == defs || defs.isEmpty()) {
+			return null;
+		}
+		return defs.get(0);
+	}
 
 	/* (non-Javadoc)
 	 * @see org.openmrs.module.household.dao.HouseholdDAO#getHouseholdDefinition(java.lang.Integer)
@@ -109,6 +136,28 @@ public class HibernateHouseholdDAO implements HouseholdDAO {
 	public List<HouseholdDefinition> getAllHouseholdDefinitions() {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(
 				HouseholdDefinition.class);
+		return criteria.list();
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.openmrs.module.household.dao.HouseholdDAO#getHouseholdDefinitionParents()
+	 */
+	
+	@SuppressWarnings("unchecked")
+	public List<HouseholdDefinition> getHouseholdDefinitionParents() {
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(HouseholdDefinition.class).add(
+			    Expression.isNull("parent"));
+		return criteria.list();
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.openmrs.module.household.dao.HouseholdDAO#getHouseholdDefinitionChildren()
+	 */
+	
+	@SuppressWarnings("unchecked")
+	public List<HouseholdDefinition> getHouseholdDefinitionChildren(HouseholdDefinition hd) {
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(HouseholdDefinition.class).add(
+			    Expression.eq("parent", hd));
 		return criteria.list();
 	}
 
@@ -819,6 +868,19 @@ public class HibernateHouseholdDAO implements HouseholdDAO {
 		return (HouseholdEncounterType) sessionFactory.getCurrentSession().createQuery("from Household_Encounter_Type et where et.uuid = :uuid")
         .setString("uuid", uuid).uniqueResult();
 	}
+	
+	public HouseholdEncounterType getHouseholdEncounterTypeByName(String name) throws APIException {
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(HouseholdEncounterType.class).add(
+		    Expression.eq("name", name));
+		
+		@SuppressWarnings("unchecked")
+        List<HouseholdEncounterType> et = criteria.list();
+		if (null == et || et.isEmpty()) {
+			return null;
+		}
+		return et.get(0);
+	}
+
 
 
 	@SuppressWarnings("unchecked")

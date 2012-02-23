@@ -1,0 +1,1993 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+                  http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+
+	<!-- See http://wiki.openmrs.org/display/docs/Module+liquibase+File for 
+		documentation on this file. See http://www.liquibase.org/manual/home#available_database_refactorings 
+		for a list of supported elements and attributes -->
+		
+		<changeSet id="householdDef-2012-01-23-11:20" author="ningosi">
+			<preConditions onFail="MARK_RAN">
+				<not>
+					<tableExists tableName="household_definition" />
+				</not>
+			</preConditions>
+			<comment>
+				Create tables for Household System `household_definition`
+			</comment>
+			
+			<createTable tableName="household_definition">
+			
+				<column name="household_definition_id" type="int(10)" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false"  />
+				</column>
+				
+				<column name="household_definition_code" type="varchar(45)">
+				<constraints nullable="false"  />
+				</column>
+				
+				<column name="household_definition_codeinfull" type="varchar(225)" defaultValue="null">
+				<constraints nullable="true" />
+				</column>
+				
+				<column name="household_definition_description" type="varchar(225)" defaultValue="null">
+				<constraints nullable="true" />
+				</column>
+				
+				<column name="uuid" type="char(38)">
+				<constraints nullable="false" />
+				</column>
+				
+				<column name="program_id" type="int(11)" defaultValue="0"></column>
+				
+				
+				<column name="voided" type="smallint(6)" defaultValue="0">
+					<constraints nullable="false" />
+				</column>
+	
+				<column name="voided_by" type="int(11)">
+					<constraints nullable="true" />
+				</column>
+				
+				<column name="date_voided" type="datetime">
+					<constraints nullable="true" />
+				</column>
+				
+				<column name="void_reason" type="varchar(255)">
+					<constraints nullable="true" />
+				</column>
+				
+				<column name="creator" type="int(11)" defaultValue="0">
+				<constraints nullable="false" />
+				</column>
+				<column name="date_created" type="datetime">
+					<constraints nullable="true" />
+				</column>
+	
+				<column name="date_changed" type="datetime">
+					<constraints nullable="true" />
+				</column>
+	
+				<column name="changed_by" type="int(11)">
+					<constraints nullable="true" />
+				</column>
+				
+				</createTable>
+		</changeSet>
+		
+		<changeSet id="household-2012-01-23-11:25" author="ningosi">
+			<preConditions onFail="MARK_RAN">
+				<not>
+					<tableExists tableName="household" />
+				</not>
+			</preConditions>
+			<comment>
+				Create tables for Household System `household`
+			</comment>
+			<createTable tableName="household">
+			
+				<column name="household_group_id" type="int(10)" autoIncrement="true">
+				 <constraints primaryKey="true" nullable="false"  />
+				</column>
+				
+			    <column name="household_def_uuid" type="char(38)">
+				<constraints nullable="false"/>
+				</column>
+				
+			    <column name="household_identifier" type="varchar(50)" defaultValue="null" />
+				
+				
+				<column name="uuid" type="char(38)">
+				<constraints nullable="false"/>
+				</column>
+				
+				<column name="voided" type="int(6)" defaultValue="0">
+					<constraints nullable="false" />
+				</column>
+	
+				<column name="voided_by" type="int(11)">
+					<constraints nullable="true" />
+				</column>
+	
+				<column name="date_voided" type="datetime">
+					<constraints nullable="true" />
+				</column>
+				
+				<column name="void_reason" type="varchar(255)">
+					<constraints nullable="true" />
+				</column>
+				
+				<column name="creator" type="int(11)" defaultValue="0">
+				<constraints nullable="false" />
+				</column>
+				<column name="date_created" type="datetime">
+					<constraints nullable="true" />
+				</column>
+				
+				<column name="date_changed" type="datetime">
+					<constraints nullable="true" />
+				</column>
+				
+				<column name="changed_by" type="int(11)">
+					<constraints nullable="true" />
+				</column>
+				
+			</createTable>	
+		</changeSet>
+		
+		<changeSet id="household_membership-2012-01-23-11:27" author="ningosi">
+			<preConditions onFail="MARK_RAN">
+				<not>
+					<tableExists tableName="household_membership" />
+				</not>
+			</preConditions>
+			<comment>
+				Create tables for Household System `household_membership`
+			</comment>
+			<createTable tableName="household_membership">
+			
+				<column name="household_membership_id" type="int(10)" autoIncrement="true">
+					<constraints primaryKey="true" nullable="false"  />
+				</column>
+				
+				<column name="household_uuid" type="char(38)">
+					<constraints nullable="false"/>
+				</column>
+				
+				<column name="household_membership_headship" type="smallint(6)" defaultValue="0">
+					<constraints nullable="false"/>
+				</column>
+				
+				<column name="household_membership_person_uuid" type="varchar(38)">
+					<constraints nullable="false"/>
+				</column>
+				
+				<column name="start_date" type="datetime" defaultValue="null">
+				</column>
+				<column name="end_date" type="datetime" defaultValue="null">
+				</column>
+				
+				<column name="voided" type="smallint(6)" defaultValue="0">
+					<constraints nullable="false" />
+				</column>
+	
+				<column name="voided_by" type="int(11)">
+					<constraints nullable="true" />
+				</column>
+	
+				<column name="date_voided" type="datetime">
+					<constraints nullable="true" />
+				</column>
+				<column name="void_reason" type="varchar(255)">
+					<constraints nullable="true" />
+				</column>
+			    <column name="creator" type="int(11)" defaultValue="0">
+				<constraints nullable="false" />
+				</column>
+				<column name="date_created" type="datetime">
+					<constraints nullable="true" />
+				</column>
+	
+				<column name="date_changed" type="datetime">
+					<constraints nullable="true" />
+				</column>
+		
+				<column name="changed_by" type="int(11)">
+					<constraints nullable="true" />
+				</column>
+				
+			</createTable>
+		</changeSet>
+		<changeSet id="household_attribute-2012-01-23-11:30" author="ningosi">
+			<preConditions onFail="MARK_RAN">
+				<not>
+					<tableExists tableName="household_attribute" />
+				</not>
+			</preConditions>
+			<comment>
+				Create tables for Household System `household_attribute`
+			</comment>
+			<createTable tableName="household_attribute">
+			
+				<column name="household_attribute_type_id" type="int(11)" autoIncrement="true">
+					<constraints primaryKey="true" nullable="false"  />
+				</column>
+				
+				<column name="name" type="varchar(50)" defaultValue="">
+					<constraints nullable="false"/>
+				</column>
+				
+				<column name="household_description" type="text">
+					<constraints nullable="false"/>
+				</column>
+				
+				<column name="searchable" type="smallint(6)" defaultValue="0">
+					<constraints nullable="false"/>
+				</column>
+				<column name="creator" type="int(11)" defaultValue="0">
+					<constraints nullable="false" />
+				</column>
+				<column name="date_created" type="datetime">
+						<constraints nullable="true" />
+				</column>
+				<column name="changed_by" type="int(11)" defaultValue="null"></column>
+				<column name="date_changed" type="datetime" defaultValue="null" ></column>
+				<column name="retired" type="smallint(6)" defaultValue="0">
+					<constraints nullable="false"/>
+				</column>
+				<column name="retired_by" type="int(11)" defaultValue="null"></column>
+				<column name="date_retired" type="datetime" defaultValue="null"></column>
+				<column name="retire_reason" type="varchar(255)" defaultValue="null"></column>
+				<column name="edit_privilege" type="varchar(255)" defaultValue="null"></column>
+				<column name="uuid" type="char(38)">
+					<constraints nullable="false"/>
+				</column>
+				<column name="sort_weight" type="double" defaultValue="null">
+				</column>
+			</createTable>
+		</changeSet>
+		
+		<changeSet id="household_attrib_value-2012-01-23-11:30" author="ningosi">
+			<preConditions onFail="MARK_RAN">
+				<not>
+					<tableExists tableName="household_attrib_value" />
+				</not>
+			</preConditions>
+			<comment>
+				Create tables for Household System household_attrib_value
+			</comment>
+			<createTable tableName="household_attrib_value">
+			
+				<column name="household_attribute_id" type="int(11)" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false"  />
+				</column>
+				
+				<column name="household_group_uuid" type="char(38)" defaultValue="null"></column>
+				
+				<column name="household_value" type="varchar(50)" defaultValue="">
+					<constraints nullable="false"/>
+				</column>
+				
+				<column name="household_attribute_type_id" type="int(11)" defaultValue="0">
+					<constraints nullable="false"/>
+				</column>
+				
+				<column name="creator" type="int(11)" defaultValue="0">
+				<constraints nullable="false" />
+				</column>
+				<column name="date_created" type="datetime">
+					<constraints nullable="true" />
+				</column>
+				<column name="changed_by" type="int(11)" defaultValue="null"></column>
+				<column name="date_changed" type="datetime" defaultValue="null" ></column>
+	
+				<column name="voided" type="smallint(6)" defaultValue="0">
+					<constraints nullable="false" />
+				</column>
+	
+				<column name="voided_by" type="int(11)">
+					<constraints nullable="true" />
+				</column>
+	
+				<column name="date_voided" type="datetime">
+					<constraints nullable="true" />
+				</column>
+	
+				<column name="void_reason" type="varchar(255)">
+					<constraints nullable="true" />
+				</column>
+				
+				<column name="uuid" type="char(38)">
+					<constraints nullable="false"/>
+				</column>
+			</createTable>
+		</changeSet>
+		
+		<changeSet id="household_location-2012-01-23-11:35" author="ningosi">
+			<preConditions onFail="MARK_RAN">
+				<not>
+					<tableExists tableName="household_location" />
+				</not>
+			</preConditions>
+			<comment>
+				Create tables for Household System `household_location`
+			</comment>
+			<createTable tableName="household_location">
+			
+				<column name="household_location_id" type="int(11)" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false"  />
+				</column>
+				
+				<column name="name" type="varchar(255)" defaultValue="">
+					<constraints nullable="false"/>
+				</column>
+				
+				<column name="description" type="varchar(255)" defaultValue="null"></column>
+				
+				<column name="address1" type="varchar(255)" defaultValue="null"></column>
+				<column name="address2" type="varchar(255)" defaultValue="null"></column>
+				<column name="address3" type="varchar(255)" defaultValue="null"></column>
+				<column name="address4" type="varchar(255)" defaultValue="null"></column>
+				<column name="address5" type="varchar(255)" defaultValue="null"></column>
+				<column name="address6" type="varchar(255)" defaultValue="null"></column>
+				
+				<column name="city_village" type="varchar(255)" defaultValue="null"></column>
+				<column name="city_sub_location" type="varchar(255)" defaultValue="null"></column>
+				<column name="city_location" type="varchar(255)" defaultValue="null"></column>
+				<column name="county_district" type="varchar(255)" defaultValue="null"></column>
+				<column name="postal_code" type="varchar(50)" defaultValue="null"></column>
+				<column name="country" type="varchar(50)" defaultValue="null"></column>
+				<column name="latitude" type="varchar(50)" defaultValue="null"></column>
+				<column name="longitude" type="varchar(50)" defaultValue="null"></column>
+				
+				<column name="creator" type="int(11)" defaultValue="0">
+				<constraints nullable="false" />
+				</column>
+				<column name="date_created" type="datetime">
+					<constraints nullable="true" />
+				</column>
+				<column name="retired" type="smallint(6)" defaultValue="0">
+				<constraints nullable="false"/>
+				</column>
+				<column name="retired_by" type="int(11)" defaultValue="null"></column>
+				<column name="date_retired" type="datetime" defaultValue="null"></column>
+				<column name="retire_reason" type="varchar(255)" defaultValue="null"></column>
+				
+				<column name="parent_household_location" type="int(11)" defaultValue="null"></column>
+				<column name="uuid" type="char(38)">
+					<constraints nullable="false"/>
+				</column>
+			</createTable>
+		</changeSet>
+		
+		<changeSet id="household_location_level-2012-01-23-11:40" author="ningosi">
+			<preConditions onFail="MARK_RAN">
+				<not>
+					<tableExists tableName="household_location_level" />
+				</not>
+		</preConditions>
+		<comment>
+			Create tables for Household System `household_location_level`
+		</comment>
+		
+		<createTable tableName="household_location_level">
+		
+			<column name="household_location_level_id" type="int(11)" autoIncrement="true">
+			<constraints primaryKey="true" nullable="false"  />
+			</column>
+			<column name="name" type="varchar(160)" defaultValue="null" />
+			<column name="parent_level_id" type="int(11)" defaultValue="null" />
+			<column name="household_location_field" type="varchar(50)" defaultValue="null" />
+			<column name="uuid" type="char(38)">
+				<constraints nullable="false"/>
+			</column>
+			
+			<column name="required" type="tinyint(1)" defaultValue="0">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+	</changeSet>
+	
+	<changeSet id="household_location_entry-2012-01-23-11:45" author="ningosi">
+			<preConditions onFail="MARK_RAN">
+				<not>
+					<tableExists tableName="household_location_entry" />
+				</not>
+		</preConditions>
+		<comment>
+			Create tables for Household System `household_location_entry`
+		</comment>
+		
+		<createTable tableName="household_location_entry">
+			<column name="household_location_entry_id" type="int(11)" autoIncrement="true">
+			<constraints primaryKey="true" nullable="false"  />
+			</column>
+			<column name="name" type="varchar(160)">
+				<constraints nullable="false"/>
+			</column>
+			
+			<column name="level_id" type="int(11)">
+				<constraints nullable="false"/>
+			</column>
+			
+			<column name="parent_id" type="int(11)" defaultValue="null" />
+			<column name="user_generated_id" type="varchar(11)" defaultValue="null" />
+			<column name="latitude" type="double" defaultValue="null" />
+			<column name="longitude" type="double" defaultValue="null" />
+			<column name="elevation" type="double" defaultValue="null" />
+			
+			<column name="uuid" type="char(38)">
+				<constraints nullable="false"/>
+			</column>
+			
+		</createTable>	
+	</changeSet>	
+	<changeSet id="household_encounter_type-2012-01-23-11:50" author="ningosi">
+			<preConditions onFail="MARK_RAN">
+				<not>
+					<tableExists tableName="household_encounter_type"/>
+				</not>
+			</preConditions>
+			<comment>
+				Create tables for Household System `household_encounter_type`
+			</comment>
+			
+			<createTable tableName="household_encounter_type">
+			
+				<column name="household_encounter_type_id" type="int(11)" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false"  />
+				</column>
+				
+				<column name="name" type="varchar(160)">
+					<constraints nullable="false"/>
+				</column>
+				<column name="description" type="text" />
+				
+				<column name="creator" type="int(11)" defaultValue="0">
+					<constraints nullable="false"/>
+				</column>
+				<column name="date_created" type="datetime" defaultValue="0002-11-30 00:00:00">
+					<constraints nullable="true" />
+				</column>
+				<column name="retired" type="smallint(6)" defaultValue="0">
+				<constraints nullable="false"/>
+				</column>
+				<column name="retired_by" type="int(11)" defaultValue="null" />
+				
+				<column name="date_retired" type="datetime" defaultValue="null" /> 
+				<column name="retire_reason" type="varchar(255)" defaultValue="null" />
+				<column name="uuid" type="char(38)">
+					<constraints nullable="false"/>
+				</column>
+			</createTable>
+		</changeSet>
+		<changeSet id="household_encounter-2012-01-23-12:00" author="ningosi">
+			<preConditions onFail="MARK_RAN">
+				<not>
+					<tableExists tableName="household_encounter" />
+				</not>
+		</preConditions>
+		<comment>
+			Create tables for Household System `household_encounter`
+		</comment>
+		
+		<createTable tableName="household_encounter">
+		
+			<column name="household_encounter_id" type="int(11)" autoIncrement="true">
+			<constraints primaryKey="true" nullable="false"  />
+			</column>
+			<column name="household_encounter_type" type="int(11)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="household_group_uuid" type="char(38)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="provider_id" type="int(11)" defaultValue="0">
+				<constraints nullable="false"/>
+			</column>
+			<column name="location_uuid" type="char(38)" defaultValue="null"></column>
+			<column name="form_id" type="int(11)" defaultValue="null"></column>
+			<column name="household_encounter_datetime" type="datetime" defaultValue="0002-11-30 00:00:00">
+				<constraints nullable="false"/>
+			</column>
+			<column name="creator" type="int(11)" defaultValue="0">
+			<constraints nullable="false" />
+			</column>
+			<column name="date_created" type="datetime" defaultValue="0002-11-30 00:00:00">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="voided" type="smallint(6)" defaultValue="0">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="voided_by" type="int(11)">
+				<constraints nullable="true" />
+			</column>
+
+			<column name="date_voided" type="datetime">
+				<constraints nullable="true" />
+			</column>
+
+			<column name="void_reason" type="varchar(255)">
+				<constraints nullable="true" />
+			</column>
+			
+			<column name="uuid" type="char(38)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="changed_by" type="int(11)" defaultValue="null"></column>
+			<column name="date_changed" type="datetime" defaultValue="null" ></column>
+
+
+		</createTable>
+	</changeSet>
+	<changeSet id="household_obs-2012-01-24-08:36" author="ningosi">
+			<preConditions onFail="MARK_RAN">
+				<not>
+					<tableExists tableName="household_obs" />
+				</not>
+			</preConditions>
+		<comment>
+			Create tables for Household System `household_obs`
+		</comment>
+		
+		<createTable tableName="household_obs">
+		
+			<column name="household_obs_id" type="int(11)" autoIncrement="true">
+			<constraints primaryKey="true" nullable="false"  />
+			</column>
+			
+			<column name="household_group_uuid" type="char(38)">
+				<constraints nullable="false"/>
+			</column>
+			
+			<column name="concept_id" type="int(11)" defaultValue="0">
+				<constraints nullable="false" />
+			</column>
+			
+			<column name="household_encounter_uuid" type="char(38)" defaultValue="null"></column>
+			
+			<column name="household_obs_datetime" type="datetime" defaultValue="0002-11-30 00:00:00">
+				<constraints nullable="false"/>
+			</column>
+			
+			<column name="location_uuid" type="char(38)" defaultValue="null"></column>
+			
+			<column name="household_obs_group_uuid" type="char(38)" defaultValue="null"></column>
+			
+			<column name="value_group_id" type="int(11)" defaultValue="null"></column>
+			
+			<column name="value_boolean" type="int(4)" defaultValue="null"></column>
+			
+			<column name="value_coded" type="int(11)" defaultValue="null"></column>
+			
+			<column name="value_coded_name_id" type="int(11)" defaultValue="null"></column>
+			
+			<column name="value_datetime" type="datetime" defaultValue="null"></column>
+			
+			<column name="value_numeric" type="double" defaultValue="null"></column>
+			<column name="value_modifier" type="varchar(2)" defaultValue="null"></column>
+			<column name="value_text" type="text"></column>
+			<column name="date_started" type="datetime" defaultValue="null"></column>
+			<column name="date_stopped" type="datetime" defaultValue="null"></column>
+			<column name="comments" type="varchar(255)" defaultValue="null"></column>
+			<column name="creator" type="int(11)" defaultValue="0">
+			<constraints nullable="false" />
+			</column>
+			
+			<column name="date_created" type="datetime" defaultValue="0002-11-30 00:00:00">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="voided" type="int(6)" defaultValue="0">
+				<constraints nullable="false" />
+			</column>
+
+			<column name="voided_by" type="int(11)">
+				<constraints nullable="true" />
+			</column>
+
+			<column name="date_voided" type="datetime">
+				<constraints nullable="true" />
+			</column>
+
+			<column name="void_reason" type="varchar(255)">
+				<constraints nullable="true" />
+			</column>
+			
+			<column name="uuid" type="char(38)">
+				<constraints nullable="false"/>
+			</column>
+
+		</createTable>
+	</changeSet>
+	<!-- creating indexes now here start of household_definition -->	
+	
+	<changeSet author="ningosi" id="household_definition-30-01-2012:19:30">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="hduuid"/>
+			</not>
+		</preConditions>
+		<comment>Creating index huuid</comment>
+		<createIndex tableName="household_definition" indexName="hduuid" unique="true">
+				<column name="uuid" />
+		</createIndex>
+	</changeSet>
+	<changeSet author="ningosi" id="household_definition-30-01-2012:21:01">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="user_who_created_definitions"/>
+			</not>
+		</preConditions>
+		<comment>Creating index user_who_created_definitions</comment>
+		<createIndex tableName="household_definition" indexName="user_who_created_definitions">
+				<column name="creator" />
+		</createIndex>
+	</changeSet>
+	<changeSet author="ningosi" id="household_definition-30-01-2012:21:03">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="user_who_changed_definitions"/>
+			</not>
+		</preConditions>
+		<comment>Creating index user_who_changed_definitions</comment>
+		<createIndex tableName="household_definition" indexName="user_who_changed_definitions">
+				<column name="changed_by" />
+		</createIndex>
+	</changeSet>	
+	<changeSet author="ningosi" id="household_definition-30-01-2012:21:05">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="user_who_voided_definitions"/>
+			</not>
+		</preConditions>
+		<comment>Creating index user_who_voided_definitions</comment>
+		<createIndex tableName="household_definition" indexName="user_who_voided_definitions">
+				<column name="voided_by" />
+		</createIndex>
+	</changeSet>	
+	<changeSet author="ningosi" id="household_definition-30-01-2012:21:06">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="definition_program"/>
+			</not>
+		</preConditions>
+		<comment>Creating index definition_program</comment>
+		<createIndex tableName="household_definition" indexName="definition_program">
+				<column name="program_id" />
+		</createIndex>
+	</changeSet>	
+	
+	<!-- creating indexes now here start of household -->
+	<changeSet author="ningosi" id="household-30-01-2012:21:09">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="hhuuid"/>
+			</not>
+		</preConditions>
+		<comment>Creating index household hhuuid</comment>
+		<createIndex tableName="household" indexName="hhuuid">
+				<column name="uuid" />
+		</createIndex>
+	</changeSet>
+	<changeSet author="ningosi" id="household-30-01-2012:21:10">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="household_def_uuid"/>
+			</not>
+		</preConditions>
+		<comment>Creating index household household_def_uuid</comment>
+		<createIndex tableName="household" indexName="household_def_uuid">
+				<column name="household_def_uuid" />
+		</createIndex>
+	</changeSet>
+	<changeSet author="ningosi" id="household-30-01-2012:21:13">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="user_who_changed_household"/>
+			</not>
+		</preConditions>
+		<comment>Creating index household user_who_changed_household</comment>
+		<createIndex tableName="household" indexName="user_who_changed_household">
+				<column name="changed_by" />
+		</createIndex>
+	</changeSet>
+	<changeSet author="ningosi" id="household-30-01-2012:21:15">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="user_who_created_household"/>
+			</not>
+		</preConditions>
+		<comment>Creating index household user_who_created_household</comment>
+		<createIndex tableName="household" indexName="user_who_created_household">
+				<column name="creator" />
+		</createIndex>
+	</changeSet>	
+	<changeSet author="ningosi" id="household-30-01-2012:21:17">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="user_who_voided_household"/>
+			</not>
+		</preConditions>
+		<comment>Creating index household user_who_voided_household</comment>
+		<createIndex tableName="household" indexName="user_who_voided_household">
+				<column name="voided_by" />
+		</createIndex>
+	</changeSet>	
+	
+	<!-- creating indexes now here start of household_membership -->
+	<changeSet author="ningosi" id="household_membership-30-01-2012:21:20">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="user_who_created_membership"/>
+			</not>
+		</preConditions>
+		<comment>Creating index household_membership user_who_created_membership</comment>
+		<createIndex tableName="household_membership" indexName="user_who_created_membership">
+				<column name="creator" />
+		</createIndex>
+	</changeSet>
+	<changeSet author="ningosi" id="household_membership-30-01-2012:21:22">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="user_who_changed_membership"/>
+			</not>
+		</preConditions>
+		<comment>Creating index household_membership user_who_created_membership</comment>
+		<createIndex tableName="household_membership" indexName="user_who_changed_membership">
+				<column name="changed_by" />
+		</createIndex>
+	</changeSet>
+	<changeSet author="ningosi" id="household_membership-30-01-2012:21:24">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="user_who_voided_membership"/>
+			</not>
+		</preConditions>
+		<comment>Creating index household_membership user_who_voided_membership</comment>
+		<createIndex tableName="household_membership" indexName="user_who_voided_membership">
+				<column name="voided_by" />
+		</createIndex>
+	</changeSet>
+	<changeSet author="ningosi" id="household_membership-30-01-2012:21:25">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="household_membership_person_uuid"/>
+			</not>
+		</preConditions>
+		<comment>Creating index household_membership household_membership_person_uuid</comment>
+		<createIndex tableName="household_membership" indexName="household_membership_person_uuid">
+				<column name="household_membership_person_uuid" />
+		</createIndex>
+	</changeSet>	
+	<changeSet author="ningosi" id="household_membership-30-01-2012:21:26">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="household_uuid"/>
+			</not>
+		</preConditions>
+		<comment>Creating index household_membership household_uuid</comment>
+		<createIndex tableName="household_membership" indexName="household_uuid">
+				<column name="household_uuid" />
+		</createIndex>
+	</changeSet>							
+	<!-- creating indexes now here start of household_attribute -->	
+	<changeSet author="ningosi" id="household_attribute-30-01-2012:21:30">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="household_attribute_type_uuid_index"/>
+			</not>
+		</preConditions>
+		<comment>Creating index household_attribute household_attribute_type_uuid_index</comment>
+		<createIndex tableName="household_attribute" indexName="household_attribute_type_uuid_index" unique="true">
+				<column name="uuid" />
+		</createIndex>
+	</changeSet>	
+	<changeSet author="ningosi" id="household_attribute-30-01-2012:21:32">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="household_attribute_is_searchable"/>
+			</not>
+		</preConditions>
+		<comment>Creating index household_attribute household_attribute_is_searchable</comment>
+		<createIndex tableName="household_attribute" indexName="household_attribute_is_searchable">
+				<column name="searchable" />
+		</createIndex>
+	</changeSet>
+	<changeSet author="ningosi" id="household_attribute-30-01-2012:21:35">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="household_name_of_attribute"/>
+			</not>
+		</preConditions>
+		<comment>Creating index household_attribute household_name_of_attribute</comment>
+		<createIndex tableName="household_attribute" indexName="household_name_of_attribute">
+				<column name="name" />
+		</createIndex>
+	</changeSet>
+	<changeSet author="ningosi" id="household_attribute-30-01-2012:21:36">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="household_attribute_type_retired_status"/>
+			</not>
+		</preConditions>
+		<comment>Creating index household_attribute household_attribute_type_retired_status</comment>
+		<createIndex tableName="household_attribute" indexName="household_attribute_type_retired_status">
+				<column name="retired" />
+		</createIndex>
+	</changeSet>
+	<changeSet author="ningosi" id="household_attribute-30-01-2012:21:36:20">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="household_attribute_type_changer"/>
+			</not>
+		</preConditions>
+		<comment>Creating index household_attribute household_attribute_type_changer</comment>
+		<createIndex tableName="household_attribute" indexName="household_attribute_type_changer">
+				<column name="changed_by" />
+		</createIndex>
+	</changeSet>
+	<changeSet author="ningosi" id="household_attribute-30-01-2012:21:37:21">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="household_attribute_type_creator"/>
+			</not>
+		</preConditions>
+		<comment>Creating index household_attribute household_attribute_type_creator</comment>
+		<createIndex tableName="household_attribute" indexName="household_attribute_type_creator">
+				<column name="creator" />
+		</createIndex>
+	</changeSet>
+	<changeSet author="ningosi" id="household_attribute-30-01-2012:21:38:25">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="household_user_who_retired_household_attribute_type"/>
+			</not>
+		</preConditions>
+		<comment>Creating index household_attribute household_user_who_retired_household_attribute_type</comment>
+		<createIndex tableName="household_attribute" indexName="household_user_who_retired_household_attribute_type">
+				<column name="retired_by" />
+		</createIndex>
+	</changeSet>
+	<changeSet author="ningosi" id="household_attribute-30-01-2012:21:39:25">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="household_privilege_which_can_edit"/>
+			</not>
+		</preConditions>
+		<comment>Creating index household_attribute household_privilege_which_can_edit</comment>
+		<createIndex tableName="household_attribute" indexName="household_privilege_which_can_edit">
+				<column name="edit_privilege" />
+		</createIndex>
+	</changeSet>	
+	<!-- creating indexes now here start of household_attrib_value -->	
+	<changeSet author="ningosi" id="household_attrib_value-30-01-2012:21:43">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="household_attribute_uuid_index"/>
+			</not>
+		</preConditions>
+		<comment>Creating index household_attrib_value household_attribute_uuid_index</comment>
+		<createIndex tableName="household_attrib_value" indexName="household_attribute_uuid_index" unique="true">
+				<column name="uuid" />
+		</createIndex>
+	</changeSet>	
+	<changeSet author="ningosi" id="household_attrib_value-30-01-2012:21:45">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="household_attribute_changer"/>
+			</not>
+		</preConditions>
+		<comment>Creating index household_attrib_value household_attribute_changer</comment>
+		<createIndex tableName="household_attrib_value" indexName="household_attribute_changer">
+				<column name="changed_by" />
+		</createIndex>
+	</changeSet>
+	<changeSet author="ningosi" id="household_attrib_value-30-01-2012:21:46">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="household_attribute_creator"/>
+			</not>
+		</preConditions>
+		<comment>Creating index household_attrib_value household_attribute_creator</comment>
+		<createIndex tableName="household_attrib_value" indexName="household_attribute_creator">
+				<column name="creator" />
+		</createIndex>
+	</changeSet>	
+	<changeSet author="ningosi" id="household_attrib_value-30-01-2012:21:47">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="household_defines_attribute_type"/>
+			</not>
+		</preConditions>
+		<comment>Creating index household_attrib_value household_defines_attribute_type</comment>
+		<createIndex tableName="household_attrib_value" indexName="household_defines_attribute_type">
+				<column name="household_attribute_type_id" />
+		</createIndex>
+	</changeSet>
+	<changeSet author="ningosi" id="household_attrib_value-30-01-2012:21:49">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="identifies_household"/>
+			</not>
+		</preConditions>
+		<comment>Creating index household_attrib_value identifies_household</comment>
+		<createIndex tableName="household_attrib_value" indexName="identifies_household">
+				<column name="household_group_uuid" />
+		</createIndex>
+	</changeSet>
+	<changeSet author="ningosi" id="household_attrib_value-30-01-2012:21:50">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="household_attribute_voider"/>
+			</not>
+		</preConditions>
+		<comment>Creating index household_attrib_value household_attribute_voider</comment>
+		<createIndex tableName="household_attrib_value" indexName="household_attribute_voider">
+				<column name="voided_by" />
+		</createIndex>
+	</changeSet>
+	<!-- creating indexes now here start of household_location -->
+	<changeSet author="ningosi" id="household_location-30-01-2012:21:54:30">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="household_location_uuid_index"/>
+			</not>
+		</preConditions>
+		<comment>Creating index household_location household_location_uuid_index</comment>
+		<createIndex tableName="household_location" indexName="household_location_uuid_index" unique="true">
+				<column name="uuid" />
+		</createIndex>
+	</changeSet>
+	<changeSet author="ningosi" id="household_location-30-01-2012:21:55">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="name_of_household_location"/>
+			</not>
+		</preConditions>
+		<comment>Creating index household_location name_of_household_location</comment>
+		<createIndex tableName="household_location" indexName="name_of_household_location">
+				<column name="name" />
+		</createIndex>
+	</changeSet>
+	<changeSet author="ningosi" id="household_location-30-01-2012:22:00">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="household_retired_status"/>
+			</not>
+		</preConditions>
+		<comment>Creating index household_location household_retired_status</comment>
+		<createIndex tableName="household_location" indexName="household_retired_status">
+				<column name="retired" />
+		</createIndex>
+	</changeSet>
+	<changeSet author="ningosi" id="household_location-30-01-2012:22:01">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="user_who_created_household_location"/>
+			</not>
+		</preConditions>
+		<comment>Creating index household_location user_who_created_household_location</comment>
+		<createIndex tableName="household_location" indexName="user_who_created_household_location">
+				<column name="creator" />
+		</createIndex>
+	</changeSet>
+	<changeSet author="ningosi" id="household_location-30-01-2012:22:02">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="user_who_retired_household_location"/>
+			</not>
+		</preConditions>
+		<comment>Creating index household_location user_who_retired_household_location</comment>
+		<createIndex tableName="household_location" indexName="user_who_retired_household_location">
+				<column name="retired_by" />
+		</createIndex>
+	</changeSet>
+	<!-- creating indexes now here start of household_location_level -->
+	<changeSet author="ningosi" id="household_location_level-30-01-2012:22:10">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="parent_level_id_unique_loc"/>
+			</not>
+		</preConditions>
+		<comment>Creating index household_location_level parent_level_id_unique_loc</comment>
+		<createIndex tableName="household_location_level" indexName="parent_level_id_unique_loc" unique="true">
+				<column name="parent_level_id" />
+		</createIndex>
+	</changeSet>
+	<changeSet author="ningosi" id="household_location_level-30-01-2012:22:15">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="household_location_field_unique"/>
+			</not>
+		</preConditions>
+		<comment>Creating index household_location_level household_location_field_unique</comment>
+		<createIndex tableName="household_location_level" indexName="household_location_field_unique">
+				<column name="household_location_field" />
+		</createIndex>
+	</changeSet>
+	<!-- creating indexes now here start of household_location_entry -->
+	<changeSet author="ningosi" id="household_location_entry-30-01-2012:22:18">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="parent_name_loci"/>
+			</not>
+		</preConditions>
+		<comment>Creating index household_location_entry parent_name_loci</comment>
+		<createIndex tableName="household_location_entry" indexName="parent_name_loci">
+				<column name="parent_id" />
+				<column name="name" />
+		</createIndex>
+	</changeSet>
+	<changeSet author="ningosi" id="household_location_entry-30-01-2012:22:19">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="level_name"/>
+			</not>
+		</preConditions>
+		<comment>Creating index household_location_entry level_name</comment>
+		<createIndex tableName="household_location_entry" indexName="level_name">
+				<column name="level_id" />
+				<column name="name" />
+		</createIndex>
+	</changeSet>
+	<!-- creating indexes now here start of household_encounter_type -->
+	<changeSet author="ningosi" id="household_encounter_type-30-01-2012:22:28:01">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="household_encounter_type_uuid_index"/>
+			</not>
+		</preConditions>
+		<comment>Creating index household_encounter_type household_encounter_type_uuid_index</comment>
+		<createIndex tableName="household_encounter_type" indexName="household_encounter_type_uuid_index" unique="true">
+				<column name="uuid" />
+		</createIndex>
+	</changeSet>
+	<changeSet author="ningosi" id="household_encounter_type-30-01-2012:22:30:57">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="household_retired_status"/>
+			</not>
+		</preConditions>
+		<comment>Creating index household_encounter_type household_retired_status</comment>
+		<createIndex tableName="household_encounter_type" indexName="household_retired_status">
+				<column name="retired" />
+		</createIndex>
+	</changeSet>
+	<changeSet author="ningosi" id="household_encounter_type-30-01-2012:22:32:11">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="user_who_created_household_type"/>
+			</not>
+		</preConditions>
+		<comment>Creating index household_encounter_type user_who_created_household_type</comment>
+		<createIndex tableName="household_encounter_type" indexName="user_who_created_household_type">
+				<column name="creator" />
+		</createIndex>
+	</changeSet>
+	<changeSet author="ningosi" id="household_encounter_type-30-01-2012:22:33:45">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="user_who_retired_household_encounter_type"/>
+			</not>
+		</preConditions>
+		<comment>Creating index household_encounter_type user_who_retired_household_encounter_type</comment>
+		<createIndex tableName="household_encounter_type" indexName="user_who_retired_household_encounter_type">
+				<column name="retired_by" />
+		</createIndex>
+	</changeSet>
+	<!-- creating indexes now here start of household_encounter -->
+	<changeSet author="ningosi" id="household_encounter-30-01-2012:22:52:25">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="household_encounter_uuid_index"/>
+			</not>
+		</preConditions>
+		<comment>Creating index household_encounter household_encounter_uuid_index</comment>
+		<createIndex tableName="household_encounter" indexName="household_encounter_uuid_index" unique="true">
+				<column name="uuid" />
+		</createIndex>
+	</changeSet>
+	<changeSet author="ningosi" id="household_encounter-30-01-2012:22:55">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="household_encounter_ibfk_1"/>
+			</not>
+		</preConditions>
+		<comment>Creating index household_encounter household_encounter_ibfk_1</comment>
+		<createIndex tableName="household_encounter" indexName="household_encounter_ibfk_1">
+				<column name="creator" />
+		</createIndex>
+	</changeSet>
+	<changeSet author="ningosi" id="household_encounter-30-01-2012:22:57">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="household_encounter_type_id"/>
+			</not>
+		</preConditions>
+		<comment>Creating index household_encounter household_encounter_type_id1</comment>
+		<createIndex tableName="household_encounter" indexName="household_encounter_type_id">
+				<column name="household_encounter_type" />
+		</createIndex>
+	</changeSet>
+	<changeSet author="ningosi" id="household_encounter-30-01-2012:22:58">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="household_encounter_form"/>
+			</not>
+		</preConditions>
+		<comment>Creating index household_encounter household_encounter_form</comment>
+		<createIndex tableName="household_encounter" indexName="household_encounter_form">
+				<column name="form_id" />
+		</createIndex>
+	</changeSet>
+	<changeSet author="ningosi" id="household_encounter-30-01-2012:22:59">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="household_encounter_location"/>
+			</not>
+		</preConditions>
+		<comment>Creating index household_encounter household_encounter_location</comment>
+		<createIndex tableName="household_encounter" indexName="household_encounter_location">
+				<column name="location_uuid" />
+		</createIndex>
+	</changeSet>
+	<changeSet author="ningosi" id="household_encounter-30-01-2012:23:00">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="household_encounter_patient"/>
+			</not>
+		</preConditions>
+		<comment>Creating index household_encounter household_encounter_patient</comment>
+		<createIndex tableName="household_encounter" indexName="household_encounter_patient">
+				<column name="household_group_uuid" />
+		</createIndex>
+	</changeSet>
+	<changeSet author="ningosi" id="household_encounter-30-01-2012:23:01">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="user_who_voided_household_encounter"/>
+			</not>
+		</preConditions>
+		<comment>Creating index household_encounter user_who_voided_household_encounter</comment>
+		<createIndex tableName="household_encounter" indexName="user_who_voided_household_encounter">
+				<column name="voided_by" />
+		</createIndex>
+	</changeSet>
+	<changeSet author="ningosi" id="household_encounter-30-01-2012:23:02">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="household_encounter_changed_by"/>
+			</not>
+		</preConditions>
+		<comment>Creating index household_encounter household_encounter_changed_by</comment>
+		<createIndex tableName="household_encounter" indexName="household_encounter_changed_by">
+				<column name="changed_by" />
+		</createIndex>
+	</changeSet>
+	<changeSet author="ningosi" id="household_encounter-30-01-2012:23:05:89">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="household_encounter_provider"/>
+			</not>
+		</preConditions>
+		<comment>Creating index household_encounter household_encounter_provider</comment>
+		<createIndex tableName="household_encounter" indexName="household_encounter_provider">
+				<column name="provider_id" />
+		</createIndex>
+	</changeSet>
+	<changeSet author="ningosi" id="household_encounter-30-01-2012:23:05">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="household_encounter_datetime_idx"/>
+			</not>
+		</preConditions>
+		<comment>Creating index household_encounter household_encounter_datetime_idx</comment>
+		<createIndex tableName="household_encounter" indexName="household_encounter_datetime_idx">
+				<column name="household_encounter_datetime" />
+		</createIndex>
+	</changeSet>
+	<!-- creating indexes now here start of household_obs -->
+	<changeSet author="ningosi" id="household_obs-30-01-2012:23:15">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="household_obs_uuid_index"/>
+			</not>
+		</preConditions>
+		<comment>Creating index household_obs_uuid_index household_obs_uuid_index</comment>
+		<createIndex tableName="household_obs" indexName="household_obs_uuid_index" unique="true">
+				<column name="uuid" />
+		</createIndex>
+	</changeSet>
+	<changeSet author="ningosi" id="household_obs-30-01-2012:23:16">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="household_obs_concept"/>
+			</not>
+		</preConditions>
+		<comment>Creating index household_obs_uuid_index household_obs_concept</comment>
+		<createIndex tableName="household_obs" indexName="household_obs_concept">
+				<column name="concept_id" />
+		</createIndex>
+	</changeSet>
+	<changeSet author="ningosi" id="household_obs-30-01-2012:23:17">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="household_obs_enterer"/>
+			</not>
+		</preConditions>
+		<comment>Creating index household_obs household_obs_enterer</comment>
+		<createIndex tableName="household_obs" indexName="household_obs_enterer">
+				<column name="creator" />
+		</createIndex>
+	</changeSet>
+	<changeSet author="ningosi" id="household_obs-30-01-2012:23:18">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="household_encounter_observations"/>
+			</not>
+		</preConditions>
+		<comment>Creating index household_obs household_encounter_observations</comment>
+		<createIndex tableName="household_obs" indexName="household_encounter_observations">
+				<column name="household_encounter_uuid" />
+		</createIndex>
+	</changeSet>
+	<changeSet author="ningosi" id="household_obs-30-01-2012:23:19">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="household_obs_location"/>
+			</not>
+		</preConditions>
+		<comment>Creating index household_obs household_obs_location</comment>
+		<createIndex tableName="household_obs" indexName="household_obs_location">
+				<column name="location_uuid" />
+		</createIndex>
+	</changeSet>
+	<!-- <changeSet author="ningosi" id="household_obs-30-01-2012:23:20">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="household_obs_grouping_uuid"/>
+			</not>
+		</preConditions>
+		<comment>Creating index household_obs household_obs_grouping_uuid</comment>
+		<createIndex tableName="household_obs" indexName="household_obs_grouping_uuid">
+				<column name="household_obs_group_uuid" />
+		</createIndex>
+	</changeSet> -->
+	<changeSet author="ningosi" id="household_obs-30-01-2012:23:22">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="household_group_obs"/>
+			</not>
+		</preConditions>
+		<comment>Creating index household_obs household_group_obs</comment>
+		<createIndex tableName="household_obs" indexName="household_group_obs">
+				<column name="household_group_uuid" />
+		</createIndex>
+	</changeSet>
+	<changeSet author="ningosi" id="household_obs-30-01-2012:23:23">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="household_answer_concept"/>
+			</not>
+		</preConditions>
+		<comment>Creating index household_obs household_answer_concept</comment>
+		<createIndex tableName="household_obs" indexName="household_answer_concept">
+				<column name="value_coded" />
+		</createIndex>
+	</changeSet>
+	<changeSet author="ningosi" id="household_obs-30-01-2012:23:25">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="household_obs_name_of_coded_value"/>
+			</not>
+		</preConditions>
+		<comment>Creating index household_obs household_obs_name_of_coded_value</comment>
+		<createIndex tableName="household_obs" indexName="household_obs_name_of_coded_value">
+				<column name="value_coded_name_id" />
+		</createIndex>
+	</changeSet>
+	<changeSet author="ningosi" id="household_obs-30-01-2012:23:26">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="household_user_who_voided_obs"/>
+			</not>
+		</preConditions>
+		<comment>Creating index household_obs household_user_who_voided_obs</comment>
+		<createIndex tableName="household_obs" indexName="household_user_who_voided_obs">
+				<column name="voided_by" />
+		</createIndex>
+	</changeSet>
+	<changeSet author="ningosi" id="household_obs-30-01-2012:23:27">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists indexName="household_obs_datetime"/>
+			</not>
+		</preConditions>
+		<comment>Creating index household_obs household_obs_datetime</comment>
+		<createIndex tableName="household_obs" indexName="household_obs_datetime">
+				<column name="household_obs_datetime" />
+		</createIndex>
+	</changeSet>
+	<!-- Start of foreign keys start here -->
+	<!-- Start of foreign keys Household_definition -->
+	<changeSet author="ningosi" id="household_definition-30-01-2012:23:31">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<foreignKeyConstraintExists foreignKeyName="user_who_created_definitions"/>
+			</not>
+		</preConditions>
+		<comment> creating household_definition user_who_created_definitions foreign keys</comment>
+			<addForeignKeyConstraint constraintName="user_who_created_definitions"
+					baseTableName="household_definition" baseColumnNames="creator"
+					referencedTableName="users" referencedColumnNames="user_id" />
+	</changeSet>
+	<changeSet author="ningosi" id="household_definition-31-01-2012:06:45">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<foreignKeyConstraintExists foreignKeyName="user_who_changed_definitions"/>
+			</not>
+		</preConditions>
+		<comment> creating household_definition user_who_changed_definitions foreign keys</comment>
+			<addForeignKeyConstraint constraintName="user_who_changed_definitions"
+					baseTableName="household_definition" baseColumnNames="changed_by"
+					referencedTableName="users" referencedColumnNames="user_id" />
+	</changeSet>
+	<changeSet author="ningosi" id="household_definition-31-01-2012:06:46">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<foreignKeyConstraintExists foreignKeyName="user_who_voided_definitions"/>
+			</not>
+		</preConditions>
+		<comment> creating household_definition user_who_voided_definitions foreign keys</comment>
+			<addForeignKeyConstraint constraintName="user_who_voided_definitions"
+					baseTableName="household_definition" baseColumnNames="voided_by"
+					referencedTableName="users" referencedColumnNames="user_id" />
+	</changeSet>
+	<changeSet author="ningosi" id="household_definition-31-01-2012:06:47">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<foreignKeyConstraintExists foreignKeyName="definition_program"/>
+			</not>
+		</preConditions>
+		<comment> creating household_definition definition_program foreign keys</comment>
+			<addForeignKeyConstraint constraintName="definition_program"
+					baseTableName="household_definition" baseColumnNames="program_id"
+					referencedTableName="program" referencedColumnNames="program_id" />
+	</changeSet>
+	<!-- Start of foreign keys household -->
+	<changeSet author="ningosi" id="household-31-01-2012:06:55">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<foreignKeyConstraintExists foreignKeyName="user_who_created_household"/>
+			</not>
+		</preConditions>
+		<comment> creating household user_who_created_household foreign keys</comment>
+			<addForeignKeyConstraint constraintName="user_who_created_household"
+					baseTableName="household" baseColumnNames="creator"
+					referencedTableName="users" referencedColumnNames="user_id" />
+	</changeSet>
+	<changeSet author="ningosi" id="household-31-01-2012:06:56">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<foreignKeyConstraintExists foreignKeyName="user_who_changed_household"/>
+			</not>
+		</preConditions>
+		<comment> creating household user_who_changed_household foreign keys</comment>
+			<addForeignKeyConstraint constraintName="user_who_changed_household"
+					baseTableName="household" baseColumnNames="changed_by"
+					referencedTableName="users" referencedColumnNames="user_id" />
+	</changeSet>
+	<changeSet author="ningosi" id="household-31-01-2012:06:57">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<foreignKeyConstraintExists foreignKeyName="user_who_voided_household"/>
+			</not>
+		</preConditions>
+		<comment> creating household user_who_voided_household foreign keys</comment>
+			<addForeignKeyConstraint constraintName="user_who_voided_household"
+					baseTableName="household" baseColumnNames="voided_by"
+					referencedTableName="users" referencedColumnNames="user_id" />
+	</changeSet>
+	<changeSet author="ningosi" id="household-31-01-2012:06:58">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<foreignKeyConstraintExists foreignKeyName="household_def_uuid"/>
+			</not>
+		</preConditions>
+		<comment> creating household household_def_uuid foreign keys</comment>
+			<addForeignKeyConstraint constraintName="household_def_uuid"
+					baseTableName="household" baseColumnNames="household_def_uuid"
+					referencedTableName="household_definition" referencedColumnNames="uuid" />
+	</changeSet>
+	<!-- Start of foreign keys household memebrship -->
+	<changeSet author="ningosi" id="household_mebership-31-01-2012:07:00">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<foreignKeyConstraintExists foreignKeyName="household_uuid"/>
+			</not>
+		</preConditions>
+		<comment> creating household_membership household_uuid foreign keys</comment>
+			<addForeignKeyConstraint constraintName="household_uuid"
+					baseTableName="household_membership" baseColumnNames="household_uuid"
+					referencedTableName="household" referencedColumnNames="uuid" />
+	</changeSet>
+	<changeSet author="ningosi" id="household_mebership-31-01-2012:07:30">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<foreignKeyConstraintExists foreignKeyName="user_who_created_membership"/>
+			</not>
+		</preConditions>
+		<comment> creating household_membership user_who_created_membership foreign keys</comment>
+			<addForeignKeyConstraint constraintName="user_who_created_membership"
+					baseTableName="household_membership" baseColumnNames="creator"
+					referencedTableName="users" referencedColumnNames="user_id" />
+	</changeSet>
+	<changeSet author="ningosi" id="household_mebership-31-01-2012:07:32">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<foreignKeyConstraintExists foreignKeyName="user_who_changed_membership"/>
+			</not>
+		</preConditions>
+		<comment> creating household_membership user_who_changed_membership foreign keys</comment>
+			<addForeignKeyConstraint constraintName="user_who_changed_membership"
+					baseTableName="household_membership" baseColumnNames="changed_by"
+					referencedTableName="users" referencedColumnNames="user_id" />
+	</changeSet>
+	<changeSet author="ningosi" id="household_mebership-31-01-2012:07:35">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<foreignKeyConstraintExists foreignKeyName="user_who_voided_membership"/>
+			</not>
+		</preConditions>
+		<comment> creating household_membership user_who_voided_membership foreign keys</comment>
+			<addForeignKeyConstraint constraintName="user_who_voided_membership"
+					baseTableName="household_membership" baseColumnNames="voided_by"
+					referencedTableName="users" referencedColumnNames="user_id" />
+	</changeSet>
+	<changeSet author="ningosi" id="household_mebership-31-01-2012:07:36">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<foreignKeyConstraintExists foreignKeyName="household_membership_person_uuid"/>
+			</not>
+		</preConditions>
+		<comment> creating household_membership household_membership_person_uuid foreign keys</comment>
+			<addForeignKeyConstraint constraintName="household_membership_person_uuid"
+					baseTableName="household_membership" baseColumnNames="household_membership_person_uuid"
+					referencedTableName="person" referencedColumnNames="uuid" />
+	</changeSet>
+	<!-- Start of foreign keys household_attribute -->
+	<changeSet author="ningosi" id="household_mebership-31-01-2012:07:40">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<foreignKeyConstraintExists foreignKeyName="household_attribute_type_changer"/>
+			</not>
+		</preConditions>
+		<comment> creating household_attribute household_attribute_type_changer foreign keys</comment>
+			<addForeignKeyConstraint constraintName="household_attribute_type_changer"
+					baseTableName="household_attribute" baseColumnNames="changed_by"
+					referencedTableName="users" referencedColumnNames="user_id" />
+	</changeSet>
+	<changeSet author="ningosi" id="household_mebership-31-01-2012:07:42">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<foreignKeyConstraintExists foreignKeyName="household_attribute_type_creator"/>
+			</not>
+		</preConditions>
+		<comment> creating household_attribute household_attribute_type_creator foreign keys</comment>
+			<addForeignKeyConstraint constraintName="household_attribute_type_creator"
+					baseTableName="household_attribute" baseColumnNames="creator"
+					referencedTableName="users" referencedColumnNames="user_id" />
+	</changeSet>
+	<changeSet author="ningosi" id="household_mebership-31-01-2012:07:43">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<foreignKeyConstraintExists foreignKeyName="household_privilege_which_can_edit"/>
+			</not>
+		</preConditions>
+		<comment> creating household_attribute household_privilege_which_can_edit foreign keys</comment>
+			<addForeignKeyConstraint constraintName="household_privilege_which_can_edit"
+					baseTableName="household_attribute" baseColumnNames="edit_privilege"
+					referencedTableName="privilege" referencedColumnNames="privilege" />
+	</changeSet>
+	<changeSet author="ningosi" id="household_mebership-31-01-2012:07:45">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<foreignKeyConstraintExists foreignKeyName="household_user_who_retired_household_attribute_type"/>
+			</not>
+		</preConditions>
+		<comment> creating household_attribute household_user_who_retired_household_attribute_type foreign keys</comment>
+			<addForeignKeyConstraint constraintName="household_user_who_retired_household_attribute_type"
+					baseTableName="household_attribute" baseColumnNames="retired_by"
+					referencedTableName="users" referencedColumnNames="user_id" />
+	</changeSet>
+	<!-- Start of foreign keys household_attrib_value -->
+	<changeSet author="ningosi" id="household_attrib_value-31-01-2012:08:27">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<foreignKeyConstraintExists foreignKeyName="household_attribute_changer"/>
+			</not>
+		</preConditions>
+		<comment> creating household_attrib_value household_attribute_changer foreign keys</comment>
+			<addForeignKeyConstraint constraintName="household_attribute_changer"
+					baseTableName="household_attrib_value" baseColumnNames="changed_by"
+					referencedTableName="users" referencedColumnNames="user_id" />
+	</changeSet>
+	<changeSet author="ningosi" id="household_attrib_value-31-01-2012:08:29">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<foreignKeyConstraintExists foreignKeyName="household_attribute_creator"/>
+			</not>
+		</preConditions>
+		<comment> creating household_attrib_value household_attribute_creator foreign keys</comment>
+			<addForeignKeyConstraint constraintName="household_attribute_creator"
+					baseTableName="household_attrib_value" baseColumnNames="creator"
+					referencedTableName="users" referencedColumnNames="user_id" />
+	</changeSet>
+	<changeSet author="ningosi" id="household_attrib_value-31-01-2012:08:30">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<foreignKeyConstraintExists foreignKeyName="household_attribute_voider"/>
+			</not>
+		</preConditions>
+		<comment> creating household_attrib_value household_attribute_voider foreign keys</comment>
+			<addForeignKeyConstraint constraintName="household_attribute_voider"
+					baseTableName="household_attrib_value" baseColumnNames="voided_by"
+					referencedTableName="users" referencedColumnNames="user_id" />
+	</changeSet>
+	<changeSet author="ningosi" id="household_attrib_value-31-01-2012:08:33">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<foreignKeyConstraintExists foreignKeyName="household_defines_attribute_type"/>
+			</not>
+		</preConditions>
+		<comment> creating household_attrib_value household_defines_attribute_type foreign keys</comment>
+			<addForeignKeyConstraint constraintName="household_defines_attribute_type"
+					baseTableName="household_attrib_value" baseColumnNames="household_attribute_type_id"
+					referencedTableName="household_attribute" referencedColumnNames="household_attribute_type_id" />
+	</changeSet>
+	<!-- Start of foreign keys household_location -->
+	<changeSet author="ningosi" id="household_location-31-01-2012:08:35">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<foreignKeyConstraintExists foreignKeyName="user_who_created_household_location"/>
+			</not>
+		</preConditions>
+		<comment> creating household_location household_attribute_voider foreign keys</comment>
+			<addForeignKeyConstraint constraintName="user_who_created_household_location"
+					baseTableName="household_location" baseColumnNames="creator"
+					referencedTableName="users" referencedColumnNames="user_id" />
+	</changeSet>
+	<changeSet author="ningosi" id="household_location-31-01-2012:08:38">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<foreignKeyConstraintExists foreignKeyName="user_who_retired_household_location"/>
+			</not>
+		</preConditions>
+		<comment> creating household_location user_who_retired_household_location foreign keys</comment>
+			<addForeignKeyConstraint constraintName="user_who_retired_household_location"
+					baseTableName="household_location" baseColumnNames="retired_by"
+					referencedTableName="users" referencedColumnNames="user_id" />
+	</changeSet>
+	<!-- Start of foreign keys household_location_level -->
+	<changeSet author="ningosi" id="household_location_level-31-01-2012:08:40">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<foreignKeyConstraintExists foreignKeyName="parent_level_loc"/>
+			</not>
+		</preConditions>
+		<comment> creating household_location_level user_who_retired_household_location foreign keys</comment>
+			<addForeignKeyConstraint constraintName="parent_level_loc"
+					baseTableName="household_location_level" baseColumnNames="parent_level_id"
+					referencedTableName="household_location_level" referencedColumnNames="household_location_level_id" />
+	</changeSet>
+	<!-- Start of foreign keys household_location_entry -->
+	<changeSet author="ningosi" id="household_location_entry-31-01-2012:08:42">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<foreignKeyConstraintExists foreignKeyName="level_to_level_loci"/>
+			</not>
+		</preConditions>
+		<comment> creating household_location_entry level_to_level_loci foreign keys</comment>
+			<addForeignKeyConstraint constraintName="level_to_level_loci"
+					baseTableName="household_location_entry" baseColumnNames="level_id"
+					referencedTableName="household_location_level" referencedColumnNames="household_location_level_id" />
+	</changeSet>
+	<changeSet author="ningosi" id="household_location_entry-31-01-2012:08:45">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<foreignKeyConstraintExists foreignKeyName="parent_to_parent_loci"/>
+			</not>
+		</preConditions>
+		<comment> creating household_location_entry parent_to_parent_loci foreign keys</comment>
+			<addForeignKeyConstraint constraintName="parent_to_parent_loci"
+					baseTableName="household_location_entry" baseColumnNames="parent_id"
+					referencedTableName="household_location_entry" referencedColumnNames="household_location_entry_id" />
+	</changeSet>
+	<!-- Start of foreign keys household_encounter_type -->
+	<changeSet author="ningosi" id="household_encounter_type-31-01-2012:08:50">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<foreignKeyConstraintExists foreignKeyName="user_who_created_household_type"/>
+			</not>
+		</preConditions>
+		<comment> creating household_encounter_type user_who_created_household_type foreign keys</comment>
+			<addForeignKeyConstraint constraintName="user_who_created_household_type"
+					baseTableName="household_encounter_type" baseColumnNames="creator"
+					referencedTableName="users" referencedColumnNames="user_id" />
+	</changeSet>
+	<changeSet author="ningosi" id="household_encounter_type-31-01-2012:08:51">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<foreignKeyConstraintExists foreignKeyName="user_who_retired_household_encounter_type"/>
+			</not>
+		</preConditions>
+		<comment> creating household_encounter_type user_who_retired_household_encounter_type foreign keys</comment>
+			<addForeignKeyConstraint constraintName="user_who_retired_household_encounter_type"
+					baseTableName="household_encounter_type" baseColumnNames="retired_by"
+					referencedTableName="users" referencedColumnNames="user_id" />
+	</changeSet>
+	<!-- Start of foreign keys household_encounter -->
+	<changeSet author="ningosi" id="household_encounter-31-01-2012:08:54">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<foreignKeyConstraintExists foreignKeyName="household_encounter_changed_by"/>
+			</not>
+		</preConditions>
+		<comment> creating household_encounter household_encounter_changed_by foreign keys</comment>
+			<addForeignKeyConstraint constraintName="household_encounter_changed_by"
+					baseTableName="household_encounter" baseColumnNames="changed_by"
+					referencedTableName="users" referencedColumnNames="user_id" />
+	</changeSet>
+	<changeSet author="ningosi" id="household_encounter-31-01-2012:08:55">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<foreignKeyConstraintExists foreignKeyName="household_encounter_form"/>
+			</not>
+		</preConditions>
+		<comment> creating household_encounter household_encounter_form foreign keys</comment>
+			<addForeignKeyConstraint constraintName="household_encounter_form"
+					baseTableName="household_encounter" baseColumnNames="form_id"
+					referencedTableName="form" referencedColumnNames="form_id" />
+	</changeSet>
+	<changeSet author="ningosi" id="household_encounter-31-01-2012:08:56">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<foreignKeyConstraintExists foreignKeyName="household_encounter_ibfk_1"/>
+			</not>
+		</preConditions>
+		<comment> creating household_encounter household_encounter_ibfk_1 foreign keys</comment>
+			<addForeignKeyConstraint constraintName="household_encounter_ibfk_1"
+					baseTableName="household_encounter" baseColumnNames="creator"
+					referencedTableName="users" referencedColumnNames="user_id" />
+	</changeSet>
+	<changeSet author="ningosi" id="household_encounter-31-01-2012:08:58">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<foreignKeyConstraintExists foreignKeyName="household_encounter_location"/>
+			</not>
+		</preConditions>
+		<comment> creating household_encounter household_encounter_location foreign keys</comment>
+			<addForeignKeyConstraint constraintName="household_encounter_location"
+					baseTableName="household_encounter" baseColumnNames="location_uuid"
+					referencedTableName="household_location" referencedColumnNames="uuid" />
+	</changeSet>
+	<changeSet author="ningosi" id="household_encounter-31-01-2012:08:59">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<foreignKeyConstraintExists foreignKeyName="household_encounter_patient"/>
+			</not>
+		</preConditions>
+		<comment> creating household_encounter household_encounter_patient foreign keys</comment>
+			<addForeignKeyConstraint constraintName="household_encounter_patient"
+					baseTableName="household_encounter" baseColumnNames="household_group_uuid"
+					referencedTableName="household" referencedColumnNames="uuid" />
+	</changeSet>
+	<changeSet author="ningosi" id="household_encounter-31-01-2012:09:01">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<foreignKeyConstraintExists foreignKeyName="household_encounter_provider"/>
+			</not>
+		</preConditions>
+		<comment> creating household_encounter household_encounter_provider foreign keys</comment>
+			<addForeignKeyConstraint constraintName="household_encounter_provider"
+					baseTableName="household_encounter" baseColumnNames="provider_id"
+					referencedTableName="person" referencedColumnNames="person_id" />
+	</changeSet>
+	<changeSet author="ningosi" id="household_encounter-31-01-2012:09:03">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<foreignKeyConstraintExists foreignKeyName="household_encounter_type_id"/>
+			</not>
+		</preConditions>
+		<comment> creating household_encounter household_encounter_type_id foreign keys</comment>
+			<addForeignKeyConstraint constraintName="household_encounter_type_id"
+					baseTableName="household_encounter" baseColumnNames="household_encounter_type"
+					referencedTableName="household_encounter_type" referencedColumnNames="household_encounter_type_id" />
+	</changeSet>
+	<!-- Start of foreign keys household_obs -->
+	<changeSet author="ningosi" id="household_obs-31-01-2012:09:08">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<foreignKeyConstraintExists foreignKeyName="household_answer_concept"/>
+			</not>
+		</preConditions>
+		<comment> creating household_obs household_answer_concept foreign keys</comment>
+			<addForeignKeyConstraint constraintName="household_answer_concept"
+					baseTableName="household_obs" baseColumnNames="value_coded"
+					referencedTableName="concept" referencedColumnNames="concept_id" />
+	</changeSet>
+	<changeSet author="ningosi" id="household_obs-31-01-2012:09:10">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<foreignKeyConstraintExists foreignKeyName="household_encounter_observations"/>
+			</not>
+		</preConditions>
+		<comment> creating household_obs household_encounter_observations foreign keys</comment>
+			<addForeignKeyConstraint constraintName="household_encounter_observations"
+					baseTableName="household_obs" baseColumnNames="household_encounter_uuid"
+					referencedTableName="household_encounter" referencedColumnNames="uuid" />
+	</changeSet>
+	<changeSet author="ningosi" id="household_obs-31-01-2012:09:11">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<foreignKeyConstraintExists foreignKeyName="household_obs_concept"/>
+			</not>
+		</preConditions>
+		<comment> creating household_obs household_obs_concept foreign keys</comment>
+			<addForeignKeyConstraint constraintName="household_obs_concept"
+					baseTableName="household_obs" baseColumnNames="concept_id"
+					referencedTableName="concept" referencedColumnNames="concept_id" />
+	</changeSet>
+	<changeSet author="ningosi" id="household_obs-31-01-2012:09:12">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<foreignKeyConstraintExists foreignKeyName="household_obs_enterer"/>
+			</not>
+		</preConditions>
+		<comment> creating household_obs household_obs_enterer foreign keys</comment>
+			<addForeignKeyConstraint constraintName="household_obs_enterer"
+					baseTableName="household_obs" baseColumnNames="creator"
+					referencedTableName="users" referencedColumnNames="user_id" />
+	</changeSet>
+	<!-- <changeSet author="ningosi" id="household_obs-31-01-2012:09:14">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<foreignKeyConstraintExists foreignKeyName="household_obs_grouping_uuid"/>
+			</not>
+		</preConditions>
+		<comment> creating household_obs household_obs_grouping_uuid foreign keys</comment>
+			<addForeignKeyConstraint constraintName="household_obs_grouping_uuid"
+					baseTableName="household_obs" baseColumnNames="household_obs_group_uuid"
+					referencedTableName="household_obs" referencedColumnNames="uuid" />
+	</changeSet> -->
+	<changeSet author="ningosi" id="household_obs-31-01-2012:09:15">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<foreignKeyConstraintExists foreignKeyName="household_obs_location"/>
+			</not>
+		</preConditions>
+		<comment> creating household_obs household_obs_location foreign keys</comment>
+			<addForeignKeyConstraint constraintName="household_obs_location"
+					baseTableName="household_obs" baseColumnNames="location_uuid"
+					referencedTableName="household_location" referencedColumnNames="uuid" />
+	</changeSet>
+	<changeSet author="ningosi" id="household_obs-31-01-2012:09:16">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<foreignKeyConstraintExists foreignKeyName="household_obs_name_of_coded_value"/>
+			</not>
+		</preConditions>
+		<comment> creating household_obs household_obs_name_of_coded_value foreign keys</comment>
+			<addForeignKeyConstraint constraintName="household_obs_name_of_coded_value"
+					baseTableName="household_obs" baseColumnNames="value_coded_name_id"
+					referencedTableName="concept_name" referencedColumnNames="concept_name_id" />
+	</changeSet>
+	<changeSet author="ningosi" id="household_obs-31-01-2012:09:17">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<foreignKeyConstraintExists foreignKeyName="household_group_obs"/>
+			</not>
+		</preConditions>
+		<comment> creating household_obs household_group_obs foreign keys</comment>
+			<addForeignKeyConstraint constraintName="household_group_obs"
+					baseTableName="household_obs" baseColumnNames="household_group_uuid"
+					referencedTableName="household" referencedColumnNames="uuid" />
+	</changeSet>
+	<changeSet author="ningosi" id="household_obs-31-01-2012:09:20">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<foreignKeyConstraintExists foreignKeyName="household_user_who_voided_obs"/>
+			</not>
+		</preConditions>
+		<comment> creating household_obs household_user_who_voided_obs foreign keys</comment>
+			<addForeignKeyConstraint constraintName="household_user_who_voided_obs"
+					baseTableName="household_obs" baseColumnNames="voided_by"
+					referencedTableName="users" referencedColumnNames="user_id" />
+	</changeSet>
+	<!-- Droping constraint if exist -->
+	<changeSet author="ningosi" id="household_obs_droping-31-01-2012:09:27" dbms="mysql">
+		<preConditions onFail="MARK_RAN">
+			<foreignKeyConstraintExists foreignKeyName="household_obs_grouping_uuid"/>
+		</preConditions>
+		<comment>Drop constraint to allow for household grouping uuid</comment>
+			<sql>
+				SET FOREIGN_KEY_CHECKS=0;
+			</sql>
+			<dropForeignKeyConstraint baseTableName="household_obs" constraintName="household_obs_grouping_uuid"/>
+			<sql>
+				SET FOREIGN_KEY_CHECKS=1;
+			</sql>
+	</changeSet>
+	
+	<changeSet author="ningosi" id="household_membership-31-01-2012:09:50">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="household_membership" columnName="uuid"/>
+			</not>
+			
+		</preConditions>
+			<comment>Creating an additional uuid column on household_membership</comment>
+				<addColumn tableName="household_membership">
+					<column name="uuid" type="char(38)">
+						<constraints nullable="false"/>
+					</column>
+				</addColumn>
+	</changeSet>
+	
+	<!-- Additional columns on household_defition -->
+	<changeSet author="ningosi" id="household_definition-31-01-2012:11:37:57">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="household_definition" columnName="parent"/>
+			</not>
+		</preConditions>
+			<comment>Adding object column that will maintain hierrachies in household definitions takes uuid</comment>
+			<addColumn tableName="household_definition">
+				<column name="parent" type="char(38)" defaultValue="null">
+					<constraints nullable="true" />
+				</column>
+			</addColumn>
+	</changeSet>
+	
+	<changeSet author="ningosi" id="householdDefuuid-2011-12-31-13:25:70:278">
+			<preConditions onFail="MARK_RAN">
+				<not>
+					<indexExists indexName="householdDef_parent_uuid"/>
+				</not>
+			</preConditions>
+			<comment>creating key householdDef_parent_uuid </comment>
+			<createIndex tableName="household_definition" indexName="householdDef_parent_uuid">
+				<column name="parent" />
+			</createIndex>
+			
+		</changeSet>
+		
+		<!-- defining additional tables -->
+			
+		<changeSet author="ningosi" id="householdForms-2011-12-31-15:30">
+		
+			<preConditions onFail="MARK_RAN">
+				<not>
+					<tableExists tableName="household_forms" />
+				</not>
+			</preConditions>
+			<comment>Create tables for Household System `household_forms` to hold the forms</comment>
+			
+	        	<createTable tableName="household_forms">
+	        	
+	            <column autoIncrement="true" name="form_id" type="int">
+	                <constraints nullable="false" primaryKey="true"/>
+	            </column>
+	            
+	            <column defaultValue="" name="name" type="varchar(255)">
+	                <constraints nullable="false"/>
+	            </column>
+	            
+	            <column defaultValue="" name="version" type="varchar(50)">
+	                <constraints nullable="false"/>
+	            </column>
+	            
+	            <column name="build" type="int"/>
+	            
+	            <column defaultValueNumeric="0" name="published" type="tinyint">
+	                <constraints nullable="false"/>
+	            </column>
+	            
+	            <column name="description" type="text"/>
+	            
+	            <column name="encounter_type" type="int"/>
+	            
+	            <column name="template" type="mediumtext"/>
+	            
+	            <column name="xslt" type="mediumtext"/>
+	            
+	            <column defaultValueNumeric="0" name="creator" type="int">
+	                <constraints nullable="false"/>
+	            </column>
+	            
+	            <column defaultValueDate="0002-11-30T00:00:00.0" name="date_created" type="DATETIME">
+	                <constraints nullable="false"/>
+	            </column>
+	            
+	            <column name="changed_by" type="int"/>
+	            
+	            <column name="date_changed" type="DATETIME"/>
+	            
+	            <column defaultValueNumeric="0" name="retired" type="tinyint">
+	                <constraints nullable="false"/>
+	            </column>
+	            
+	            <column name="retired_by" type="int"/>
+	            
+	            <column name="date_retired" type="DATETIME"/>
+	            
+	            <column name="retired_reason" type="varchar(255)"/>
+	            
+	            <column name="uuid" type="char(38)">
+	            	<constraints nullable="false"/>
+	            </column>
+	        </createTable>
+   	</changeSet>
+   	
+   	<!-- creating household_form_field table -->
+   	<changeSet author="ningosi" id="householdFormsField-2011-12-31-15:40">
+	   	<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="household_forms_field" />
+			</not>
+		</preConditions>
+	<comment>Create tables for Household System `household_forms_field` to hold the formsfields</comment>
+		<createTable tableName="household_forms_field">
+           <column autoIncrement="true" name="form_field_id" type="int">
+               <constraints nullable="false" primaryKey="true"/>
+           </column>
+           <column defaultValueNumeric="0" name="form_id" type="int">
+               <constraints nullable="false"/>
+           </column>
+           <column defaultValueNumeric="0" name="field_id" type="int">
+               <constraints nullable="false"/>
+           </column>
+           <column name="field_number" type="int"/>
+           <column name="field_part" type="varchar(5)"/>
+           <column name="page_number" type="int"/>
+           <column name="parent_form_field" type="int"/>
+           <column name="min_occurs" type="int"/>
+           <column name="max_occurs" type="int"/>
+           <column name="required" type="tinyint"/>
+           <column name="changed_by" type="int"/>
+           <column name="date_changed" type="DATETIME"/>
+           <column defaultValueNumeric="0" name="creator" type="int">
+               <constraints nullable="false"/>
+           </column>
+           <column defaultValueDate="0002-11-30T00:00:00.0" name="date_created" type="DATETIME">
+               <constraints nullable="false"/>
+           </column>
+           <column name="sort_weight" type="float(11,5)"/>
+           <column name="uuid" type="char(38)">
+            	<constraints nullable="false"/>
+        	</column>
+      	</createTable>
+	</changeSet>
+	<changeSet author="ningosi" id="32323232321" dbms="mysql">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<foreignKeyConstraintExists foreignKeyName="parent_definition"/>
+			</not>
+		</preConditions>
+		<sql>
+			SET FOREIGN_KEY_CHECKS=0;
+		</sql>
+		<addForeignKeyConstraint constraintName="parent_definition" referencedTableName="household_definition" 
+		baseColumnNames="parent" baseTableName="household_definition" referencedColumnNames="uuid"/>
+		<sql>
+			SET FOREIGN_KEY_CHECKS=1;
+		</sql>
+	</changeSet>
+	
+	
+</databaseChangeLog>		

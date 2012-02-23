@@ -58,6 +58,26 @@ public interface HouseholdService extends OpenmrsService{
 	public HouseholdDefinition getHouseholdDefinition(Integer id);
 	
 	/**
+	 * Get one HouseholdDefinition record based on the hd
+	 * 
+	 * @param id the HouseholdDefinition id
+	 * @return HouseholdDefinition that match the id
+	 */
+	@Transactional(readOnly = true)
+	@Authorized("View Household")
+	public HouseholdDefinition getHouseholdDefinition(HouseholdDefinition hd);
+	
+	/**
+	 * Get one HouseholdDefinition record based on the household def
+	 * 
+	 * @param def the HouseholdDefinition def
+	 * @return HouseholdDefinition that match the def
+	 */
+	@Transactional(readOnly = true)
+	@Authorized("View Household")
+	public HouseholdDefinition getHouseholdDefinition(String def);
+	
+	/**
 	 * Get one HouseholdDefinition record based on the household uuid
 	 * 
 	 * @param strUuid the HouseholdDefinition strUuid
@@ -75,6 +95,24 @@ public interface HouseholdService extends OpenmrsService{
 	@Transactional(readOnly = true)
 	@Authorized("View Household")
 	public List<HouseholdDefinition> getAllHouseholdDefinitions();
+	
+	/**
+	 * Get all parent HouseholdDefinition
+	 * 
+	 * @return all parent HouseholdDefinition
+	 */
+	@Transactional(readOnly = true)
+	@Authorized("View Household")
+	public List<HouseholdDefinition> getHouseholdDefinitionParents();
+	
+	/**
+	 * Get all HouseholdDefinition records by hd
+	 * 
+	 * @return all HouseholdDefinition record in the system that are children of hd
+	 */
+	@Transactional(readOnly = true)
+	@Authorized("View Household")
+	public List<HouseholdDefinition> getHouseholdDefinitionChildren(HouseholdDefinition hd);
 
 	/**
 	 * Save one HouseholdGroups object to the database
@@ -937,6 +975,18 @@ public interface HouseholdService extends OpenmrsService{
 	@Transactional(readOnly = true)
 	@Authorized("View Household")
 	public HouseholdEncounterType getHouseholdEncounterTypeByUuid(String uuid) throws APIException;
+	
+	/**
+	 * Get HouseholdEncounterType by its name
+	 * 
+	 * @param name
+	 * @return
+	 * @should find object given valid name
+	 * @should return null if no object found with given name
+	 */
+	@Transactional(readOnly = true)
+	@Authorized("View Household")
+	public HouseholdEncounterType getHouseholdEncounterTypeByName(String name) throws APIException;
 	
 	/**
 	 * Get all Household encounter types (including retired)

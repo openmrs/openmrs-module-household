@@ -28,22 +28,14 @@ public class DWRHouseholdService {
 	private static final Log log = LogFactory.getLog(DWRHouseholdService.class);
 	
 	public String getSubLocations(String strLoc) {
-		// hack to make sure other Locations aren't still hanging around
 		HouseholdService service = Context.getService(HouseholdService.class);
 		Context.clearSession();
-		
-		//Get all the levels locations,sub-locations,village
 		List<HouseholdLocationLevel> levels = service.getOrderedHouseholdLocationLevels(false);
-		
-		//Get all location entries
 		List<HouseholdLocationEntry> hl = service.getHouseholdLocationEntriesByLevel(levels.get(0));
-		
-		//Get location entry for given name
 		List<HouseholdLocationEntry> hln = service.getHouseholdLocationEntriesByLevelAndName(hl.get(0).getHouseholdLocationLevel(), strLoc);
 		
 		String strVal="";
 		for (int i = 0; hln.size()>0; i++) {
-			//Get sub-locations for this location given the id
 			List<HouseholdLocationEntry> hl1 = service.getChildHouseholdLocationEntries(hln.get(0).getHouseholdLocationEntryId());
 			for (int n = 0; n<hl1.size(); n++) {
 				if(!(n == hl1.size()-1))
@@ -53,50 +45,31 @@ public class DWRHouseholdService {
 			}
 			break;
 		}
-		
-		
-		
-		//log.info("\n =====" + strVal);
 		return strVal;
 	}
 	
 	public String getVillage(String strSubLoc, String strLoc) {
-		// hack to make sure other Locations aren't still hanging around
 		HouseholdService service = Context.getService(HouseholdService.class);
 		Context.clearSession();
-		
-		//Get all the levels locations,sub-locations,village
 		List<HouseholdLocationLevel> levels = service.getOrderedHouseholdLocationLevels(false);
-		//log.info("\n =====1=" + levels.size());
-		//Get all location entries
-		//List<HouseholdLocationEntry> hl = service.getHouseholdLocationEntriesByLevel(levels.get(0));
-		//log.info("\n =====2=" + hl.size());
-		//Get location entry for given name
-		//List<HouseholdLocationEntry> hln = service.getHouseholdLocationEntriesByLevelAndName(hl.get(0).getHouseholdLocationLevel(), strLoc);
-		//log.info("\n =====3=" + hln.size());
-		//Get all sub-location for this entry
-		List<HouseholdLocationEntry> hln2 = service.getHouseholdLocationEntriesByLevel(levels.get(1));
-		//log.info("\n =====4=" + hln2.size());
-		//Get sub-location entry for given name
-		List<HouseholdLocationEntry> hln3 = service.getHouseholdLocationEntriesByLevelAndName(hln2.get(0).getHouseholdLocationLevel(), strSubLoc);
-		//log.info("\n =====5=" + hln3.size());
+		List<HouseholdLocationEntry> hln = service.getHouseholdLocationEntriesByLevelAndName(levels.get(0), strLoc);
+		List<HouseholdLocationEntry> hlnSub = service.getChildHouseholdLocationEntries(hln.get(0).getId());
+		HouseholdLocationEntry sublocation = null;
+		for (int n = 0; n<hlnSub.size(); n++) {
+			if (hlnSub.get(n).getName().equals(strSubLoc)){
+				sublocation = hlnSub.get(n);
+				break;
+			}
+		}
+		List<HouseholdLocationEntry> hlnVill = service.getChildHouseholdLocationEntries(sublocation.getId());
 		
 		String strVal="";
-		for (int i = 0; hln3.size()>0; i++) {
-			//Get villages for this sub-location given the id
-			List<HouseholdLocationEntry> hl1 = service.getChildHouseholdLocationEntries(hln3.get(i).getHouseholdLocationEntryId());
-			for (int n = 0; n<hl1.size(); n++) {
-				if(!(n == hl1.size()-1))
-					strVal += hl1.get(n) + ",";
-				else
-					strVal = strVal + hl1.get(n);
-			}
-			break;
+		for (int n = 0; n<hlnVill.size(); n++) {
+			if(!(n == hlnVill.size()-1))
+				strVal += hlnVill.get(n) + ",";
+			else
+				strVal = strVal + hlnVill.get(n);
 		}
-		
-		
-		
-		//log.info("\n =====" + strVal);
 		return strVal;
 	}
 	/**
@@ -117,10 +90,6 @@ public class DWRHouseholdService {
 			HouseholdMembership householdMembership = (HouseholdMembership) iterator.next();
 			
 			if(householdMembership.isHouseholdMembershipHeadship()){
-				
-				
-				
-				
 				strHousehold = householdMembership.getHouseholdMembershipMember().getNames() +
 					"," +
 					householdMembership.getHouseholdMembershipMember().getAttribute(10);//"Contact Phone Number"
@@ -150,25 +119,17 @@ public class DWRHouseholdService {
 	public String getHouseholdEncountersObs(String encUuid){
 		HouseholdService service = Context.getService(HouseholdService.class);
 		Context.clearSession();
-		log.info("\n:::::::::>0>" + encUuid);
 		HouseholdEncounter he = service.getHouseholdEncounterByUUID(encUuid);
-		log.info("\n:::::::::>1>" + he.getUuid());
 		
-		/*List<HouseholdObs> obsList = (List<HouseholdObs>) service.getObservations(h,e, 
-				null, null, null, null, null, null, null, null, false);*/
 		Set<HouseholdObs> obsList = he.getAllHouseholdObs();
-        log.info("\n:::::::::>2" + obsList.size());
-		String toRet = "";
+        String toRet = "";
         for (HouseholdObs householdObs : obsList) {
 
 			if(StringUtils.isEmpty(toRet))
 				toRet="";
 			else
 				toRet+="|";
-			/*toRet += householdObs.getConcept().getDisplayString() +
-			"," + householdObs.getConcept().getAnswers(false);  */
 			String ans = "";
-			//valueDatetime,valueNumeric,valueText,valueCoded
 			if(householdObs.getValueDatetime()!= null)
 				ans = householdObs.getValueDatetime()+ "";
 			else if(householdObs.getValueNumeric()!= null)
@@ -178,12 +139,10 @@ public class DWRHouseholdService {
 			else if(householdObs.getValueCoded()!= null)
 				ans = householdObs.getValueCoded().getName().toString();
 			
-			log.info("\n:::::::::>"+ householdObs.getConcept().getName() + "|" + ans);
 			
             toRet += householdObs.getConcept().getName() +
 			"|" + ans;
         }
-		log.info("\n:::::::::>"+ toRet);
 		return toRet;
 	}
 	

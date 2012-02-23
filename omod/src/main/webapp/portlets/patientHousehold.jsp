@@ -1,6 +1,6 @@
 <%@ include file="/WEB-INF/template/include.jsp" %>
 
-<openmrs:require privilege="Manage Household" otherwise="/login.htm"
+<%-- <openmrs:require privilege="Manage Household" otherwise="/login.htm"
 	redirect="/module/household/patientHousehold.form" />
 	
 <openmrs:htmlInclude file="/dwr/engine.js" />
@@ -13,8 +13,8 @@
 <openmrs:htmlInclude file="/scripts/jquery/highlight/jquery.highlight-3.js" />
 <openmrs:htmlInclude file="/scripts/jquery/dataTables/css/dataTables_jui.css" />
 <openmrs:htmlInclude file="/scripts/jquery/dataTables/js/jquery.dataTables.filteringDelay.js" />
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="t" %>
-<link href="${pageContext.request.contextPath}/moduleResources/household/css/tablestyles.css" type="text/css" rel="stylesheet" />
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="t" %> --%>
+<%-- <link href="${pageContext.request.contextPath}/moduleResources/household/css/tablestyles.css" type="text/css" rel="stylesheet" />
 
 <script type="text/javascript">
 var strHH = "";
@@ -107,13 +107,16 @@ function toggle_visibility() {
 
 
 </script>
-
+ --%>
 
 
 
 <b class="boxHeader">Household</b>
 <div class="box">
-	<table id="patientDetail" cellpadding="5" width="80%">
+	
+	<openmrs:portlet url="patientHouseholdPortlet" id="patientHouseholdPortlet" moduleId="household" />
+	
+	<%-- <table id="patientDetail" cellpadding="5" width="80%">
 		<thead>
 		<tr>
 			<th class="tbClass">No</th>
@@ -135,7 +138,7 @@ function toggle_visibility() {
 					<td class="tdClass" valign="top">
 						<div class="encountersForHousehold">
 							<t:forEach var="enc" items="${model.encounters[householdMem.householdMembershipGroups.id]}" varStatus="states">
-								<%-- <a href='#' onclick='javascript:view(${enc.householdEncounterId})'> ${states.index + 1} . View - ${enc.householdEncounterId}</a><br /> --%>
+								<a href='#' onclick='javascript:view(${enc.householdEncounterId})'> ${states.index + 1} . View - ${enc.householdEncounterId}</a><br />
                                 <a href="#" id="getHouseholdEncObs" onclick="javascript:getEncObs('${enc.uuid}');">${states.index + 1} . Encounter - ${enc.dateCreated}</a> <br />  
 							</t:forEach>
 						</div>
@@ -158,5 +161,5 @@ function toggle_visibility() {
 		<br class="clear" /><br/>
 	</div> <!-- end of info -->
 	<div id="infoObs" style="display:none;">
-	</div>
+	</div> --%>
 </div>

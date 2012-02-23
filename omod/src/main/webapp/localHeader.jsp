@@ -2,7 +2,7 @@
 	<li class="first">
 		<a href="${pageContext.request.contextPath}/admin"><spring:message code="admin.title.short"/></a>
 	</li>
-	<openmrs:hasPrivilege privilege="Manage Household">
+	<%-- <openmrs:hasPrivilege privilege="Manage Household">
 		<li <c:if test='<%= request.getRequestURI().contains("householdDefinitions") %>'>class="active"</c:if>>
 			<a href="${pageContext.request.contextPath}/module/household/householdDefinitions.form">
 				Definitions/Groups
@@ -16,11 +16,11 @@
 			</a>
 		</li>
 		
-		<%-- <li <c:if test='<%= request.getRequestURI().contains("householdLocationUpload") %>'>class="active"</c:if>>
+		<li <c:if test='<%= request.getRequestURI().contains("householdLocationUpload") %>'>class="active"</c:if>>
 			<a href="${pageContext.request.contextPath}/module/household/householdLocationUpload.form">
 			 Upload Sites
 			</a>
-		</li> --%>
+		</li>
 	</openmrs:hasPrivilege>
 	<openmrs:hasPrivilege privilege="Manage Household">
 		<li <c:if test='<%= request.getRequestURI().contains("householdEncounterType") %>'>class="active"</c:if>>
@@ -28,15 +28,22 @@
 				Encounters Types
 			</a>
 		</li>
-	</openmrs:hasPrivilege>
+	</openmrs:hasPrivilege> --%>
 	<openmrs:hasPrivilege privilege="Manage Household">
-			<li <c:if test='<%= request.getRequestURI().contains("enctypeSetting") %>'>class="active"</c:if>>
-			<a href="${pageContext.request.contextPath}/module/household/householdEnctypeSetting.htm">
-			 Household Settings
+		<li <c:if test='<%= request.getRequestURI().contains("householdDashboard") %>'>class="active"</c:if>>
+			<a href="${pageContext.request.contextPath}/module/household/householdDashboard.form">
+				Household Dashboard
 			</a>
 		</li>
 	</openmrs:hasPrivilege>	
 	<openmrs:hasPrivilege privilege="Manage Household">
+		<li <c:if test='<%= request.getRequestURI().contains("householdSettingsPanel") %>'>class="active"</c:if>>
+			<a href="${pageContext.request.contextPath}/module/household/householdSettingsPanel.form">
+				Household Settings
+			</a>
+		</li>
+	</openmrs:hasPrivilege>	
+	<%-- <openmrs:hasPrivilege privilege="Manage Household">
 			<li <c:if test='<%= request.getRequestURI().contains("manageHouseholdLocation") %>'>class="active"</c:if>>
 			<a href="${pageContext.request.contextPath}/module/household/manageHouseholdLocation.form">
 			 Sites/Locations
@@ -46,8 +53,8 @@
 	<openmrs:hasPrivilege privilege="View Household">
 		<li <c:if test='<%= request.getRequestURI().contains("householdCHWInitial") %>'>class="active"</c:if>>
 			<a href="${pageContext.request.contextPath}/module/household/householdCHWInitial.form">
-			 CHW Initial Encounter
+			 CHW Encounter
 			</a>
 		</li>
-	</openmrs:hasPrivilege>
+	</openmrs:hasPrivilege> --%>
 </ul>

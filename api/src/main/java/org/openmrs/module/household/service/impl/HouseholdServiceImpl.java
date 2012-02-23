@@ -81,6 +81,22 @@ public class HouseholdServiceImpl extends BaseOpenmrsService implements Househol
 	}
 	
 	/* (non-Javadoc)
+	 * @see org.openmrs.module.household.service.HouseholdService#getHouseholdDefinition(java.lang.String)
+	 */
+	
+	public HouseholdDefinition getHouseholdDefinition(HouseholdDefinition hd) {
+		return householdDAO.getHouseholdDefinition(hd);
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.openmrs.module.household.service.HouseholdService#getHouseholdDefinition(java.lang.String)
+	 */
+	
+	public HouseholdDefinition getHouseholdDefinition(String def) {
+		return householdDAO.getHouseholdDefinition(def);
+	}
+	
+	/* (non-Javadoc)
 	 * @see org.openmrs.module.household.service.HouseholdService#getHouseholdDefinitionByUuid(java.lang.String)
 	 */
 	
@@ -94,6 +110,22 @@ public class HouseholdServiceImpl extends BaseOpenmrsService implements Househol
 	
 	public List<HouseholdDefinition> getAllHouseholdDefinitions() {
 		return householdDAO.getAllHouseholdDefinitions();
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.openmrs.module.household.service.HouseholdService#getHouseholdDefinitionParents()
+	 */
+	
+	public List<HouseholdDefinition> getHouseholdDefinitionParents() {
+		return householdDAO.getHouseholdDefinitionParents();
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.openmrs.module.household.service.HouseholdService#getHouseholdDefinitionChildren()
+	 */
+	
+	public List<HouseholdDefinition> getHouseholdDefinitionChildren(HouseholdDefinition hd) {
+		return householdDAO.getHouseholdDefinitionChildren(hd);
 	}
 
 	/* (non-Javadoc)
@@ -1089,6 +1121,15 @@ public class HouseholdServiceImpl extends BaseOpenmrsService implements Househol
 	public HouseholdEncounterType getHouseholdEncounterTypeByUuid(String uuid)
 			throws APIException {
 		return householdDAO.getHouseholdEncounterTypeByUuid(uuid);
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.openmrs.module.household.service.HouseholdEncounterService#getHouseholdEncounterTypeByName(java.lang.String)
+	 */
+	
+	public HouseholdEncounterType getHouseholdEncounterTypeByName(String name)
+			throws APIException {
+		return householdDAO.getHouseholdEncounterTypeByName(name);
 	}
 
 	/* (non-Javadoc)

@@ -18,6 +18,18 @@ public class HouseholdDefinition extends BaseOpenmrsData{
 	private String householdDefinitionsCodeinfull;
 	private String householdDefinitionsDescription;
 	private Program program;
+	private HouseholdDefinition parent;
+	
+	public HouseholdDefinition(String defCode, String defCodeInFull, String decription){
+		setHouseholdDefinitionsCode(defCode);
+		setHouseholdDefinitionsCodeinfull(defCodeInFull);
+		setHouseholdDefinitionsDescription(decription);
+	}
+	public HouseholdDefinition(){};
+	/** constructor with id */
+	public HouseholdDefinition(Integer id) {
+		this.id = id;
+	}
 	
 	/**
 	 * @return the id
@@ -82,4 +94,10 @@ public class HouseholdDefinition extends BaseOpenmrsData{
 		this.program = program;
 	}
 	
+	public HouseholdDefinition getParent() {
+		return parent;
+	}
+	public void setParent(HouseholdDefinition parent) {
+		this.parent = parent;
+	}
 }

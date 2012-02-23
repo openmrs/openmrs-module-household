@@ -14,12 +14,21 @@
         <!-- Register LogicService with OpenMRS ServiceContext -->
         
         <bean id="householdUrlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
-    	<property name="order"><value>1</value></property>
-    	<property name="mappings">
-            <props>
-                <prop key="**/patientHousehold.portlet">patientHouseholdPortletController</prop>
-			</props>
-		</property>
+	    	<property name="order"><value>1</value></property>
+	    	<property name="mappings">
+	            <props>
+	                <prop key="**/patientHousehold.portlet">patientHouseholdController</prop>
+				</props>
+			</property>
+		</bean>
+		
+		<bean id="householdUrlMapping2" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+	    	<property name="order"><value>1</value></property>
+	    	<property name="mappings">
+	            <props>
+	                <prop key="**/patientHouseholdPortlet.portlet">patientHouseholdPortletController</prop>
+				</props>
+			</property>
 		</bean>
         
         <bean parent="serviceContext">
@@ -48,6 +57,6 @@
                 </property>
         </bean>
         
-        <bean id="patientHouseholdPortletController" class="org.openmrs.module.household.web.controller.PatientHouseholdPortletController">
-		</bean>
+        <bean id="patientHouseholdController" class="org.openmrs.module.household.web.controller.PatientHouseholdController"/>
+		<bean id="patientHouseholdPortletController" class="org.openmrs.module.household.web.controller.PatientHouseholdPortletController"/>
 </beans>

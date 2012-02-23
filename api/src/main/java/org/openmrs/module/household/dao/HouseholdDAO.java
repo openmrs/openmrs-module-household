@@ -50,6 +50,22 @@ public interface HouseholdDAO {
 	public HouseholdDefinition getHouseholdDefinition(Integer id);
 	
 	/**
+	 * Get one HouseholdDefinition record based on the hd
+	 * 
+	 * @param hd the HouseholdDefinition hd
+	 * @return HouseholdDefinition that match the hd
+	 */
+	public HouseholdDefinition getHouseholdDefinition(HouseholdDefinition hd);
+	
+	/**
+	 * Get one HouseholdDefinition record based on the household id
+	 * 
+	 * @param def the String def
+	 * @return HouseholdDefinition that match the def
+	 */
+	public HouseholdDefinition getHouseholdDefinition(String def);
+	
+	/**
 	 * Get one HouseholdDefinition record based on the household uuid
 	 * 
 	 * @param strUuid the HouseholdDefinition strUuid
@@ -63,6 +79,20 @@ public interface HouseholdDAO {
 	 * @return all HouseholdDefinition record in the system
 	 */
 	public List<HouseholdDefinition> getAllHouseholdDefinitions();
+	
+	/**
+	 * Get all parent HouseholdDefinition
+	 * 
+	 * @return all parent HouseholdDefinition
+	 */
+	public List<HouseholdDefinition> getHouseholdDefinitionParents();
+	
+	/**
+	 * Get all HouseholdDefinition records of parenthd
+	 * 
+	 * @return all HouseholdDefinition record in the system of parenthd
+	 */
+	public List<HouseholdDefinition> getHouseholdDefinitionChildren(HouseholdDefinition hd);
 
 	/**
 	 * Save one HouseholdGroups object to the database
@@ -612,6 +642,16 @@ public interface HouseholdDAO {
 	 * @should return null if no object found with given uuid
 	 */
 	public HouseholdEncounterType getHouseholdEncounterTypeByUuid(String uuid) throws APIException;
+	
+	/**
+	 * Get HouseholdEncounterType by its name
+	 * 
+	 * @param name
+	 * @return
+	 * @should find object given valid name
+	 * @should return null if no object found with given name
+	 */
+	public HouseholdEncounterType getHouseholdEncounterTypeByName(String name) throws APIException;
 	
 	/**
 	 * Get all Household encounter types (including retired)

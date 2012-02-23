@@ -18,7 +18,7 @@ public class HouseholdAdminExt extends AdministrationSectionExt {
 	
 	/** Defines the privilege required to the see the Administration section for the module */
 	public String getRequiredPrivilege() {
-		return HouseholdConstants.PRIV_MANAGE_LOCATIONS;
+		return "";
 	}
 	/* (non-Javadoc)
 	 * @see org.openmrs.module.web.extension.AdministrationSectionExt#getLinks()
@@ -26,12 +26,12 @@ public class HouseholdAdminExt extends AdministrationSectionExt {
 	@Override
 	public Map<String, String> getLinks() {
 		Map<String, String> map = new LinkedHashMap<String, String>();
-		map.put("module/household/householdDefinitions.form", "Definitions/Groups");
-		map.put("module/household/householdRegistration.form", "Registration");
-		map.put("module/household/householdEncounterTypeList.list", "Encounters Types");
-		map.put("module/household/householdEnctypeSetting.htm", "Settings");
-		map.put("module/household/manageHouseholdLocation.form", "Locations/Sites");
-		map.put("module/household/householdCHWInitial.form", "CHW Initial Encounter");
+		map.put("module/household/householdDashboard.form", "Dashboard");
+		/*map.put("module/household/householdRegistration.form", "Registration");
+		map.put("module/household/householdEncounterTypeList.list", "Encounters Types");*/
+		map.put("module/household/householdSettingsPanel.form", "Settings");
+		/*map.put("module/household/manageHouseholdLocation.form", "Locations/Sites");
+		map.put("module/household/householdCHWInitial.form", "CHW Encounter");*/
 
 		return map;
 	}
