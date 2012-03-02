@@ -3,6 +3,7 @@
  */
 package org.openmrs.module.household.web.dwr;
 
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -208,6 +209,38 @@ public class DWRHouseholdService {
 		HouseholdService service = Context.getService(HouseholdService.class);
 		List<HouseholdMembership> householdMem = service.getAllHouseholdMembershipsByPerson(p);
 		return householdMem;
+	}
+	
+	public List<HouseholdMembership> getHouseholdMems(String householdGrp){
+		
+		HouseholdService service = Context.getService(HouseholdService.class);
+		Household hh = new Household();
+		hh = service.getHouseholdGroupByIdentifier(householdGrp);
+		List<HouseholdMembership> householdMembers = service.getAllHouseholdMembershipsByGroup(hh);
+		
+		return householdMembers;
+	}
+	
+	public boolean voidMembers(Integer voidId,String voidReason){
+		
+		HouseholdService service = Context.getService(HouseholdService.class);
+		try {
+			HouseholdMembership membership = service.getHouseholdMembership(voidId);
+			membership.setHouseholdMembershipMember(Context.getPatientService().getPatientByUuid(membership.getHouseholdMembershipMember().getUuid()));
+			membership.setVoided(true);
+			membership.setVoidReason(voidReason);
+			membership.setEndDate(new Date());
+			service.saveHouseholdMembership(membership);
+			return true;
+		} 
+		catch (Exception e) {
+			return false;
+		}
+		
+		
+		
+		
+		
 	}
 
 }

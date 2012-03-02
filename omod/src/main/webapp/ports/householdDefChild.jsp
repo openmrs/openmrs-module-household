@@ -27,6 +27,7 @@
 <openmrs:htmlInclude file="/scripts/jquery/dataTables/css/dataTables_jui.css"/>
 <openmrs:htmlInclude file="/scripts/jquery/dataTables/js/jquery.dataTables.min.js"/>
 <openmrs:htmlInclude file="/scripts/jquery-ui/js/openmrsSearch.js" />
+<openmrs:htmlInclude file="/scripts/calendar/calendar.js" />
 
 <script type="text/javascript">
 	var lastSearch;
@@ -93,10 +94,13 @@
 	}
 	
 	function pullByIdentifier(){
-		var val = document.getElementById("searchFieldHI").value;
-		if ((val!= "") && (val.length > 3)){
-			alert("Meets criteria1");
-			
+		var household=dwr.util.getValue("searchFieldHI");
+		if ((household!= "") && (household.length > 3)){
+			$j('#householdDetails').show();
+			DWRHouseholdService.getHouseholdMems(household,fillTable);
+			}
+		else{
+			$j('#householdDetails').hide();
 		}
 	}
 	
@@ -198,17 +202,195 @@
 							</div>
 						</div>
 						<br><br>
+						
+						<script type="text/javascript">
+						$j(document).ready(function() {
+							$j('#findMembers').click(function(event){
+								
+								//var val = document.getElementById("searchFieldHI").value;
+								var household=dwr.util.getValue("searchFieldHI");
+								if ((household!= "") && (household.length > 3)){
+									$j('#householdDetails').show();
+									DWRHouseholdService.getHouseholdMems(household,fillTable);
+									}
+								else{
+									$j('#householdDetails').hide();
+								}
+								
+							});
+							
+								
+						});
+						function fillTable(data){
+							//remove all the rows 
+							
+							dwr.util.removeAllRows("details");
+							//add the required rows 
+							var count=1;
+							
+							dwr.util.addRows("details",data,[
+							  function(householdMembership) { return count++;},
+                      	      function(householdMembership) { return (householdMembership.householdMembershipMember.names) ; },
+                      	      function(householdMembership) { return (householdMembership.householdMembershipMember.gender); },
+                      	      function(householdMembership) { return (householdMembership.householdMembershipMember.birthdate); },
+                      	      function(householdMembership) { return (householdMembership.householdMembershipHeadship); },
+                      	      function(householdMembership) { return (householdMembership.startDate ); },
+                      	      function(householdMembership) { return '<input type="button" id="void" value="Void" onclick="clickVoid()" />'; },
+                      	      function(householdMembership) { return '<input type="hidden" id="voidId" name="voidId"  value=' + householdMembership.id +' />'; }
+                      	    ], { escapeHtml:false }
+							);	
+							
+						}
+						function clickVoid(){
+							/* var memberId=dwr.util.getValue("voidId");
+							alert(memberId); */
+							if (confirm("Are you sure you want to void this person ?")) {
+								$j(function() {
+									$j( "#dialog" ).dialog({ 
+										modal: true, 
+										show: 'slide',
+										height: 'auto',
+										hide: 'slide',
+										width: 450
+										
+										});
+								});
+								
+							}
+						}
+						function voidMembers(memberId,voidReason){
+							voidReason=dwr.util.getValue("voidreason");
+							memberId=dwr.util.getValue("voidId");
+							var errordiv=document.getElementById("errordiv");
+							if(voidReason ==null || voidReason ==''){
+								
+								errordiv.style.display='inline';
+							return false
+							}
+							else{
+								errordiv.style.display='none';
+								// this where the actual voiding take place 
+								//alert(memberId + " "+ voidReason);
+								DWRHouseholdService.voidMembers(memberId,voidReason,aftervoiding);
+								// call the feel table function to refresh the table 
+								var household=dwr.util.getValue(searchFieldHI);
+								DWRHouseholdService.getHouseholdMems(household,fillTable);
+								//code close the dilag 
+								$j("#dialog").dialog('close');
+								return true;
+							}
+						}
+						function aftervoiding(text){
+							//alert("voided Successfully......");
+						}
+						
+						function addMembers(){
+							
+							$j('#addMembers').click(function(event){
+								
+								$j(function() {
+									$j( "#addMembersToHousehold" ).dialog({ 
+										modal: true, 
+										show: 'slide',
+										height: 'auto',
+										hide: 'slide',
+										width: 750
+										
+										});
+								});
+								
+							});
+						}
+						</script>
+						<div id="addMembersToHousehold" title="Add Members" style="display:none">
+									<table border="0" cellpadding="0" cellspacing="0">
+										<tr>
+											<td>Enter name:</td>
+											<td><openmrs_tag:patientField formFieldName="addPeopleTo" callback="" /></td>
+											<td><input type="text" name="patientId" id="patientId" size="10" /></td>
+										</tr>
+										<tr>
+											<td>Provider:</td>
+											<td><openmrs_tag:userField formFieldName="userProvider" callback="" /></td>
+											<td><input type="text" name="systemId" id="systemId" size="10" /></td>
+										</tr>
+										<tr>		
+											<td>Date:</td>	
+											<td><input type="text" name="addDate" id="startDate" onClick="showCalendar(this)" /></td>
+											<td>&nbsp;</td>
+										</tr>
+										<tr>
+											<td>&nbsp;</td>
+											<td><input type="button" id="add" name="add" value="Save" >
+										</tr>		
+									</table>	
+						</div>
+						<div id="dialog" title="Void Reason"  style="display:none">
+									<table>
+										<thead></thead>
+										<tbody>
+											<tr>
+												<td>
+												Provide reason:
+												</td>
+												<td>
+												<input type="text" name="voidreason" id="voidreason" size="50" />
+												</td>
+											</tr>
+											<tr>
+												
+												<td>&nbsp;</td>
+												<td><input type="button" id="saveVoided" value="Void" onclick="voidMembers(this)" /></td>
+											</tr>
+											<tr>
+												<td colspan="2">
+												<div class="error" style="display:none" id="errordiv">Please provide void reason</div>
+												</td>
+											</tr>
+										</tbody>	
+				
+									</table>
+											
+								</div>
+								
+						
 						<b class="boxHeader">Find household by identifier:</b>
 						<div class="box">
-							<table>
+							<table border="0">
 								<tbody>
-									<tr><td>Household Identifier</td><td><input type="text" id="searchFieldHI" onkeypress="pullByIdentifier()"/></td></tr>
-									<tr><td colspan="2">
-										DATA
-									</td></tr>
+									<tr>
+									<td>Household Identifier</td>
+									<td><input type="text" id="searchFieldHI" onkeypress="pullByIdentifier()"/></td>
+									<td><input type="button" id="findMembers" value="Find" /></td>
+									</tr>
+									<tr>
+									<td colspan="3">
+									</td>
+									
+									</tr>
 								</tbody>
 							</table>
-							: 
+						
+						</div>
+						<b class="boxHeader">Household Members</b>
+						<div id="householdDetails" style="display:none" class="box">
+									<table border="0" cellpadding="0" cellspacing="0">
+										<thead>
+											<tr>
+												<th>No:</th>
+												<th>Names</th>
+												<th>Gender</th>
+												<th>Birth Date</th>
+												<th>Head/Index</th>
+												<th>Start Date</th>
+												<th>Action?</th>
+											</tr>
+										</thead>
+										<tbody id="details">
+	
+										</tbody>
+									</table>
+									<a href="#" id="addMembers" onclick="addMembers()">Add Members</a>
 						</div>
 						
 				</div>
