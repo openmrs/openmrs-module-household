@@ -10,8 +10,10 @@ import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openmrs.Person;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.household.model.Household;
+import org.openmrs.module.household.model.HouseholdDefinition;
 import org.openmrs.module.household.model.HouseholdEncounter;
 import org.openmrs.module.household.model.HouseholdLocationEntry;
 import org.openmrs.module.household.model.HouseholdLocationLevel;
@@ -177,6 +179,35 @@ public class DWRHouseholdService {
 		} catch (Exception e) {
 			return false;
 		}
+	}
+	
+	public List<HouseholdDefinition> getParentHouseholdDefinitions(String intPassed){
+		HouseholdService service = Context.getService(HouseholdService.class);
+		if(!StringUtils.isEmpty(intPassed)){
+			int householdDefinition = Integer.parseInt(intPassed);
+			HouseholdDefinition hd = service.getHouseholdDefinition(householdDefinition);
+			List<HouseholdDefinition> householdsDefinitionChildren = service.getHouseholdDefinitionChildren(hd);
+			
+			return householdsDefinitionChildren;
+		}else
+			return null;
+		/*else if(!isParentPassed && !StringUtils.isEmpty(intPassed)){
+			int householdDefinition = Integer.parseInt(intPassed);
+			HouseholdDefinition hd = service.getHouseholdDefinition(householdDefinition);
+			
+			map.addAttribute("hdef", hd);
+			map.addAttribute("par", 3);
+		}*/
+	}
+	/**
+	 * Get Households by personID
+	 * @Param personID
+	 */
+	public List<HouseholdMembership> getHouseholdsByPersonID(String personID){
+		Person p = Context.getPersonService().getPerson(Integer.parseInt(personID));
+		HouseholdService service = Context.getService(HouseholdService.class);
+		List<HouseholdMembership> householdMem = service.getAllHouseholdMembershipsByPerson(p);
+		return householdMem;
 	}
 
 }

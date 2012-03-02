@@ -3,9 +3,11 @@
  */
 package org.openmrs.module.household.web.controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
@@ -38,7 +40,26 @@ public class HouseholdDashboardController {
     }
 	
 	@RequestMapping(method = RequestMethod.POST, value = "module/household/householdDashboard")
-    public void postPage(ModelMap map, HttpServletRequest request,HttpSession httpSession,
+    public void postPage(ModelMap map, HttpServletRequest request,HttpSession httpSession,HttpServletResponse response,
+                         @RequestParam(required = false, value = "parent") String parent,
+                         @RequestParam(required = false, value = "child") String child) throws IOException {
+		HouseholdService service = Context.getService(HouseholdService.class);
+		/*
+		if(!StringUtils.isEmpty(parent)){
+			int householdDefinition = Integer.parseInt(parent);
+			HouseholdDefinition hd = service.getHouseholdDefinition(householdDefinition);
+			List<HouseholdDefinition> householdsTypes = service.getHouseholdDefinitionChildren(hd);
+			
+			map.addAttribute("pare", hd);
+			map.addAttribute("householdDefinition", householdsTypes);
+			map.addAttribute("hdef", hd);
+			map.addAttribute("par", 2);
+		}*/
+		
+		
+    }
+	/*@RequestMapping(method = RequestMethod.POST, value = "module/household/householdDashboard")
+    public ModelMap postPage(ModelMap map, HttpServletRequest request,HttpSession httpSession,
                          @RequestParam(required = false, value = "parent") String parent,
                          @RequestParam(required = false, value = "child") String child) {
 		HouseholdService service = Context.getService(HouseholdService.class);
@@ -62,6 +83,6 @@ public class HouseholdDashboardController {
 			map.addAttribute("par", 3);
 		}
 		
-		
-    }
+		return map;
+    }*/
 }

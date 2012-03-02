@@ -97,7 +97,12 @@
 				<include method="getHouseholdMembersPortlet"/>
 				<include method="getCheckDigit"/>
 				<include method="getHouseholds"/>
+				<include method="getParentHouseholdDefinitions"/>
+				<include method="getHouseholdsByPersonID"/>
 			</create>
+			<convert match="org.openmrs.module.household.model.HouseholdDefinition" converter="bean" />
+			<convert match="org.openmrs.module.household.model.HouseholdMembership" converter="bean" />
+			<convert match="org.openmrs.module.household.model.Household" converter="bean" />
 		</allow>
 
 		<signatures>
@@ -110,6 +115,8 @@
 			DWRHouseholdService.getHouseholdMembersPortlet(String grpids);
 			DWRHouseholdService.getCheckDigit(String hhold);
 			DWRHouseholdService.getHouseholds(String strUuid);
+			DWRHouseholdService.getParentHouseholdDefinitions(String intPassed);
+			DWRHouseholdService.getHouseholdsByPersonID(String personID);
 			]]>
 		</signatures>
 	</dwr>

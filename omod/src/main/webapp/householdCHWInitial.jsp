@@ -40,6 +40,7 @@
 	}
 	
 	function gotVil(strVill){
+		//alert(strVill);
 		var opt = document.chwForm.village;
 		if(!(opt.value.length == 0)){
 			opt.length = 0;
@@ -172,7 +173,7 @@
 	
 	<form method="post" name="chwForm" onsubmit="return validateInput()">
 	<%-- <input type="hidden" name="enctype" id="enctype" value="${encounterType}" /> --%>
-	<table border="1" cellspacing="10">
+	<table border="0">
 	<tbody>
 		<tr>
 			<td valign="top">
