@@ -104,7 +104,9 @@
 function display(box) {
 // get reference to form object, and to array of same-named checkboxes
 var temparr = new Array(), f = box.form, boxgroup = f[box.name];
-// loop through it
+// loop through it 
+alert(boxgroup.length);
+
 for (var i=0; i<boxgroup.length; i++) {
 // add the value of any checked box to next available slot in temparr
 if (boxgroup[i].checked) temparr[temparr.length] = boxgroup[i].value;
@@ -118,7 +120,7 @@ else
 }
 
 </script> 
-<body onload="document.forms[0].reset()"> 
+<body <!-- onload="document.forms[0].reset()" -->> 
 <div id="dialog" title="Saved Information"></div>
 
 <b class="boxHeader"><spring:message code="household.householdsearch.title"/></b>
@@ -245,7 +247,7 @@ else
 			  				</c:otherwise>
 			  			</c:choose>	
 			  			</td>
-			  			<td><input type="hidden" value="" name="marktext" id="marktext"></td>
+			  			<td><input type="text" value="" name="marktext" id="marktext"></td>
 			  			
 			  		 
 			  		</tr>	

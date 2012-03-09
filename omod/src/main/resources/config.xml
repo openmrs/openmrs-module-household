@@ -101,10 +101,13 @@
 				<include method="getHouseholdsByPersonID"/>
 				<include method="getHouseholdMems" />
 				<include method="voidMembers" />
+				<include method="saveMembersToHseHold" />
 			</create>
 			<convert match="org.openmrs.module.household.model.HouseholdDefinition" converter="bean" />
 			<convert match="org.openmrs.module.household.model.HouseholdMembership" converter="bean" />
 			<convert match="org.openmrs.module.household.model.Household" converter="bean" />
+			<convert match="org.openmrs.module.household.service.HouseholdService" converter="bean" />
+			<convert match="org.openmrs.PersonName" converter="bean" />
 		</allow>
 
 		<signatures>
@@ -121,6 +124,7 @@
 			DWRHouseholdService.getHouseholdsByPersonID(String personID);
 			DWRHouseholdService.getHouseholdMems(String householdGrp);
 			DWRHouseholdService.voidMembers(Integer voidId,String voidReason);
+			DWRHouseholdService.saveMembersToHseHold(String householdMem,String grpId);
 			]]>
 		</signatures>
 	</dwr>

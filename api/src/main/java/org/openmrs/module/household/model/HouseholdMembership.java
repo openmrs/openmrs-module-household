@@ -24,7 +24,14 @@ public class HouseholdMembership extends BaseOpenmrsData{
 	private Date endDate;
 	private Date resumeDate;
 	private String resumeReason;
+	private String providerId;
 		
+	public String getProviderId() {
+		return providerId;
+	}
+	public void setProviderId(String providerId) {
+		this.providerId = providerId;
+	}
 	/**
 	 * @return the id
 	 */

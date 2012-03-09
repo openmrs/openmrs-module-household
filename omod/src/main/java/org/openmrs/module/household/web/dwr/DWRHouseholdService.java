@@ -3,6 +3,10 @@
  */
 package org.openmrs.module.household.web.dwr;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -211,36 +215,133 @@ public class DWRHouseholdService {
 		return householdMem;
 	}
 	
-	public List<HouseholdMembership> getHouseholdMems(String householdGrp){
+	public  String getHouseholdMems(String householdGrp){
 		
 		HouseholdService service = Context.getService(HouseholdService.class);
 		Household hh = new Household();
 		hh = service.getHouseholdGroupByIdentifier(householdGrp);
 		List<HouseholdMembership> householdMembers = service.getAllHouseholdMembershipsByGroup(hh);
 		
-		return householdMembers;
+		/*return householdMembers;*/
+		String householdMembersList="";
+		for(int i=0; i<householdMembers.size(); i++){
+			
+			if(StringUtils.isEmpty(householdMembersList))
+				householdMembersList="";
+			
+				
+			else
+				householdMembersList +="|";
+				
+			householdMembersList += householdMembers.get(i).getHouseholdMembershipMember().getPersonName()
+			+","+
+			householdMembers.get(i).getHouseholdMembershipMember().getGender()
+			+","+
+			householdMembers.get(i).getHouseholdMembershipMember().getBirthdate().toString().substring(0, 11)+","+
+			householdMembers.get(i).isHouseholdMembershipHeadship()
+			+","+
+			householdMembers.get(i).getStartDate().toString().substring(0, 11)
+			+","+
+			householdMembers.get(i).getId();
+			
+			
+			
+		}
+		return householdMembersList;
 	}
 	
-	public boolean voidMembers(Integer voidId,String voidReason){
+	public void voidMembers(String voidId,String voidReason){
 		
 		HouseholdService service = Context.getService(HouseholdService.class);
-		try {
-			HouseholdMembership membership = service.getHouseholdMembership(voidId);
-			membership.setHouseholdMembershipMember(Context.getPatientService().getPatientByUuid(membership.getHouseholdMembershipMember().getUuid()));
-			membership.setVoided(true);
-			membership.setVoidReason(voidReason);
-			membership.setEndDate(new Date());
-			service.saveHouseholdMembership(membership);
-			return true;
-		} 
-		catch (Exception e) {
-			return false;
+		
+		String [] hseMembers=voidId.split(",");
+		Arrays.sort(hseMembers);
+		for(int m=0;m<hseMembers.length;m++){
+				//introduction of variable to handle an individual
+				String mem=hseMembers[m];
+				try {
+					HouseholdMembership membership = service.getHouseholdMembership(Integer.parseInt(mem));
+					membership.setHouseholdMembershipMember(Context.getPatientService().getPatientByUuid(membership.getHouseholdMembershipMember().getUuid()));
+					membership.setVoided(true);
+					membership.setVoidReason(voidReason);
+					membership.setEndDate(new Date());
+					service.saveHouseholdMembership(membership);
+					//return true;
+				} 
+				catch (Exception e) {
+					log.info("Not able to void the selection"+e.toString());
+				}
+				
 		}
 		
 		
 		
+	}
+	public String saveMembersToHseHold(String householdMemToAdd,String grpId,String provider,String startDate) throws ParseException{
+		
+		HouseholdService service = Context.getService(HouseholdService.class);
+			
+			
+				
+				Household group=service.getHouseholdGroupByIdentifier(grpId);
+				
+				String []strMem = householdMemToAdd.split(",");
+				
+				Arrays.sort(strMem);
+				
+				int j = 1;
+				
+				for (int i = 1; i < strMem.length; i++)
+				{
+					if (! strMem[i].equals(strMem[i -1]))
+						strMem[j++] = strMem[i];
+				}
+				
+				String[] unique = new String[j];
+				System.arraycopy(strMem, 0, unique, 0, j);
+				
+				for(int i=0; i<unique.length; i++ ){
+					
+					String strMember = unique[i];
+					
+					HouseholdMembership membership = new HouseholdMembership();
+					Person pn = Context.getPersonService().getPerson(Integer.parseInt(strMember));
+					List<HouseholdMembership> member = service.getHouseholdMembershipByGrpByPsn(pn, group);
+					if(member.isEmpty()){ 
+						
+						membership.setHouseholdMembershipMember(pn);
+						membership.setHouseholdMembershipGroups(group);
+				
+						membership.setHouseholdMembershipHeadship(false);
+						membership.setProviderId(provider);
+						
+						if(StringUtils.isEmpty(startDate))
+							membership.setStartDate(new Date());
+						else
+							membership.setStartDate(dateFormatHelper(startDate));
+						
+						// then save the members to this household grpId
+						service.saveHouseholdMembership(membership);
+						
+					}
+					else{
+						continue;
+					}
+						
+					
+				}
+			
 		
 		
+		return "Added successfully  ";
+	}
+	
+	static DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy"); 
+	private static Date dateFormatHelper(String strvalue) throws ParseException {
+		if (strvalue == null || strvalue.length() == 0)
+			return new Date();
+		else
+			return dateFormat.parse(strvalue);
 	}
 
 }

@@ -48,5 +48,8 @@
 
 		<property name="voided" type="boolean" column="voided"
 			length="1" not-null="true" />
+			
+		<property name="providerId" type="java.lang.String"
+			column="providerId" not-null="false" length="50"/>	
 	</class>
 </hibernate-mapping>

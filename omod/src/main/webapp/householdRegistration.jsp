@@ -75,13 +75,13 @@ function inputValidator() {
 												<b>Find Household Member:</b>
 												<openmrs_tag:patientField formFieldName="new_member" callback="selectedPerson" />
 											</div>
-									        <input type="hidden" id="hiddenbox" name="hiddenbox"/>
+									        <input type="text" id="hiddenbox" name="hiddenbox"/>
 									        <c:choose>
 												<c:when test ="${not empty HouseholdID}">
-													<input type="hidden" id="hiddenIndex" name="hiddenIndex" value="${HouseholdID}"/>
+													<input type="text" id="hiddenIndex" name="hiddenIndex" value="${HouseholdID}"/>
 												</c:when>
 												<c:otherwise>
-													<input type="hidden" id="hiddenIndex" name="hiddenIndex"/>
+													<input type="text" id="hiddenIndex" name="hiddenIndex"/>
 												</c:otherwise>
 											</c:choose>
 										</td>
