@@ -19,8 +19,8 @@
 <openmrs:htmlInclude file="/dwr/interface/DWRHouseholdService.js"/>
 <link href="${pageContext.request.contextPath}/moduleResources/household/css/hor_tab.css" type="text/css" rel="stylesheet" />
 <openmrs:htmlInclude file="/moduleResources/household/scripts/prototype.lite.js"/>
-<openmrs:htmlInclude file="/moduleResources/household/scripts/moo.fx.js"/>
-<openmrs:htmlInclude file="/moduleResources/household/scripts/moo.fx.pack.js"/>
+<!-- <openmrs:htmlInclude file="/moduleResources/household/scripts/moo.fx.js"/>
+<openmrs:htmlInclude file="/moduleResources/household/scripts/moo.fx.pack.js"/> -->
 <link href="${pageContext.request.contextPath}/moduleResources/household/css/css-table.css" type="text/css" rel="stylesheet" /> 
 
 <%-- <script type="text/javascript" src="${pageContext.request.contextPath}/moduleResources/household/scripts/style-table.js"/>--%>
@@ -84,9 +84,35 @@ function init(){
 				$j('#div' + i).hide();
 			}else{
 				$j('#div' + val).show();
+				if(val == 9){
+					alert(${hdef});
+					$j.get("ports/householdReg.form",
+							function(data){
+								$j('#divAll').html(data);
+							}
+						);
+				}
 			}
 		}
 	}
+	function openClose2(val, def){
+		var i=0;
+		for(i=0; i<10; i++){
+			if(i != val){
+				$j('#div' + i).hide();
+			}else{
+				$j('#div' + val).show();
+				if(val == 9){
+					$j.get("ports/householdReg.form?hdef=" + def,
+							function(data){
+								$j('#divAll').html(data);
+							}
+						);
+				}
+			}
+		}
+	}
+	
 	function fnChangedParentDefinition(){
 		var val = document.getElementById("parent").value;
 		DWRHouseholdService.getParentHouseholdDefinitions(val, fnRetChildDefinition);
@@ -114,13 +140,15 @@ function init(){
 
 
 <div id="wrapper">
-	<h3 class="tab" title="first"><div class="tabtxt"><a href="#">Program</a></div><div class="arrow"></div></h3>
-	<div class="tab"><h3 class="tabtxt" title="second"><a href="#">Patient</a></h3><div class="arrow"></div></div>
-	<div class="boxholder">
-		<div class="boxi">
-		<div>
+	<!-- <h3 class="tab" title="first"><div class="tabtxt"><a href="#">Program</a></div><div class="arrow"></div></h3> -->
+	<!-- <div class="tab"><h3 class="tabtxt" title="second"><a href="#">Patient</a></h3><div class="arrow"></div></div> -->
+	<!-- <div class="boxholder"> -->
+		<!-- <div class="boxi"> -->
+		<!-- <h4>Household Dashboard</h4> -->
 			<div style="padding: 3px;">
-				<div id="divchild" class="box" >
+				<div id="divchild">
+					<div class="boxHeader">Choose Program Definition:</div>
+					<div class="box" >
 					<c:if test="${par == '1'}">
 						Choose Program: <select name="parent" id="parent" onchange="javascript:fnChangedParentDefinition()">
 											<option id="m" value="" selected="selected"></option>
@@ -146,17 +174,19 @@ function init(){
 						</table>
 						<br />
 					</c:if>
+					
+					</div>
 				</div>
 			</div>
 			
-		</div>	
-		</div>
+		
+		<!-- </div>
 		<div class="boxi">
 			<p><strong>The Patient Dashboard</strong><br />Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Ut molestie nunc eu turpis. Donec facilisis enim sed dui. Sed nunc. Cras eu arcu. Praesent vel augue vel dolor ultricies convallis. Nam consectetuer risus eu urna. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nam suscipit. Duis quis lacus sed tellus auctor blandit. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Proin eget massa in ante vehicula pharetra. Ut massa pede, ornare id, ultrices eget, porta et, metus.</p>
-		</div>
-	</div>
+		</div> -->
+	<!-- </div> -->
 </div>
-<script type="text/javascript">
+<!-- <script type="text/javascript">
 	Element.cleanWhitespace('content');
 	init();
-</script>
+</script> -->

@@ -28,7 +28,7 @@ import org.openmrs.module.household.service.HouseholdService;
 import org.openmrs.module.household.util.HouseholdCheckDigit;
 
 /**
- * @author Ampath developers
+ * @author jmwogi
  *
  */
 public class DWRHouseholdService {

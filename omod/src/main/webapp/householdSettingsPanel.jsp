@@ -4,7 +4,6 @@
 
 <%@ include file="/WEB-INF/template/header.jsp" %>
 
-<%@ include file="localHeader.jsp" %>
 
 <script type="text/javascript" src="${pageContext.request.contextPath}/moduleResources/household/scripts/jquery-1.5.2.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/moduleResources/household/scripts/style-table.js"></script>
@@ -24,9 +23,19 @@ $(document).ready(function() {
         $(".curvedContainer #tab_content_"+index).css("display","block");
     });
 });
+function checkPrefix(){
+	var par = document.getElementById("parent").value;
+	if(par == ""){
+		$("#identifierPrefix").val("");
+		$("#pref").css("display","none");
+	}else
+		$("#pref").css("display","inline");
+		
+}
 </script>
 
 <h3><spring:message code="household.title"/></h3>
+<%@ include file="localHeader.jsp" %>
 <br />
 <b class="boxHeader">Household Settings</b>
 <div class="box">
@@ -82,7 +91,7 @@ $(document).ready(function() {
 								<tr>
 									<th>Parent Program</th>
 									<td>
-										<select name="parent">
+										<select name="parent" id="parent" onchange="javascript:checkPrefix()">
 											<option id="m" value="" selected="selected"></option>
 											<c:forEach var="hh" items="${householdsTypes}" varStatus="ind">
 												<option id="${ind.index + 1 }" value="${hh.id}">${hh.householdDefinitionsCode}</option>
@@ -92,8 +101,12 @@ $(document).ready(function() {
 									</td>
 								</tr>
 							</c:if>
-							
-							
+							<div id="pref" style="display: none;">
+								<tr>
+									<th>Identifier Prefix</th>
+									<td><input type="text" id="identifierPrefix" name="identifierPrefix"/></td>
+								</tr>
+							</div>
 							<tr>
 								<th>Description</th>
 								<td><textarea name="programDescription" rows="3" cols="72"></textarea></td>

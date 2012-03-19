@@ -1,7 +1,16 @@
 <%@ include file="/WEB-INF/template/include.jsp"%>
-
 	<form:form id="programForm" modelAttribute="householdDef">
 		
+		<script type="text/javascript">
+			function checkPrefixEdit(){
+				var par = document.getElementById("parent").value;
+				if(par == "")
+					$("#pref").css("display","none");
+				else
+					$("#pref").css("display","inline");
+					
+			}
+		</script>
 		<!-- Here :<input type="te xt" name="checking"/> -->
 		<table>
 			<tr>
@@ -27,7 +36,7 @@
 					Parent:
 				</td>
 				<td>
-					<select name="parent">
+					<select name="parent" id="parent" onchange="javascript:checkPrefixEdit()">
 						<c:choose>
 							<c:when test="<form:input path='parent'/>">
 								<option id="m" value="" selected="selected"></option>
@@ -55,6 +64,10 @@
 					</select>
 				
 				</td>
+				<tr id="pref">
+					<td>Identifier Prefix</td>
+					<td><form:input path="identifierPrefix"/> <form:errors path="identifierPrefix" cssClass="error"/>
+				</tr>
 			</tr>
 			<tr>
 				<td>

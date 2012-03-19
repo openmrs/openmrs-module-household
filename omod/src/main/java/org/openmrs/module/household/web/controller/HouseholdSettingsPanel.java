@@ -54,6 +54,7 @@ public class HouseholdSettingsPanel {
                     			 @RequestParam("codeInFull") String codeInFull, 
                     			 @RequestParam("programDescription") String programDescription,
                     			 @RequestParam(required=false, value="parent") HouseholdDefinition parent,
+                    			 @RequestParam(required=false, value="identifierPrefix") String identifierPrefix,
                     			 WebRequest request) {
     	
     	if (!StringUtils.hasText(programCode)) {
@@ -70,6 +71,9 @@ public class HouseholdSettingsPanel {
 			
 			HouseholdDefinition hd = new HouseholdDefinition(programCode, codeInFull, programDescription);
 			hd.setParent(parent);
+			if((hd.getParent() != null) && (StringUtils.hasText(identifierPrefix))){
+				hd.setIdentifierPrefix(identifierPrefix);
+			}
 			Context.getService(HouseholdService.class).saveHouseholdDefinition(hd);
 			request.setAttribute(WebConstants.OPENMRS_MSG_ATTR, Context.getMessageSourceService().getMessage(
 			    "Program saved"), WebRequest.SCOPE_SESSION);
@@ -85,11 +89,12 @@ public class HouseholdSettingsPanel {
     @RequestMapping(method = RequestMethod.GET, value = "module/household/householdEditProgram")
 	public void showEdit(@RequestParam("id") HouseholdDefinition hd, ModelMap model) {
 		HouseholdDefinition householdDefinition = hd;
+		
 		model.addAttribute("householdDef", householdDefinition); // this will go in the session
 		model.addAttribute("householdParent", householdDefinition.getParent());
 		
 		HouseholdService service = Context.getService(HouseholdService.class);
-		List<HouseholdDefinition> householdsTypes = service.getAllHouseholdDefinitions();
+		List<HouseholdDefinition> householdsTypes = service.getHouseholdDefinitionParents();
 		model.addAttribute("householdsTypes", householdsTypes);
 	}
 	
