@@ -1997,6 +1997,18 @@
 				</column>
 			</addColumn>
 	</changeSet>
+	<changeSet author="jmwogi" id="household-09-03-2012:23:00">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="household_definition" columnName="identifier_prefix"/>
+			</not>
+			
+		</preConditions>
+			<comment>Creating an additional identifier_prefix column on household</comment>
+				<addColumn tableName="household_definition">
+					<column name="identifier_prefix" type="varchar(50)" defaultValue="null"/>
+				</addColumn>
+	</changeSet>
 	
 	
 </databaseChangeLog>		
