@@ -4,7 +4,8 @@
 
 <%@ include file="/WEB-INF/template/header.jsp" %>
 
-
+<openmrs:htmlInclude file="/dwr/util.js"/>
+<openmrs:htmlInclude file="/dwr/interface/DWRHouseholdService.js"/>
 <script type="text/javascript" src="${pageContext.request.contextPath}/moduleResources/household/scripts/jquery-1.5.2.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/moduleResources/household/scripts/style-table.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/moduleResources/household/scripts/modal.popup.js"></script>
@@ -13,7 +14,7 @@
 <script language="JavaScript">
 $(document).ready(function() {
 
-    $(".tabs .tab[id^=tab_menu]").hover(function() {
+    $(".tabs .tab[id^=tab_menu]").click(function() {
         var curMenu=$(this);
         $(".tabs .tab[id^=tab_menu]").removeClass("selected");
         curMenu.addClass("selected");
@@ -31,6 +32,37 @@ function checkPrefix(){
 	}else
 		$("#pref").css("display","inline");
 		
+}
+function passHDObject(){
+	var par1 = document.getElementById("hdid").value;
+	var par2 = document.getElementById("programCode").value;
+	var par3 = document.getElementById("codeInFull").value;
+	var par4 = document.getElementById("parent").value;
+	var par5 = document.getElementById("identifierPrefix").value;
+	var par6 = document.getElementById("programDescription").value;
+	//1=add, 2=edit 
+	var parArrHD = ["1", par1, par2, par3, par4, par5, par6];
+	//DWRHouseholdService.addEditHouseholdDefinition( parArrHD, returnHD);
+}
+function returnHD(data){
+	//alert("Successfully saved \n" + data);
+	$j('#addHouseholdProgram').slideToggle('fast');
+	event.preventDefault();
+	
+	
+	//$j("tblSelectedPerson").show();
+	dwr.util.removeAllRows("bdytbl");
+	var count = 1;
+	dwr.util.addRows("bdytbl", data,[
+	function(householdDefinition) { return count++; },
+	function(householdDefinition) { return <c:choose><c:when test='${not empty householdDefinition.parent  }'> householdDefinition.householdDefinitionsCode + "[Parent: " + householdDefinition.parent.householdDefinitionsCode + "]" + </c:when><c:otherwise>householdDefinition.householdDefinitionsCode</c:otherwise></c:choose>},
+	function(householdDefinition) { return householdDefinition.householdDefinitionsCodeinfull; },
+	function(householdDefinition) { return householdDefinition.householdDefinitionsDescription; },
+	function(householdDefinition) { return <openmrs:format user='${householdDefinition.creator }' /><br /><openmrs:formatDate date='${householdDefinition.dateCreated}'/>; },
+	function(householdDefinition) { return '<input type="button" value="Delete" />'; }
+	], { escapeHtml:false }); 
+
+	
 }
 </script>
 
@@ -70,19 +102,20 @@ function checkPrefix(){
 				</script>
 				<a class="toggleAddHouseholdProgram" href="#">Add Household Program/Definition</a><br />
 				<div id="addHouseholdProgram" style="border: 1px black solid; background-color: #e0e0e0; display: none">
-					<form method="post" action="householdAddProgram.form">
+					<form method="post"> <!-- action="householdAddProgram.form" -->
 						<table>
 							<tr>
 								<th>Program Code</th>
 								<td>
-									<input type="text" name="programCode"/>
+									<input type="hidden" name="hdid" id="hdid"/>
+									<input type="text" name="programCode" id="programCode"/>
 									<span class="required">*</span>
 								</td>
 							</tr>
 							<tr>
 								<th>Code in Full</th>
 								<td>
-									<input type="text" name="codeInFull"/>
+									<input type="text" name="codeInFull" id="codeInFull"/>
 									<span class="required">*</span>
 								</td>
 							</tr>
@@ -109,12 +142,12 @@ function checkPrefix(){
 							</div>
 							<tr>
 								<th>Description</th>
-								<td><textarea name="programDescription" rows="3" cols="72"></textarea></td>
+								<td><textarea name="programDescription" id="programDescription" rows="3" cols="72"></textarea></td>
 							</tr>
 							<tr>
 								<th></th>
 								<td>
-									<input type="submit" value="<spring:message code="general.save"/>" />
+									<input type="button" onclick="javascript:passHDObject()" value="<spring:message code="general.save"/>" />
 									<input type="button" value="<spring:message code="general.cancel"/>" class="toggleAddHouseholdProgram" />
 								</td>
 							</tr>
@@ -138,7 +171,7 @@ function checkPrefix(){
 				            <th scope="col">Action</th>
 				        </tr>        
 				    </thead>
-				    <tbody>
+				    <tbody id="bdytbl">
 				    	<c:forEach var="household" items="${householdsTypes}" varStatus="ind">
 							<form method="POST" name="${household.id}">
 								<tr>

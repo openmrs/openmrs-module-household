@@ -21,10 +21,10 @@ public class HouseholdDefinition extends BaseOpenmrsData{
 	private HouseholdDefinition parent;
 	private String identifierPrefix;
 	
-	public HouseholdDefinition(String defCode, String defCodeInFull, String decription){
+	public HouseholdDefinition(String defCode, String defCodeInFull, String description){
 		setHouseholdDefinitionsCode(defCode);
 		setHouseholdDefinitionsCodeinfull(defCodeInFull);
-		setHouseholdDefinitionsDescription(decription);
+		setHouseholdDefinitionsDescription(description);
 	}
 	public HouseholdDefinition(){};
 	/** constructor with id */

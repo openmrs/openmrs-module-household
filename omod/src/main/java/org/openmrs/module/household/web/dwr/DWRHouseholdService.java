@@ -280,60 +280,79 @@ public class DWRHouseholdService {
 	public String saveMembersToHseHold(String householdMemToAdd,String grpId,String provider,String startDate) throws ParseException{
 		
 		HouseholdService service = Context.getService(HouseholdService.class);
+			Household group=service.getHouseholdGroupByIdentifier(grpId);
 			
+			String []strMem = householdMemToAdd.split(",");
 			
+			Arrays.sort(strMem);
+			
+			int j = 1;
+			
+			for (int i = 1; i < strMem.length; i++)
+			{
+				if (! strMem[i].equals(strMem[i -1]))
+					strMem[j++] = strMem[i];
+			}
+			
+			String[] unique = new String[j];
+			System.arraycopy(strMem, 0, unique, 0, j);
+			
+			for(int i=0; i<unique.length; i++ ){
 				
-				Household group=service.getHouseholdGroupByIdentifier(grpId);
+				String strMember = unique[i];
 				
-				String []strMem = householdMemToAdd.split(",");
-				
-				Arrays.sort(strMem);
-				
-				int j = 1;
-				
-				for (int i = 1; i < strMem.length; i++)
-				{
-					if (! strMem[i].equals(strMem[i -1]))
-						strMem[j++] = strMem[i];
-				}
-				
-				String[] unique = new String[j];
-				System.arraycopy(strMem, 0, unique, 0, j);
-				
-				for(int i=0; i<unique.length; i++ ){
+				HouseholdMembership membership = new HouseholdMembership();
+				Person pn = Context.getPersonService().getPerson(Integer.parseInt(strMember));
+				List<HouseholdMembership> member = service.getHouseholdMembershipByGrpByPsn(pn, group);
+				if(member.isEmpty()){ 
 					
-					String strMember = unique[i];
+					membership.setHouseholdMembershipMember(pn);
+					membership.setHouseholdMembershipGroups(group);
+			
+					membership.setHouseholdMembershipHeadship(false);
+					membership.setProviderId(provider);
 					
-					HouseholdMembership membership = new HouseholdMembership();
-					Person pn = Context.getPersonService().getPerson(Integer.parseInt(strMember));
-					List<HouseholdMembership> member = service.getHouseholdMembershipByGrpByPsn(pn, group);
-					if(member.isEmpty()){ 
-						
-						membership.setHouseholdMembershipMember(pn);
-						membership.setHouseholdMembershipGroups(group);
-				
-						membership.setHouseholdMembershipHeadship(false);
-						membership.setProviderId(provider);
-						
-						if(StringUtils.isEmpty(startDate))
-							membership.setStartDate(new Date());
-						else
-							membership.setStartDate(dateFormatHelper(startDate));
-						
-						// then save the members to this household grpId
-						service.saveHouseholdMembership(membership);
-						
-					}
-					else{
-						continue;
-					}
-						
+					if(StringUtils.isEmpty(startDate))
+						membership.setStartDate(new Date());
+					else
+						membership.setStartDate(dateFormatHelper(startDate));
+					
+					// then save the members to this household grpId
+					service.saveHouseholdMembership(membership);
 					
 				}
-			
-		
-		
+				else{
+					continue;
+				}
+			}
 		return "Added successfully  ";
+	}
+	
+	public List<HouseholdDefinition> addEditHouseholdDefinition(String [] passedArr){
+		HouseholdService service = Context.getService(HouseholdService.class);
+		if(passedArr[0].equals("1")){
+			HouseholdDefinition hd = new HouseholdDefinition(passedArr[2], passedArr[3], passedArr[6]);
+			if(!StringUtils.isEmpty(passedArr[4]))
+				hd.setParent(service.getHouseholdDefinition(Integer.parseInt(passedArr[4])));
+			if(!StringUtils.isEmpty(passedArr[5]))
+				hd.setIdentifierPrefix(passedArr[5]);
+			service.saveHouseholdDefinition(hd);
+			List<HouseholdDefinition> hdl = service.getAllHouseholdDefinitions();
+			return hdl;
+		}else if(passedArr[0].equals("2")){
+			HouseholdDefinition hd = service.getHouseholdDefinition(Integer.parseInt(passedArr[1]));
+			hd.setHouseholdDefinitionsCode(passedArr[2]);
+			hd.setHouseholdDefinitionsCodeinfull(passedArr[3]);
+			hd.setHouseholdDefinitionsDescription(passedArr[6]);
+			if(!StringUtils.isEmpty(passedArr[4]))
+				hd.setParent(service.getHouseholdDefinition(Integer.parseInt(passedArr[4])));
+			if(!StringUtils.isEmpty(passedArr[5]))
+				hd.setIdentifierPrefix(passedArr[5]);
+			service.saveHouseholdDefinition(hd);
+			List<HouseholdDefinition> hdl = service.getAllHouseholdDefinitions();
+			return hdl;
+		}
+		return null;
 	}
 	
 	static DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy"); 

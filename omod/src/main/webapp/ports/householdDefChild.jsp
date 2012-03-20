@@ -208,7 +208,7 @@
 					<a href="#" onclick="javascript:openClose('8')">View Households(20)</a> &nbsp;<br /> 
 					<a href="#" onclick="javascript:openClose2('9','${hdef.id}')">Create Household</a>&nbsp;
 				<div>
-				<legend style="width:90%">Section 1</legend>
+				<!-- <legend style="width:90%">Section 1</legend>
 				<div>
 					<a href="#" onclick="javascript:openClose('2')">Out-patient</a><br />
 					<a href="#" onclick="javascript:openClose('3')">Wards</a><br />
@@ -219,7 +219,7 @@
 				<div>
 					<a href="#" onclick="javascript:openClose('6')">Wards1</a><br />
 					<a href="#" onclick="javascript:openClose('7')">Wards2</a>
-				</div>
+				</div> -->
 				<!-- </fieldset> -->
 			</div>
 		</td><td width="2%"><div class="rpt"></div></td>
