@@ -263,11 +263,18 @@ public class DWRHouseholdService {
 				try {
 					HouseholdMembership membership = service.getHouseholdMembership(Integer.parseInt(mem));
 					membership.setHouseholdMembershipMember(Context.getPatientService().getPatientByUuid(membership.getHouseholdMembershipMember().getUuid()));
+					if(membership.isHouseholdMembershipHeadship()){
+						 //skipping the head of household
+						 continue;
+						 
+					 }
+					 else{
 					membership.setVoided(true);
 					membership.setVoidReason(voidReason);
 					membership.setEndDate(new Date());
 					service.saveHouseholdMembership(membership);
 					//return true;
+					 }
 				} 
 				catch (Exception e) {
 					log.info("Not able to void the selection"+e.toString());
@@ -378,6 +385,42 @@ public class DWRHouseholdService {
 			return new Date();
 		else
 			return dateFormat.parse(strvalue);
+	}
+	
+public String closeEntireHousehold(String householdId,String voidReason,String provID,String closedate )throws ParseException{
+		
+		HouseholdService service = Context.getService(HouseholdService.class);
+		Household householdToClose = new Household();
+		householdToClose = service.getHouseholdGroupByIdentifier(householdId);
+		List<HouseholdMembership> householdMembersToClose = service.getAllHouseholdMembershipsByGroup(householdToClose);
+		
+		//loop through the entire list and void each member
+		
+		for(HouseholdMembership householdMembership:householdMembersToClose ){
+			
+			//creation of a string variable that will hold a member value for voiding
+			
+			Integer memId=householdMembership.getId();
+			
+			// now we start voiding starting with memId only and only if it is not empty
+			HouseholdMembership membership = service.getHouseholdMembership(memId);
+			membership.setHouseholdMembershipMember(Context.getPatientService().getPatientByUuid(membership.getHouseholdMembershipMember().getUuid()));
+			membership.setVoided(true);
+			membership.setVoidReason(voidReason);
+			membership.setProviderId(provID);
+			membership.setEndDate(dateFormatHelper(closedate));
+			householdToClose.setEndDate(dateFormatHelper(closedate));
+			householdToClose.setProvider(provID);
+			
+			service.saveHouseholdMembership(membership);
+			service.saveHouseholdGroup(householdToClose);
+			
+		}
+				
+		
+		
+		return "Household closed";
+		
 	}
 
 }

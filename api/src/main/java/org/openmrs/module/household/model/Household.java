@@ -3,6 +3,8 @@
  */
 package org.openmrs.module.household.model;
 
+import java.util.Date;
+
 import org.openmrs.BaseOpenmrsData;
 
 
@@ -17,6 +19,28 @@ public class Household extends BaseOpenmrsData implements java.io.Serializable{
 	private HouseholdDefinition householdDef;
 	private String householdIdentifier;
 	//private String uuid = null;
+	private Date startDate;
+	private Date endDate;
+	private String provider;
+	
+	public Date getStartDate() {
+		return startDate;
+	}
+	public Date getEndDate() {
+		return endDate;
+	}
+	public String getProvider() {
+		return provider;
+	}
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+	public void setProvider(String provider) {
+		this.provider = provider;
+	}
 	
 	/**
 	 * @return the id

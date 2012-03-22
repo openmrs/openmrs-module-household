@@ -104,6 +104,8 @@
 				<include method="saveMembersToHseHold" />
 				<include method="addEditHouseholdDefinition" />
 				<include method="addEditHouseholdEncounterType" />
+				<include method="householdsSearchStrings" />
+				<include method="closeEntireHousehold" />
 			</create>
 			<convert match="org.openmrs.module.household.model.HouseholdDefinition" converter="bean" />
 			<convert match="org.openmrs.module.household.model.HouseholdMembership" converter="bean" />
@@ -129,6 +131,8 @@
 			DWRHouseholdService.saveMembersToHseHold(String householdMem,String grpId);
 			DWRHouseholdService.addEditHouseholdDefinition(String [] passedArr);
 			DWRHouseholdService.addEditHouseholdEncounterType(String [] passedArr);
+			DWRHouseholdService.householdsSearchStrings();
+			DWRHouseholdService.closeEntireHousehold(String householdId,String voidReason,String provID,String closedate);
 			]]>
 		</signatures>
 	</dwr>

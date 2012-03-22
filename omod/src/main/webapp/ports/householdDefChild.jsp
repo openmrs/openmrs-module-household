@@ -596,8 +596,74 @@
 								document.formMemebrs.actOnVidedMembers.disabled=true;  
 							}
 							}
+						function actOnCloseHousehold(){
+							var householdToClose=dwr.util.getValue("searchFieldHI");
+							if (confirm("Are you sure you want to close this Household ? "+householdToClose)) {
+								$j(function() {
+									$j( "#dialogCloseHousehold" ).dialog({ 
+										modal: true, 
+										show: 'slide',
+										height: 'auto',
+										hide: 'slide',
+										width: 450,
+										position: 'center'
+										
+										});
+								});
+							} 
+							
+						}
+						function closeHousehold(){
+							// code to close the entire household to follow here 
+							var householdToClose=dwr.util.getValue("searchFieldHI");
+							var householdToCloseProvId=dwr.util.getValue("userWhoCloseHousehold");
+							var householdToCloseReason=dwr.util.getValue("householdCloseReason");
+							var householdToCloseDate=dwr.util.getValue("householdCloseDate");
+							
+							// call dwrmethod to void the entire household 
+							DWRHouseholdService.closeEntireHousehold(householdToClose,householdToCloseReason,householdToCloseProvId,householdToCloseDate,close_closeHousehold);
+							
+						}
+						
+						function close_closeHousehold(){
+							$j("#dialogCloseHousehold").dialog('close');
+						}
+						
+						function selectProviderWhoCloseHousehold(userid,provider){
+							var proWhoCloseHouseholdId=null
+							if(provider !=null){
+								proWhoCloseHouseholdId=provider.systemId;
+							}
+							$j("#userWhoCloseHousehold").val(proWhoCloseHouseholdId);
+							
+							}
+
 						
 						</script>
+						<div id="dialogCloseHousehold" title="Close Household" style="display:none">
+							<table border="0">
+								<tr>
+									<td>Reason for close:</td>
+									<td><input type="text" id="householdCloseReason" /></td>
+									<td>&nbsp;</td>
+								</tr>
+								<tr>
+									<td>Provider Id:</td>
+									<td><openmrs_tag:userField formFieldName="userProviders" roles="Trusted+External+Application,Lab+Technician,Community+Health+Worker+Nutritionist,Clinician,Nurse,Psychosocial+Support+Staff,Pharmacist,HCT+Nurse,Outreach+Worker,Community+Health+Extension+Worker,Clinical+Officer,Provider" callback="selectProviderWhoCloseHousehold" /></td>
+									<td><input type="hidden" id="userWhoCloseHousehold" size="10" />
+								</tr>
+								<tr>
+									<td>Close Date</td>
+									<td><input type="text" id="householdCloseDate" onClick="showCalendar(this)" readonly="readonly" /></td>
+									<td>&nbsp;</td>
+								</tr>
+								<tr>
+									<td>&nbsp;</td>
+									<td><input type="button" id="closeHouseholdButton" value="Close Household" onclick="closeHousehold()"/></td>
+									<td>&nbsp;</td>
+								</tr>
+							</table>
+						</div>
 						
 						<div id="addMembersToHousehold" title="Add Members" style="display:none">
 							<div id="savedwell" style="display: none" class="successfullyDone">Members added successfully...</div>
@@ -690,7 +756,6 @@
 							</table>
 						
 						</div>
-						<b class="boxHeader">Household Members</b>
 						<div id="householdDetails" style="display:none" class="box">
 							<form method="post" name="formMemebrs">
 									<table border="0" cellpadding="0" cellspacing="0">
@@ -721,10 +786,13 @@
 											<td>
 												<input type="button" value="Void Members" name="actOnVidedMembers" id="actOnVidedMembers" onclick="clickVoid()"  disabled="disabled" />
 											</td>
+											<td>
+												<input type="button" value="Close Household" name="nameActOnCloseHousehold" id="idActOnCloseHousehold" onclick="actOnCloseHousehold()"  />
+											</td>
 											
 										</tr>
 										<tr>
-											<td>&nbsp;</td><td>&nbsp;</td>
+											<td>&nbsp;</td><td><input type="hidden" id="householdToCloseList"/></td>
 											<td colspan="2">
 												<div id="actOnVidedMembersNull" style="display: none" class="error">At least one member can be voided</div>
 											</td>
