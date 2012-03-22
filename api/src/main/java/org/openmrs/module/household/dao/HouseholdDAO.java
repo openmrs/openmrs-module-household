@@ -93,6 +93,13 @@ public interface HouseholdDAO {
 	 * @return all HouseholdDefinition record in the system of parenthd
 	 */
 	public List<HouseholdDefinition> getHouseholdDefinitionChildren(HouseholdDefinition hd);
+	
+	/**
+	 * Purge the definition and 
+	 * 
+	 * @return true if purged
+	 */
+	public boolean purgeHouseholdDefinition(HouseholdDefinition hd);
 
 	/**
 	 * Save one HouseholdGroups object to the database

@@ -735,14 +735,14 @@
 						</div>
 						
 				</div>
-				<div id="div2">Selling maize 2</div>
-				<div id="div3">Selling maize 3</div>
-				<div id="div4">Selling maize 4</div>
-				<div id="div5">Selling maize 5</div>
-				<div id="div6">Selling maize 6</div>
-				<div id="div7">Selling maize 7</div>
-				<div id="div8">Selling maize 8</div>
-				<div id="div9">Selling maize 9</div>
+				<div id="div2"><img src="${pageContext.request.contextPath}/moduleResources/household/images/loading.gif"/></div>
+				<div id="div3"><img src="${pageContext.request.contextPath}/moduleResources/household/images/loading.gif"/></div>
+				<div id="div4"><img src="${pageContext.request.contextPath}/moduleResources/household/images/loading.gif"/></div>
+				<div id="div5"><img src="${pageContext.request.contextPath}/moduleResources/household/images/loading.gif"/></div>
+				<div id="div6"><img src="${pageContext.request.contextPath}/moduleResources/household/images/loading.gif"/></div>
+				<div id="div7"><img src="${pageContext.request.contextPath}/moduleResources/household/images/loading.gif"/></div>
+				<div id="div8"><img src="${pageContext.request.contextPath}/moduleResources/household/images/loading.gif"/></div>
+				<div id="div9"><img src="${pageContext.request.contextPath}/moduleResources/household/images/loading.gif"/></div>
 			</div>
 		</td>
 	</tr>

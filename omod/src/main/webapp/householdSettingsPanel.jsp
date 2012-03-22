@@ -34,35 +34,75 @@ function checkPrefix(){
 		
 }
 function passHDObject(){
+	var par = document.getElementById("hdAddEdit").value;
 	var par1 = document.getElementById("hdid").value;
 	var par2 = document.getElementById("programCode").value;
 	var par3 = document.getElementById("codeInFull").value;
 	var par4 = document.getElementById("parent").value;
 	var par5 = document.getElementById("identifierPrefix").value;
 	var par6 = document.getElementById("programDescription").value;
-	//1=add, 2=edit 
-	var parArrHD = ["1", par1, par2, par3, par4, par5, par6];
-	//DWRHouseholdService.addEditHouseholdDefinition( parArrHD, returnHD);
+	
+	if((par == "Add") || (par == ""))
+		var parArrHD = ["1", par1, par2, par3, par4, par5, par6];
+	else if(par == "Edit")
+		var parArrHD = ["2", par1, par2, par3, par4, par5, par6];
+	else
+		var parArrHD = ["3", par1, par2, par3, par4, par5, par6];
+	DWRHouseholdService.addEditHouseholdDefinition( parArrHD, returnHD);
 }
 function returnHD(data){
 	//alert("Successfully saved \n" + data);
-	$j('#addHouseholdProgram').slideToggle('fast');
-	event.preventDefault();
-	
-	
-	//$j("tblSelectedPerson").show();
-	dwr.util.removeAllRows("bdytbl");
-	var count = 1;
-	dwr.util.addRows("bdytbl", data,[
-	function(householdDefinition) { return count++; },
-	function(householdDefinition) { return <c:choose><c:when test='${not empty householdDefinition.parent  }'> householdDefinition.householdDefinitionsCode + "[Parent: " + householdDefinition.parent.householdDefinitionsCode + "]" + </c:when><c:otherwise>householdDefinition.householdDefinitionsCode</c:otherwise></c:choose>},
-	function(householdDefinition) { return householdDefinition.householdDefinitionsCodeinfull; },
-	function(householdDefinition) { return householdDefinition.householdDefinitionsDescription; },
-	function(householdDefinition) { return <openmrs:format user='${householdDefinition.creator }' /><br /><openmrs:formatDate date='${householdDefinition.dateCreated}'/>; },
-	function(householdDefinition) { return '<input type="button" value="Delete" />'; }
-	], { escapeHtml:false }); 
+	var checkDelete = document.getElementById("hdAddEdit").value;
+	if (checkDelete != "Delete"){
+		$j('#addHouseholdProgram').slideToggle('fast');
+		event.preventDefault();
+	}
+		$j.get("ports/householdSettingsDef.form",
+				function(dat){
+					$j('#idDefinition').html(dat);
+				}
+			);
+	document.getElementById("hdAddEdit").value = "Add";
+	document.getElementById("hdid").value = "";
+	document.getElementById("programCode").value = "";
+	document.getElementById("codeInFull").value = "";
+	document.getElementById("parent").value = "";
+	document.getElementById("identifierPrefix").value = "";
+	document.getElementById("programDescription").value = "";
+}
 
+function passEncTypeObject(){
+	var par = document.getElementById("hdAddEditEnc").value;
+	var par1 = document.getElementById("hdidEnc").value;
+	var par2 = document.getElementById("idname").value;
+	var par3 = document.getElementById("idencTypeDescription").value;
+	var par4 = document.getElementById("hdidRetire").value;
 	
+	if((par == "Add") || (par == ""))
+		var parArrHD = ["1", par1, par2, par3];
+	else if(par == "Edit")
+		var parArrHD = ["2", par1, par2, par3];
+	else
+		var parArrHD = ["3", par1, par2, par3, par4];
+	DWRHouseholdService.addEditHouseholdEncounterType( parArrHD, returnEncType);
+}
+function returnEncType(data){
+	//alert("Successfully saved \n" + data);
+	var checkDelete = document.getElementById("hdAddEditEnc").value;
+	if (checkDelete != "Retire"){
+		$j('#addHouseholdEncounterType').slideToggle('fast');
+		event.preventDefault();
+	}
+		$j.get("ports/householdSettingsEncType.form?includedRetired=" + false,
+				function(dat){
+					$j('#idEncType').html(dat);
+				}
+			);
+	document.getElementById("hdAddEditEnc").value = "Add";
+	document.getElementById("hdidEnc").value = "";
+	document.getElementById("idname").value = "";
+	document.getElementById("idencTypeDescription").value = "";
+	document.getElementById("hdidRetire").value = "";
 }
 </script>
 
@@ -108,6 +148,7 @@ function returnHD(data){
 								<th>Program Code</th>
 								<td>
 									<input type="hidden" name="hdid" id="hdid"/>
+									<input type="hidden" name="hdAddEdit" id="hdAddEdit"/>
 									<input type="text" name="programCode" id="programCode"/>
 									<span class="required">*</span>
 								</td>
@@ -126,7 +167,7 @@ function returnHD(data){
 									<td>
 										<select name="parent" id="parent" onchange="javascript:checkPrefix()">
 											<option id="m" value="" selected="selected"></option>
-											<c:forEach var="hh" items="${householdsTypes}" varStatus="ind">
+											<c:forEach var="hh" items="${definitionParents}" varStatus="ind">
 												<option id="${ind.index + 1 }" value="${hh.id}">${hh.householdDefinitionsCode}</option>
 											</c:forEach>
 										</select>
@@ -156,62 +197,83 @@ function returnHD(data){
 				</div>
 				<br />
 				
-				
-				<table id="houseDefs"  class="lineTable">
-					<thead>    
-				    	<tr>
-				            <th scope="col" rowspan="2">&nbsp;</th>
-				            <th scope="col" colspan="6">Registered Household Programs</th>
-				        </tr>
-				        <tr>
-				            <th scope="col">Program Code</th>
-				            <th scope="col">Program Code In Full</th>
-				            <th scope="col">Description</th>
-				            <th scope="col"><spring:message code="general.createdBy"/></th>
-				            <th scope="col">Action</th>
-				        </tr>        
-				    </thead>
-				    <tbody id="bdytbl">
-				    	<c:forEach var="household" items="${householdsTypes}" varStatus="ind">
-							<form method="POST" name="${household.id}">
-								<tr>
-									<th>${ind.index + 1}</th>
-									<td class="highlight">
-										<c:choose>
-											<c:when test="${not empty household.parent}">
-												${household.householdDefinitionsCode} [Parent: ${household.parent.householdDefinitionsCode}]
-											</c:when>
-											<c:otherwise>
-												${household.householdDefinitionsCode}
-											</c:otherwise>
-										</c:choose>
-									
-									</td>
-									<td class="highlight">${household.householdDefinitionsCodeinfull}</td>
-									<td class="highlight">${household.householdDefinitionsDescription}</td>
-									<td class="highlight">
-										<openmrs:format user="${household.creator}"/><br />
-										<openmrs:formatDate date="${household.dateCreated}"/>
-									</td>
-									<td class="highlight">
-										<input type="hidden" name="houseid" id="${household.id}" value="${household.id}" />
-									    <input type="button" id="editProgram${household.id}" onclick="clickEditProgram(${household.id})" value="Edit" />
-										<input type="submit" value="Delete" />
-									</td>
-								</tr>
-							</form>
-						</c:forEach>
-				    </tbody>
-				</table>
+				<div id="idDefinition">
+					<table id="houseDefs"  class="lineTable">
+						<thead>    
+					    	<tr>
+					            <th scope="col" rowspan="2">&nbsp;</th>
+					            <th scope="col" colspan="6">Registered Household Programs</th>
+					        </tr>
+					        <tr>
+					            <th scope="col">Program Code</th>
+					            <th scope="col">Program Code In Full</th>
+					            <th scope="col">Description</th>
+					            <th scope="col"><spring:message code="general.createdBy"/></th>
+					            <th scope="col">Action</th>
+					        </tr>        
+					    </thead>
+					    <tbody id="bdytbl">
+					    	<c:forEach var="household" items="${householdsTypes}" varStatus="ind">
+								<form method="POST" name="${household.id}">
+									<tr valign="top">
+										<th>${ind.index + 1}</th>
+										<td class="highlight">
+											<c:choose>
+												<c:when test="${not empty household.parent}">
+													${household.householdDefinitionsCode} [Parent: ${household.parent.householdDefinitionsCode}]
+												</c:when>
+												<c:otherwise>
+													${household.householdDefinitionsCode}
+												</c:otherwise>
+											</c:choose>
+										
+										</td>
+										<td class="highlight">${household.householdDefinitionsCodeinfull}</td>
+										<td class="highlight">${household.householdDefinitionsDescription}</td>
+										<td class="highlight">
+											<openmrs:format user="${household.creator}"/><br />
+											<openmrs:formatDate date="${household.dateCreated}"/>
+										</td>
+										<td class="highlight">
+											<input type="hidden" name="houseid" id="${household.id}" value="${household.id}" />
+											<a href="#" onclick="javascript:onClickEditProgram('${household.id}','${household.householdDefinitionsCode}','${household.householdDefinitionsCodeinfull}','${household.householdDefinitionsDescription}','${household.parent.id}','${household.identifierPrefix}')">
+												<img src="${pageContext.request.contextPath}/moduleResources/household/images/edit.gif"/></a>
+											<a href="#" onclick="javascript:onClickDeleteProgram('${household.id}','${household.householdDefinitionsCode}')">
+												<img src="${pageContext.request.contextPath}/moduleResources/household/images/trash.gif"/></a>
+										   <%--  <input type="button" id="editProgram${household.id}" onclick="clickEditProgram(${household.id})" value="Edit" /> --%>
+											<!-- <input type="submit" value="Delete" /> -->
+										</td>
+									</tr>
+								</form>
+							</c:forEach>
+					    </tbody>
+					</table>
+				</div>
 				<div id="openEdit"></div>
 				<script type="text/javascript">
-					function clickEditProgram(id){
-						var current_id = id;
-						$j('#openEdit').load('householdEditProgram.form?id=' + current_id).dialog({position:'top', title:'Edit Household Program/Group', width:600, modal:true});
+				
+					function onClickEditProgram(id,householdDefinitionsCode,householdDefinitionsCodeinfull,householdDefinitionsDescription,parentId,pref ){
+						document.getElementById("hdAddEdit").value = "Edit";
+						document.getElementById("hdid").value = id;
+						document.getElementById("programCode").value = householdDefinitionsCode;
+						document.getElementById("codeInFull").value = householdDefinitionsCodeinfull;
+						document.getElementById("parent").value = parentId;
+						document.getElementById("identifierPrefix").value = pref;
+						document.getElementById("programDescription").value = householdDefinitionsDescription;
+						$j('#addHouseholdProgram').slideToggle('fast');
+						event.preventDefault();
+					}
+					function onClickDeleteProgram(id,def){
+						var r=confirm("Do you really want to delete the " + def + " definition?");
+						if (r==true){
+							document.getElementById("hdAddEdit").value = "Delete";
+							document.getElementById("hdid").value = id;
+							passHDObject();
+						}else{
+							document.getElementById("hdAddEdit").value = "";
+						}
 					}
 				</script>
-				
-				
 				
 			</div>
 			<div class="tabcontent" id="tab_content_2">
@@ -239,25 +301,36 @@ function returnHD(data){
 						});
 					});
 				</script>
-				<a class="toggleAddHouseholdEncounterType" href="#">Add Household Encounter Type</a><br />
+				<span>
+					<a class="toggleAddHouseholdEncounterType" href="#">Add Household Encounter Type</a><br />
+					<span style="float: right"> 
+						<label for="includeRetired">
+							<input type="checkbox" id="includeRetired" value="0" onchange="javascript:pullRetired()"/>
+							Included Retired
+						</label>
+					</span>
+				</span>
 				<div id="addHouseholdEncounterType" style="border: 1px black solid; background-color: #e0e0e0; display: none">
-					<form method="post" action="householdAddEncounterType.form">
+					<form method="post">  <!-- action="householdAddEncounterType.form" -->
 						<table>
 							<tr>
 								<th>Name</th>
 								<td>
-									<input type="text" name="name"/>
+									<input type="hidden" name="hdidEnc" id="hdidEnc"/>
+									<input type="hidden" name="hdAddEditEnc" id="hdAddEditEnc"/>
+									<input type="hidden" name="hdidRetire" id="hdidRetire"/>
+									<input type="text" name="name" id="idname"/>
 									<span class="required">*</span>
 								</td>
 							</tr>
 							<tr>
 								<th>Description</th>
-								<td><textarea name="programDescription" rows="3" cols="72"></textarea></td>
+								<td><textarea name="encTypeDescription" rows="3" cols="72" id="idencTypeDescription"></textarea></td>
 							</tr>
 							<tr>
 								<th></th>
 								<td>
-									<input type="submit" value="<spring:message code="general.save"/>" />
+									<input type="button" onclick="javascript:passEncTypeObject()" value="<spring:message code="general.save"/>" />
 									<input type="button" value="<spring:message code="general.cancel"/>" class="toggleAddHouseholdEncounterType" />
 								</td>
 							</tr>
@@ -266,49 +339,86 @@ function returnHD(data){
 				</div>
 				<br />
 				
-				
-				<table id="houseEncType"  class="lineTable">
-					<thead>    
-				    	<tr>
-				            <th scope="col" rowspan="2">&nbsp;</th>
-				            <th scope="col" colspan="6">Household Encounter Types</th>
-				        </tr>
-				        <tr>
-				            <th scope="col">Name</th>
-				            <th scope="col">Description</th>
-				            <th scope="col"><spring:message code="general.createdBy"/></th>
-				            <th scope="col">Action</th>
-				        </tr>        
-				    </thead>
-				    <tbody>
-				    	<c:forEach var="householdET" items="${householdEncTypes}" varStatus="ind">
-							<form method="POST" name="${householdET.id}">
-								<tr>
-									<th>${ind.index + 1}</th>
-									<td class="highlight">
-										${householdET.name} 
-									
-									</td>
-									<td class="highlight">${householdET.description}</td>
-									<td class="highlight">
-										<openmrs:format user="${householdET.creator}"/><br />
-										<openmrs:formatDate date="${householdET.dateCreated}"/>
-									</td>
-									<td class="highlight">
-										<input type="hidden" name="houseid" id="${householdET.id}" value="${householdET.id}" />
-									    <input type="button" id="editET${householdET.id}" onclick="clickEditEncounterType(${householdET.id})" value="Edit" />
-										<input type="submit" value="Delete" />
-									</td>
-								</tr>
-							</form>
-						</c:forEach>
-				    </tbody>
-				</table>
+				<div id="idEncType">
+					<table id="houseEncType"  class="lineTable">
+						<thead>    
+					    	<tr>
+					            <th scope="col" rowspan="2">&nbsp;</th>
+					            <th scope="col" colspan="6">Household Encounter Types</th>
+					        </tr>
+					        <tr>
+					            <th scope="col">Name</th>
+					            <th scope="col">Description</th>
+					            <th scope="col"><spring:message code="general.createdBy"/></th>
+					            <th scope="col">Action</th>
+					        </tr>        
+					    </thead>
+					    <tbody>
+					    	<c:forEach var="householdET" items="${householdEncTypes}" varStatus="ind">
+								<form method="POST" name="${householdET.id}">
+									<tr valign="top">
+										<th>${ind.index + 1}</th>
+										<td class="highlight">
+											${householdET.name} 
+										</td>
+										<td class="highlight">${householdET.description}</td>
+										<td class="highlight">
+											<openmrs:format user="${householdET.creator}"/><br />
+											<openmrs:formatDate date="${householdET.dateCreated}"/>
+										</td>
+										<td class="highlight">
+											<a href="#" onclick="javascript:onClickEditEncounterType('${householdET.id}','${householdET.name}','${householdET.description}')">
+												<img src="${pageContext.request.contextPath}/moduleResources/household/images/edit.gif"/></a>
+											<a href="#" onclick="javascript:onClickDeleteEncounterType('${householdET.id}','${householdET.name}')">
+												<img src="${pageContext.request.contextPath}/moduleResources/household/images/trash.gif"/></a>
+										</td>
+									</tr>
+								</form>
+							</c:forEach>
+					    </tbody>
+					</table>
+				</div>
 				<div id="openEditEncounterType"></div>
 				<script type="text/javascript">
-					function clickEditEncounterType(id){
-						var current_id = id;
-						$j('#openEditEncounterType').load('householdEditEncounterType.form?id=' + current_id).dialog({position:'top', title:'Edit Household Encounter Type', width:600, modal:true});
+					function onClickEditEncounterType(id,nam,description){
+						document.getElementById("hdAddEditEnc").value = "Edit";
+						document.getElementById("hdidEnc").value = id;
+						document.getElementById("idname").value = nam;
+						document.getElementById("idencTypeDescription").value = description;
+						$j('#addHouseholdEncounterType').slideToggle('fast');
+						event.preventDefault();
+					}
+					function onClickDeleteEncounterType(id,nam){
+						var reason=prompt("Please enter the reson for retiring this Encounter Type.","");
+						if (reason!=null && reason!=""){
+							var r=confirm("Do you really want to Retire the " + nam + " Encounter Type?");
+							if (r==true){
+								document.getElementById("hdAddEditEnc").value = "Retire";
+								document.getElementById("hdidEnc").value = id;
+								document.getElementById("hdidRetire").value = reason;
+								passEncTypeObject();
+							}else{
+								document.getElementById("hdAddEditEnc").value = "";
+							}
+						}else{
+							alert("Sorry, you never entered the reason for retiring this record. Not retired.")
+						}
+					}
+					function pullRetired(){
+						var val = document.getElementById("includeRetired");
+						if(val.checked){
+							$j.get("ports/householdSettingsEncType.form?includedRetired=" + true,
+									function(dat){
+										$j('#idEncType').html(dat);
+									}
+								);
+						}else{
+							$j.get("ports/householdSettingsEncType.form?includedRetired=" + false,
+									function(dat){
+										$j('#idEncType').html(dat);
+									}
+								);
+						}
 					}
 				</script>
 				

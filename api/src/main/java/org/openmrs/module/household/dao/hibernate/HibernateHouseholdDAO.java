@@ -160,6 +160,16 @@ public class HibernateHouseholdDAO implements HouseholdDAO {
 			    Expression.eq("parent", hd));
 		return criteria.list();
 	}
+	
+	public boolean purgeHouseholdDefinition(HouseholdDefinition hd){
+		try {
+			sessionFactory.getCurrentSession().delete(hd);
+			return true;
+        }
+        catch (Exception e) {
+        	return false;
+        }
+	}
 
 
 	/* (non-Javadoc)

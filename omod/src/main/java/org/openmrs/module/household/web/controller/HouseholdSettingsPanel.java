@@ -45,7 +45,10 @@ public class HouseholdSettingsPanel {
 		List<HouseholdDefinition> householdsTypes = service.getAllHouseholdDefinitions();
 		map.addAttribute("householdsTypes", householdsTypes);
 		
-		List<HouseholdEncounterType> householdET = service.getAllHouseholdEncounterTypes();
+		List<HouseholdDefinition> definitionParents = service.getHouseholdDefinitionParents();
+		map.addAttribute("definitionParents", definitionParents);
+		
+		List<HouseholdEncounterType> householdET = service.getAllHouseholdEncounterTypes(false);
 		map.addAttribute("householdEncTypes", householdET);
     }
     

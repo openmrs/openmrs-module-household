@@ -103,6 +103,7 @@
 				<include method="voidMembers" />
 				<include method="saveMembersToHseHold" />
 				<include method="addEditHouseholdDefinition" />
+				<include method="addEditHouseholdEncounterType" />
 			</create>
 			<convert match="org.openmrs.module.household.model.HouseholdDefinition" converter="bean" />
 			<convert match="org.openmrs.module.household.model.HouseholdMembership" converter="bean" />
@@ -127,6 +128,7 @@
 			DWRHouseholdService.voidMembers(Integer voidId,String voidReason);
 			DWRHouseholdService.saveMembersToHseHold(String householdMem,String grpId);
 			DWRHouseholdService.addEditHouseholdDefinition(String [] passedArr);
+			DWRHouseholdService.addEditHouseholdEncounterType(String [] passedArr);
 			]]>
 		</signatures>
 	</dwr>

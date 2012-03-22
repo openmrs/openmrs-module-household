@@ -127,6 +127,10 @@ public class HouseholdServiceImpl extends BaseOpenmrsService implements Househol
 	public List<HouseholdDefinition> getHouseholdDefinitionChildren(HouseholdDefinition hd) {
 		return householdDAO.getHouseholdDefinitionChildren(hd);
 	}
+	
+	public boolean purgeHouseholdDefinition(HouseholdDefinition hd){
+		return householdDAO.purgeHouseholdDefinition(hd);
+	}
 
 	/* (non-Javadoc)
 	 * @see org.openmrs.module.household.service.HouseholdService#saveHouseholdGroup(org.openmrs.module.household.model.HouseholdGroups)

@@ -20,6 +20,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.household.model.Household;
 import org.openmrs.module.household.model.HouseholdDefinition;
 import org.openmrs.module.household.model.HouseholdEncounter;
+import org.openmrs.module.household.model.HouseholdEncounterType;
 import org.openmrs.module.household.model.HouseholdLocationEntry;
 import org.openmrs.module.household.model.HouseholdLocationLevel;
 import org.openmrs.module.household.model.HouseholdMembership;
@@ -328,7 +329,7 @@ public class DWRHouseholdService {
 		return "Added successfully  ";
 	}
 	
-	public List<HouseholdDefinition> addEditHouseholdDefinition(String [] passedArr){
+	public boolean addEditHouseholdDefinition(String [] passedArr){
 		HouseholdService service = Context.getService(HouseholdService.class);
 		if(passedArr[0].equals("1")){
 			HouseholdDefinition hd = new HouseholdDefinition(passedArr[2], passedArr[3], passedArr[6]);
@@ -337,8 +338,6 @@ public class DWRHouseholdService {
 			if(!StringUtils.isEmpty(passedArr[5]))
 				hd.setIdentifierPrefix(passedArr[5]);
 			service.saveHouseholdDefinition(hd);
-			List<HouseholdDefinition> hdl = service.getAllHouseholdDefinitions();
-			return hdl;
 		}else if(passedArr[0].equals("2")){
 			HouseholdDefinition hd = service.getHouseholdDefinition(Integer.parseInt(passedArr[1]));
 			hd.setHouseholdDefinitionsCode(passedArr[2]);
@@ -349,10 +348,28 @@ public class DWRHouseholdService {
 			if(!StringUtils.isEmpty(passedArr[5]))
 				hd.setIdentifierPrefix(passedArr[5]);
 			service.saveHouseholdDefinition(hd);
-			List<HouseholdDefinition> hdl = service.getAllHouseholdDefinitions();
-			return hdl;
+		}else if(passedArr[0].equals("3")){
+			HouseholdDefinition hd = service.getHouseholdDefinition(Integer.parseInt(passedArr[1]));
+			return service.purgeHouseholdDefinition(hd);
 		}
-		return null;
+		return false;
+	}
+	
+	public boolean addEditHouseholdEncounterType(String [] passedArr){
+		HouseholdService service = Context.getService(HouseholdService.class);
+		if(passedArr[0].equals("1")){
+			HouseholdEncounterType he = new HouseholdEncounterType(passedArr[2], passedArr[3]);
+			service.saveHouseholdEncounterType(he);
+		}else if(passedArr[0].equals("2")){
+			HouseholdEncounterType he =  service.getHouseholdEncounterType(Integer.parseInt(passedArr[1]));
+			he.setName(passedArr[2]);
+			he.setDescription(passedArr[3]);
+			service.saveHouseholdEncounterType(he);
+		}else if(passedArr[0].equals("3")){
+			HouseholdEncounterType he = service.getHouseholdEncounterType(Integer.parseInt(passedArr[1]));
+			return service.retireHouseholdEncounterType(he, passedArr[4]) != null;
+		}
+		return false;
 	}
 	
 	static DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy"); 

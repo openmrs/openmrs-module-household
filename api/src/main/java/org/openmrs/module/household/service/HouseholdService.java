@@ -113,6 +113,8 @@ public interface HouseholdService extends OpenmrsService{
 	@Transactional(readOnly = true)
 	@Authorized("View Household")
 	public List<HouseholdDefinition> getHouseholdDefinitionChildren(HouseholdDefinition hd);
+	
+	public boolean purgeHouseholdDefinition(HouseholdDefinition hd);
 
 	/**
 	 * Save one HouseholdGroups object to the database
