@@ -111,10 +111,12 @@
 		var hidentifierProvided = document.getElementById("householdIdentifer").value;
 		var startDateProvided = document.getElementById("startDate").value;
 		var headOrIndex = document.getElementById("hiddenIndex").value;
+		var provider = document.getElementById("userHouseholdProvider").value;
 		var hDefinition = ${hdef};
+		var strArr = [hDefinition, personList, hidentifierProvided, startDateProvided, headOrIndex, provider];
 		
 		if((personList != "") && (headOrIndex != "") ){
-			DWRHouseholdService.createHousehold(hDefinition, personList, hidentifierProvided, startDateProvided, headOrIndex, returnedSavedHousehold);
+			DWRHouseholdService.createHousehold(strArr, returnedSavedHousehold);
 		}else{
 			//$j(errorDivElement).html('<img src="${pageContext.request.contextPath}/moduleResources/household/images/problem.gif" /> Please select people to form the household and indicate the index/head.');
 			errorDivElement.style.display = 'inline';
@@ -139,6 +141,14 @@
 	
 	function headPerson(person){
 		$j("#hiddenIndex").val(person);
+	}
+	function selectHouseholdProvider(userid,provider){
+		var proHouseholdId = null;
+		if(provider != null){
+			proHouseholdId=provider.personId;
+		}
+		$j("#userHouseholdProvider").val(proHouseholdId);
+		
 	}
 </script>
 <table width="100%">
@@ -175,10 +185,17 @@
 								<td>Registration Date</td><td><input type="text" name="startDate" id="startDate" onClick="showCalendar(this)" /></td>
 							</tr>
 							<tr>
-								<td><!-- TODO: Auto-Validate that identifier is not assigned to another household -->
+								<td>
 								Pre-Generated Identifier</td><td><input type="text" name="householdIdentifer" id="householdIdentifer"/><br />
 								<i>Leave this field empty if you want the system to generate for you the Household Identifier.</i></td>
 							</tr>
+							<tr>
+								<td>Provider Id:</td>
+								<td><openmrs_tag:userField formFieldName="userProviders" roles="Trusted+External+Application,Lab+Technician,Community+Health+Worker+Nutritionist,Clinician,Nurse,Psychosocial+Support+Staff,Pharmacist,HCT+Nurse,Outreach+Worker,Community+Health+Extension+Worker,Clinical+Officer,Provider" callback="selectHouseholdProvider" />
+									<input type="hidden" id="userHouseholdProvider" size="10" />
+								</td>
+							</tr>
+									
 						</table>
 						<br />
 						<input type="button" onclick="saveHousehold()" value="Create household"/>

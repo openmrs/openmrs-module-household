@@ -8,6 +8,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -216,6 +217,74 @@ public class DWRHouseholdService {
 		return householdMem;
 	}
 	
+	public String createHousehold(String [] arrInput){
+		
+		String hDefinition = arrInput[0];
+		String personList = arrInput[1];
+		String hIdentifierProvided = arrInput[2];
+		String startDateProvided = arrInput[3];
+		String headOrIndex = arrInput[4];
+		String provider = arrInput[5];
+		
+		
+		HouseholdService service = Context.getService(HouseholdService.class);
+		HouseholdDefinition hd = service.getHouseholdDefinition(Integer.parseInt(hDefinition));
+		
+		Household hh = service.getHouseholdGroupByIdentifier(hIdentifierProvided);
+		try {hh.getId();return "false, The household identifier is already assigned.";}catch (Exception e) {}
+		
+		String [] oldArrMembers =personList.split(",");
+		Set<String> arrMembers = new HashSet<String>();
+		for (String x : oldArrMembers){
+			//Makes sure that this member had not been previously registered to this definition
+			Person p = Context.getPersonService().getPerson(Integer.parseInt(x));
+			List<HouseholdMembership> hm = Context.getService(HouseholdService.class).getAllHouseholdMembershipsByPerson(p);
+			for(HouseholdMembership mem : hm){
+				if (mem.getHouseholdMembershipGroups().getHouseholdDef().equals(hd)) {
+					return "false,The following members currently exist: " + p.getFamilyName() + " " + p.getGivenName() + " " + p.getMiddleName();
+				}
+			}
+			//populate new members
+			arrMembers.add(x);
+		}
+		
+		Household grp = new Household();
+		grp.setHouseholdDef(hd);
+		grp.setProvider(provider);
+		if(!StringUtils.isEmpty(hIdentifierProvided))
+			grp.setHouseholdIdentifier(hIdentifierProvided);
+		service.saveHouseholdGroup(grp);
+		//provide a default household identifier when not provided
+		if(StringUtils.isEmpty(grp.getHouseholdIdentifier())){
+			String strIdent = hd.getIdentifierPrefix() + grp.getId();
+			int checkDigit = HouseholdCheckDigit.CheckDigit(strIdent);
+			String hhPlusCheckDigit = strIdent + "-" + checkDigit;
+			grp.setHouseholdIdentifier(hhPlusCheckDigit);
+		}
+		
+		for (String arrmem : arrMembers) {
+			HouseholdMembership membership = new HouseholdMembership();
+			Person pn = Context.getPersonService().getPerson(Integer.parseInt(arrmem));
+			membership.setHouseholdMembershipMember(pn);
+			membership.setHouseholdMembershipGroups(grp);
+			membership.setProviderId(provider);
+			if(Integer.parseInt(arrmem) == Integer.parseInt(headOrIndex))
+				membership.setHouseholdMembershipHeadship(true);
+			//hgrp = grp;
+			
+			if(StringUtils.isEmpty(startDateProvided))
+				membership.setStartDate(new Date());
+            else
+                try {
+                    membership.setStartDate(dateFormatHelper(startDateProvided));
+                }
+                catch (ParseException e) {
+                }
+			service.saveHouseholdMembership(membership);
+        }
+		return "true, Household saved successfully with the Identifier: " + grp.getHouseholdIdentifier();
+	}
+	
 	public  String getHouseholdMems(String householdGrp){
 		
 		HouseholdService service = Context.getService(HouseholdService.class);
@@ -379,15 +448,7 @@ public class DWRHouseholdService {
 		return false;
 	}
 	
-	static DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy"); 
-	private static Date dateFormatHelper(String strvalue) throws ParseException {
-		if (strvalue == null || strvalue.length() == 0)
-			return new Date();
-		else
-			return dateFormat.parse(strvalue);
-	}
-	
-public String closeEntireHousehold(String householdId,String voidReason,String provID,String closedate )throws ParseException{
+	public String closeEntireHousehold(String householdId,String voidReason,String provID,String closedate )throws ParseException{
 		
 		HouseholdService service = Context.getService(HouseholdService.class);
 		Household householdToClose = new Household();
@@ -421,6 +482,15 @@ public String closeEntireHousehold(String householdId,String voidReason,String p
 		
 		return "Household closed";
 		
+	}
+	
+
+	static DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy"); 
+	private static Date dateFormatHelper(String strvalue) throws ParseException {
+		if (strvalue == null || strvalue.length() == 0)
+			return new Date();
+		else
+			return dateFormat.parse(strvalue);
 	}
 
 }

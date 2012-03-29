@@ -127,6 +127,17 @@ public class HibernateHouseholdDAO implements HouseholdDAO {
 		}
 		return hdef.get(0);
 	}
+	public HouseholdDefinition getHouseholdDefinitionByCode(String code){
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(HouseholdDefinition.class).add(
+		    Expression.eq("household_definition_code", code));
+		
+		@SuppressWarnings("unchecked")
+		List<HouseholdDefinition> hdef = criteria.list();
+		if (null == hdef || hdef.isEmpty()) {
+			return null;
+		}
+		return hdef.get(0);
+	}
 
 	/* (non-Javadoc)
 	 * @see org.openmrs.module.household.dao.HouseholdDAO#getAllHouseholdDefinitions()

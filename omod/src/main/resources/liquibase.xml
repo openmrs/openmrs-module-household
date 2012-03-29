@@ -1992,7 +1992,7 @@
 	<changeSet author="ningosi" id="provider_column_addition:03:07:2012:11:42">
 		<comment>Adding a column that will take a provider id</comment>
 			<addColumn tableName="household_membership">
-				<column name="providerId" type="varchar(50)" defaultValue="null">
+				<column name="providerId" type="varchar(38)" defaultValue="null">
 					<constraints nullable="true" />
 				</column>
 			</addColumn>

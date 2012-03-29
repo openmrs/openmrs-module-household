@@ -632,7 +632,7 @@
 						function selectProviderWhoCloseHousehold(userid,provider){
 							var proWhoCloseHouseholdId=null
 							if(provider !=null){
-								proWhoCloseHouseholdId=provider.systemId;
+								proWhoCloseHouseholdId=provider.personId;
 							}
 							$j("#userWhoCloseHousehold").val(proWhoCloseHouseholdId);
 							
@@ -650,7 +650,7 @@
 								<tr>
 									<td>Provider Id:</td>
 									<td><openmrs_tag:userField formFieldName="userProviders" roles="Trusted+External+Application,Lab+Technician,Community+Health+Worker+Nutritionist,Clinician,Nurse,Psychosocial+Support+Staff,Pharmacist,HCT+Nurse,Outreach+Worker,Community+Health+Extension+Worker,Clinical+Officer,Provider" callback="selectProviderWhoCloseHousehold" /></td>
-									<td><input type="hidden" id="userWhoCloseHousehold" size="10" />
+									<td><input type="hidden" id="userWhoCloseHousehold" size="10" /></td>
 								</tr>
 								<tr>
 									<td>Close Date</td>

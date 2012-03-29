@@ -97,6 +97,13 @@ public interface HouseholdService extends OpenmrsService{
 	public List<HouseholdDefinition> getAllHouseholdDefinitions();
 	
 	/**
+	 * Get HouseholdDefinition by code
+	 * 
+	 * @return HouseholdDefinition record by code
+	 */
+	public HouseholdDefinition getHouseholdDefinitionByCode(String code);
+	
+	/**
 	 * Get all parent HouseholdDefinition
 	 * 
 	 * @return all parent HouseholdDefinition

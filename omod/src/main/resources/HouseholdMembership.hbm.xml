@@ -49,7 +49,6 @@
 		<property name="voided" type="boolean" column="voided"
 			length="1" not-null="true" />
 			
-		<property name="providerId" type="java.lang.String"
-			column="providerId" not-null="false" length="50"/>	
+		<many-to-one name="providerId" class="org.openmrs.User" column="providerId" property-ref="uuid" />
 	</class>
 </hibernate-mapping>

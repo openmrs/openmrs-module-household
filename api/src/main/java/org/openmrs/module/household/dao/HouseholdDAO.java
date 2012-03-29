@@ -74,6 +74,14 @@ public interface HouseholdDAO {
 	public HouseholdDefinition getHouseholdDefinitionByUuid(String strUuid);
 	
 	/**
+	 * Get one HouseholdDefinition record based on the Code
+	 * 
+	 * @param code the HouseholdDefinition Code
+	 * @return HouseholdDefinition that match the code
+	 */
+	public HouseholdDefinition getHouseholdDefinitionByCode(String code);
+	
+	/**
 	 * Get all HouseholdDefinition records
 	 * 
 	 * @return all HouseholdDefinition record in the system
