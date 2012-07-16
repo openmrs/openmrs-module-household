@@ -161,8 +161,9 @@ function returnEncType(data){
 								</td>
 							</tr>
 							
-							<c:if test="${not empty householdsTypes}">
-								<tr>
+							<c:choose>
+								<c:when test="${not empty householdsTypes}">
+									<tr>
 									<th>Parent Program</th>
 									<td>
 										<select name="parent" id="parent" onchange="javascript:checkPrefix()">
@@ -174,7 +175,22 @@ function returnEncType(data){
 										
 									</td>
 								</tr>
-							</c:if>
+								</c:when>
+								<c:otherwise>
+									<tr style="display: none;">
+										<th>Parent Program</th>
+										<td>
+											<select name="parent" id="parent" onchange="javascript:checkPrefix()">
+												<option id="m" value="" selected="selected"></option>
+												<c:forEach var="hh" items="${definitionParents}" varStatus="ind">
+													<option id="${ind.index + 1 }" value="${hh.id}">${hh.householdDefinitionsCode}</option>
+												</c:forEach>
+											</select>
+											
+										</td>
+									</tr>
+								</c:otherwise>
+							</c:choose>
 							<div id="pref" style="display: none;">
 								<tr>
 									<th>Identifier Prefix</th>

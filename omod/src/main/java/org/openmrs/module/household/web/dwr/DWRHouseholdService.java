@@ -36,6 +36,7 @@ import org.openmrs.module.household.util.HouseholdCheckDigit;
 public class DWRHouseholdService {
 	private static final Log log = LogFactory.getLog(DWRHouseholdService.class);
 	
+	@SuppressWarnings("unused")
 	public String getSubLocations(String strLoc) {
 		HouseholdService service = Context.getService(HouseholdService.class);
 		Context.clearSession();
@@ -226,7 +227,6 @@ public class DWRHouseholdService {
 		String headOrIndex = arrInput[4];
 		String provider = arrInput[5];
 		
-		
 		HouseholdService service = Context.getService(HouseholdService.class);
 		HouseholdDefinition hd = service.getHouseholdDefinition(Integer.parseInt(hDefinition));
 		
@@ -354,8 +354,9 @@ public class DWRHouseholdService {
 		
 		
 	}
-	public String saveMembersToHseHold(String householdMemToAdd,String grpId,String provider,String startDate) throws ParseException{
+	public String saveMembersToHseHold(String householdMemToAdd,String grpId,String providerid,String startDate) throws ParseException{
 		
+		String providerID = providerid;
 		HouseholdService service = Context.getService(HouseholdService.class);
 			Household group=service.getHouseholdGroupByIdentifier(grpId);
 			
@@ -387,7 +388,7 @@ public class DWRHouseholdService {
 					membership.setHouseholdMembershipGroups(group);
 			
 					membership.setHouseholdMembershipHeadship(false);
-					membership.setProviderId(provider);
+					membership.setProviderId(providerID);
 					
 					if(StringUtils.isEmpty(startDate))
 						membership.setStartDate(new Date());
@@ -448,7 +449,7 @@ public class DWRHouseholdService {
 		return false;
 	}
 	
-	public String closeEntireHousehold(String householdId,String voidReason,String provID,String closedate )throws ParseException{
+	public String closeEntireHousehold(String householdId,String voidReason,String providerid,String closedate )throws ParseException{
 		
 		HouseholdService service = Context.getService(HouseholdService.class);
 		Household householdToClose = new Household();
@@ -468,10 +469,10 @@ public class DWRHouseholdService {
 			membership.setHouseholdMembershipMember(Context.getPatientService().getPatientByUuid(membership.getHouseholdMembershipMember().getUuid()));
 			membership.setVoided(true);
 			membership.setVoidReason(voidReason);
-			membership.setProviderId(provID);
+			membership.setProviderId(providerid);
 			membership.setEndDate(dateFormatHelper(closedate));
 			householdToClose.setEndDate(dateFormatHelper(closedate));
-			householdToClose.setProvider(provID);
+			householdToClose.setProvider(providerid);
 			
 			service.saveHouseholdMembership(membership);
 			service.saveHouseholdGroup(householdToClose);

@@ -501,7 +501,7 @@
 						function selectProvider(userid,provider){
 							var proId=null
 							if(provider !=null){
-								proId=provider.systemId;
+								proId=provider.personId;
 							}
 							$j("#systemId").val(proId);
 						}
@@ -756,6 +756,7 @@
 							</table>
 						
 						</div>
+						<b class="boxHeader">Household Members</b>
 						<div id="householdDetails" style="display:none" class="box">
 							<form method="post" name="formMemebrs">
 									<table border="0" cellpadding="0" cellspacing="0">

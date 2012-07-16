@@ -83,6 +83,7 @@
 		// obtain the index. This index forms the row index to execute householdMembersTable.fnDeleteRow(intPlace, null, false);
 		var strPersonId="";
 		var noSeleted = [];
+		var intPlace= -1;
         var oldPersonID= document.getElementById("hiddenSelectedMembers").value;
         if (oldPersonID.indexOf(",", 0) < 0)
         	noSeleted = [oldPersonID];
@@ -90,7 +91,7 @@
         	noSeleted = oldPersonID.split(",");
 		for(var x=0; x<(noSeleted.length); x++){
             if(noSeleted[x]==id){
-                var intPlace= x;
+                intPlace= x;
                 householdMembersTable.fnDeleteRow(intPlace);
                 if(noSeleted.length == 1)
                 	householdMembersTable.fnClearTable();
@@ -195,7 +196,6 @@
 									<input type="hidden" id="userHouseholdProvider" size="10" />
 								</td>
 							</tr>
-									
 						</table>
 						<br />
 						<input type="button" onclick="saveHousehold()" value="Create household"/>
