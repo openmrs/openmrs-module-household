@@ -4,7 +4,6 @@
 package org.openmrs.module.household.model;
 
 import java.util.Date;
-
 import org.openmrs.BaseOpenmrsData;
 
 
@@ -18,7 +17,8 @@ public class Household extends BaseOpenmrsData implements java.io.Serializable{
 	private Integer id;
 	private HouseholdDefinition householdDef;
 	private String householdIdentifier;
-	//private String uuid = null;
+    private String retireReason;
+	private String resumeReason;
 	private Date startDate;
 	private Date endDate;
 	private String provider;
@@ -78,17 +78,34 @@ public class Household extends BaseOpenmrsData implements java.io.Serializable{
 	public void setHouseholdIdentifier(String householdIdentifier) {
 		this.householdIdentifier = householdIdentifier;
 	}
+        /**
+	 * 
+	 * @return retireReason
+	 */
+	public String getRetireReason() {
+		return retireReason;
+	}
 	/**
-	 * @return the uuid
-	 *//*
-    public String getUuid() {
-        return uuid;
-    }
-    *//**
-	 * @param uuid the uuid to set
-	 *//*
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
-    }*/
-    
+	 * 
+	 * @param retireReason
+	 */
+	public void setRetireReason(String retireReason) {
+		this.retireReason = retireReason;
+	}
+	
+	/**
+	 * 
+	 * @return resumeReason
+	 */
+	public String getResumeReason() {
+		return resumeReason;
+	}
+	
+	/**
+	 * 
+	 * @param resumeReason
+	 */
+	public void setResumeReason(String resumeReason) {
+		this.resumeReason = resumeReason;
+	}
 }

@@ -4,12 +4,6 @@
 	redirect="/module/household/householdDashboard.form" />
 <%@ include file="/WEB-INF/template/header.jsp"%>
 
-<%-- <table width="100%">
-	<tr>
-		<td align="left"><b><spring:message code="household.title"/></b></td>
-		<td align="right"><%@ include file="localHeader.jsp" %></td>
-	</tr>
-</table> --%>
 <h3><spring:message code="household.title"/></h3>
 <%@ include file="localHeader.jsp"%>
 
@@ -73,11 +67,37 @@ function init(){
 		background-image:url(../images/ui-separator.png) repeat-y;
 	}
 </style>
+
 <script>
-	$j(function() {
-		$j( "#accordion" ).accordion();
-	});
-	function openClose(val){
+	var definition;
+	function menuNav(val, def){
+            if(val == 8){
+                $j('#divAll').html('<img src="${pageContext.request.contextPath}/moduleResources/household/images/loading.gif"/><br/>Loading...');
+                DWRHouseholdService.getHouseholds(def,returnHouseholdList);
+            }
+        }
+        function returnHouseholdList(data){
+            var dat = data.split("*");
+            var houses = dat[1];
+            var voided = dat[2];
+            var retired = dat[3];
+            var holds = dat[0].split("|");
+            var strRet = "<span style='float: right;'><table><tr><td>Closed/Voided Households: </td><td>"+voided+
+                "</td></tr><tr><td>Retired Households: </td><td>"+retired+
+                "</td></tr></table></span><h2>Total Households: "+ houses +
+                "</h2><br/><br/><div class='horizontalLine'></div><br/> <table><tr>";
+            for(i=0; i<holds.length; i++){
+                var hold = holds[i].split(",");
+                if((i%5 == 0) && (i != 0)){
+                    strRet += "<td><a href='#' onclick='forwardMem("+hold[1]+")'>" + hold[0] + "</a><td></tr><tr>";
+                }else{
+                    strRet += "<td><a href='#' onclick='forwardMem("+hold[1]+")'>" + hold[0] + "</a><td>";
+                }
+            }
+            strRet += "</tr></table>";
+            $j('#divAll').html(strRet);
+        }
+        function openClose(val){
 		var i=0;
 		for(i=0; i<10; i++){
 			if(i != val){
@@ -112,7 +132,39 @@ function init(){
 			}
 		}
 	}
-	
+	function openCloseMain(val){
+            if(val == 1){
+                $j.get("ports/searchHousehold.form",
+                                function(data){
+                                        $j('#divAll').html(data);
+                                }
+                        );
+            }
+	}
+        function forwardMem(stdin){
+		$j('#divAll').html('<img src="${pageContext.request.contextPath}/moduleResources/household/images/loading.gif"/><br/>Loading...');
+                $j.get("ports/householdActivity.form?householdID="+stdin+"&program="+definition,
+                                function(data){
+                                        $j('#divAll').html(data);
+                                }
+                        );
+	}
+        /**************Maps the buttons for links that involve editting of the household******************/
+        function funEditActivity(passed, val){
+            $j.get("ports/editHousehold.form?householdID="+ val + "&opt=" + passed,
+                    function(data){
+                            $j('#editActivity').html(data);
+                    }
+            );
+            $j("#editActivity").show();
+            $j("#lnkfun").show();
+            
+        }
+        function funHideEditActivity(){
+            $j("#editActivity").hide();
+            $j("#lnkfun").hide();
+        }
+    /*******************************/
 	function fnChangedParentDefinition(){
 		var val = document.getElementById("parent").value;
 		DWRHouseholdService.getParentHouseholdDefinitions(val, fnRetChildDefinition);
@@ -131,62 +183,51 @@ function init(){
 	function forwardPass(stdin){
 		$j.get("ports/householdDefChild.form?child=" + stdin,
 			function(data){
+                            definition = stdin;
 				$j("#divchild").html(data);
 			}
 		);
 	}
-	
+	/*************************************/
+        function unRetirePerson(){
+            
+        }
 </script>
 
 
-<div id="wrapper">
-	<!-- <h3 class="tab" title="first"><div class="tabtxt"><a href="#">Program</a></div><div class="arrow"></div></h3> -->
-	<!-- <div class="tab"><h3 class="tabtxt" title="second"><a href="#">Patient</a></h3><div class="arrow"></div></div> -->
-	<!-- <div class="boxholder"> -->
-		<!-- <div class="boxi"> -->
-		<!-- <h4>Household Dashboard</h4> -->
-			<div style="padding: 3px;">
-				<div id="divchild">
-					<div class="boxHeader">Choose Program Definition:</div>
-					<div class="box" >
-					<c:if test="${par == '1'}">
-						Choose Program: <select name="parent" id="parent" onchange="javascript:fnChangedParentDefinition()">
-											<option id="m" value="" selected="selected"></option>
-											<c:forEach var="hh" items="${householdDefinition}" varStatus="ind">
-												<option id="${ind.index + 1 }" value="${hh.id}" >${hh.householdDefinitionsCode}</option>
-											</c:forEach>
-										</select>
-						<table id="houseDefs"  class="lineTable">
-							<thead>    
-							   	<tr>
-						           <th scope="col" rowspan="2">&nbsp;</th>
-						           <th scope="col" colspan="4">Definitions</th>
-						       </tr>
-						       <tr>
-						           <th scope="col">Code</th>
-						           <th scope="col">Definition</th>
-						           <th scope="col">Description</th>
-						       </tr>        
-						   </thead>
-						   <tbody id="tblPush">
-						   
-						    </tbody>
-						</table>
-						<br />
-					</c:if>
-					
-					</div>
-				</div>
-			</div>
-			
-		
-		<!-- </div>
-		<div class="boxi">
-			<p><strong>The Patient Dashboard</strong><br />Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Ut molestie nunc eu turpis. Donec facilisis enim sed dui. Sed nunc. Cras eu arcu. Praesent vel augue vel dolor ultricies convallis. Nam consectetuer risus eu urna. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nam suscipit. Duis quis lacus sed tellus auctor blandit. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Proin eget massa in ante vehicula pharetra. Ut massa pede, ornare id, ultrices eget, porta et, metus.</p>
-		</div> -->
-	<!-- </div> -->
+<div id="wrapper" class="householdbg">
+    <div style="padding: 3px;">
+            <div id="divchild">
+                    <!--div class="boxHeader">Choose Program Definition:</div-->
+                    <div>
+                    <c:if test="${par == '1'}">
+                            Department: <select name="parent" id="parent" onchange="javascript:fnChangedParentDefinition()">
+                                                                    <option id="m" value="" selected="selected"></option>
+                                                                    <c:forEach var="hh" items="${definitionParents}" varStatus="ind">
+                                                                            <option id="${ind.index + 1 }" value="${hh.id}" >${hh.parentCode} - ${hh.parentFullname}</option>
+                                                                    </c:forEach>
+                                                            </select>
+                            <br /><br />
+                            <table id="houseDefs"  class="lineTable" cellpadding="3">
+                                <thead>    
+                                   <tr>
+                                       <th scope="col" rowspan="2">&nbsp;</th>
+                                       <th scope="col" colspan="4">Programs</th>
+                                   </tr>
+                                   <tr>
+                                       <th scope="col">Code</th>
+                                       <th scope="col">Program</th>
+                                       <th scope="col">Description</th>
+                                   </tr>        
+                               </thead>
+                               <tbody id="tblPush">
+
+                                </tbody>
+                            </table>
+                            <br />
+                    </c:if>
+
+                    </div>
+            </div>
+    </div>
 </div>
-<!-- <script type="text/javascript">
-	Element.cleanWhitespace('content');
-	init();
-</script> -->

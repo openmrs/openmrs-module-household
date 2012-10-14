@@ -32,6 +32,7 @@ import org.openmrs.module.household.model.Household;
 import org.openmrs.module.household.model.HouseholdAttribValue;
 import org.openmrs.module.household.model.HouseholdAttribute;
 import org.openmrs.module.household.model.HouseholdDefinition;
+import org.openmrs.module.household.model.HouseholdDefinitionParent;
 import org.openmrs.module.household.model.HouseholdEncounter;
 import org.openmrs.module.household.model.HouseholdEncounterType;
 import org.openmrs.module.household.model.HouseholdLocation;
@@ -117,19 +118,11 @@ public class HouseholdServiceImpl extends BaseOpenmrsService implements Househol
 	}
 	
 	/* (non-Javadoc)
-	 * @see org.openmrs.module.household.service.HouseholdService#getHouseholdDefinitionParents()
-	 */
-	
-	public List<HouseholdDefinition> getHouseholdDefinitionParents() {
-		return householdDAO.getHouseholdDefinitionParents();
-	}
-	
-	/* (non-Javadoc)
 	 * @see org.openmrs.module.household.service.HouseholdService#getHouseholdDefinitionChildren()
 	 */
 	
-	public List<HouseholdDefinition> getHouseholdDefinitionChildren(HouseholdDefinition hd) {
-		return householdDAO.getHouseholdDefinitionChildren(hd);
+	public List<HouseholdDefinition> getHouseholdDefinitionParentChildren(HouseholdDefinitionParent hdp) {
+		return householdDAO.getHouseholdDefinitionParentChildren(hdp);
 	}
 	
 	public boolean purgeHouseholdDefinition(HouseholdDefinition hd){
@@ -191,10 +184,10 @@ public class HouseholdServiceImpl extends BaseOpenmrsService implements Househol
 	}
 	
 	/* (non-Javadoc)
-	 * @see org.openmrs.module.household.service.HouseholdService#getHouseholdMembershipByUuid(java.lang.String)
+	 * @see org.openmrs.module.household.service.HouseholdService#getHouseholdMembershipByHousehold(Household)
 	 */
-	public List<HouseholdMembership> getHouseholdMembershipByUuid(String householdUuid){
-		return householdDAO.getHouseholdMembershipByUuid(householdUuid);
+	public List<HouseholdMembership> getHouseholdMembershipByHousehold(Household household){
+		return householdDAO.getHouseholdMembershipByHousehold(household);
 	}
 
 	/* (non-Javadoc)
@@ -1386,6 +1379,38 @@ public class HouseholdServiceImpl extends BaseOpenmrsService implements Househol
 		return getObservations(hh, null, questions, null, null, null, null, null, null, null, false);
 	}
 
-	
+	public boolean saveHouseholdDefinitionParent(HouseholdDefinitionParent householdDefinitionParent){
+            return householdDAO.saveHouseholdDefinitionParent(householdDefinitionParent);
+        }
+	public HouseholdDefinitionParent getHouseholdDefinitionParent(int id){
+          return householdDAO.getHouseholdDefinitionParent(id);  
+        }
+	public HouseholdDefinitionParent getHouseholdDefinitionParent(String uuid){
+            return householdDAO.getHouseholdDefinitionParent(uuid);
+        }
+	public HouseholdDefinitionParent getHouseholdDefinitionParent(HouseholdDefinitionParent householdDefinitionParent){
+            return householdDAO.getHouseholdDefinitionParent(householdDefinitionParent);
+        }
+	public boolean purgeHouseholdDefinitionParent(HouseholdDefinitionParent householdDefinitionParent, String voidReason){
+            return householdDAO.purgeHouseholdDefinitionParent(householdDefinitionParent, voidReason);
+        }
+	public List<HouseholdDefinitionParent> getHouseholdDefinitionParent(boolean voidedIncluded){
+            return householdDAO.getHouseholdDefinitionParent(voidedIncluded);
+        }
+
+        //Household Membership properties
+        public List<HouseholdMembership> getHouseholdQuasiMembersByHousehold(Household household){
+            return householdDAO.getHouseholdQuasiMembersByHousehold(household);
+        }
+        public List<HouseholdMembership> getHouseholdRetiredMembersByHousehold(Household household){
+            return householdDAO.getHouseholdRetiredMembersByHousehold(household);
+        }
+        public List<HouseholdMembership> getHouseholdMembersVoidedByHousehold(Household household){
+            return householdDAO.getHouseholdMembersVoidedByHousehold(household);
+        }
+        
+        public List<Household> getHouseholdsByDefinition(HouseholdDefinition householdDefinition){
+            return householdDAO.getHouseholdsByDefinition(householdDefinition);
+        }
 }
 

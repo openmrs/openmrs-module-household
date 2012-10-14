@@ -50,6 +50,15 @@
 			length="1" not-null="true" />
 			
 		<property name="providerId" type="java.lang.String"
-			column="providerId" not-null="false" length="50"/>	
+			column="providerId" not-null="false" length="50"/>
+                	
+                <property name="retireReason" type="java.lang.String"
+			column="retire_reason" length="255" />
+                
+                <property name="resumeReason" type="java.lang.String"
+			column="resume_reason" length="255" />
+                
+                <property name="quasi" type="boolean" column="quasi"
+			length="1" />
 	</class>
 </hibernate-mapping>

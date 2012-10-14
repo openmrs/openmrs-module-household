@@ -104,15 +104,18 @@
 				<include method="saveMembersToHseHold" />
 				<include method="addEditHouseholdDefinition" />
 				<include method="addEditHouseholdEncounterType" />
-				<include method="householdsSearchStrings" />
 				<include method="closeEntireHousehold" />
 				<include method="createHousehold"/>
+                                <include method="addEditHouseholdDepartment"/>
+                                <include method="retireMembers"/>
+                                <include method="retireHousehold"/>
 			</create>
-			<convert match="org.openmrs.module.household.model.HouseholdDefinition" converter="bean" />
+			<convert match="org.openmrs.module.household.model.HouseholdDefinitionParent" converter="bean" />
+                        <convert match="org.openmrs.module.household.model.HouseholdDefinition" converter="bean" />
 			<convert match="org.openmrs.module.household.model.HouseholdMembership" converter="bean" />
 			<convert match="org.openmrs.module.household.model.Household" converter="bean" />
 			<convert match="org.openmrs.module.household.service.HouseholdService" converter="bean" />
-			<convert match="org.openmrs.PersonName" converter="bean" />
+                        
 		</allow>
 
 		<signatures>
@@ -128,13 +131,15 @@
 			DWRHouseholdService.getParentHouseholdDefinitions(String intPassed);
 			DWRHouseholdService.getHouseholdsByPersonID(String personID);
 			DWRHouseholdService.getHouseholdMems(String householdGrp);
-			DWRHouseholdService.voidMembers(Integer voidId,String voidReason);
-			DWRHouseholdService.saveMembersToHseHold(String householdMem,String grpId);
+			DWRHouseholdService.voidMembers(String voidId,String voidReason);
+			DWRHouseholdService.saveMembersToHseHold(String []arr);
 			DWRHouseholdService.addEditHouseholdDefinition(String [] passedArr);
 			DWRHouseholdService.addEditHouseholdEncounterType(String [] passedArr);
-			DWRHouseholdService.householdsSearchStrings();
 			DWRHouseholdService.closeEntireHousehold(String householdId,String voidReason,String provID,String closedate);
 			DWRHouseholdService.createHousehold(String [] arrInput);
+                        DWRHouseholdService.addEditHouseholdDepartment(String [] passedArr);
+                        DWRHouseholdService.retireMembers(String retireId, String dateRetired, String retireReason);
+                        DWRHouseholdService.retireHousehold(String householdID, String dateRetired, String retireReason);
 			]]>
 		</signatures>
 	</dwr>

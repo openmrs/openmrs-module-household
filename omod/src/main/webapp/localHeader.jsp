@@ -28,18 +28,19 @@
 				Encounters Types
 			</a>
 		</li>
-	</openmrs:hasPrivilege> --%>
-	<openmrs:hasPrivilege privilege="Manage Household">
+	</openmrs:hasPrivilege> 
+		--%>
+        <openmrs:hasPrivilege privilege="Manage Household">
 		<li <c:if test='<%= request.getRequestURI().contains("householdDashboard") %>'>class="active"</c:if>>
 			<a href="${pageContext.request.contextPath}/module/household/householdDashboard.form">
-				Household Dashboard
+				Dashboard
 			</a>
 		</li>
-	</openmrs:hasPrivilege>	
+	</openmrs:hasPrivilege>
 	<openmrs:hasPrivilege privilege="Manage Household">
 		<li <c:if test='<%= request.getRequestURI().contains("householdSettingsPanel") %>'>class="active"</c:if>>
 			<a href="${pageContext.request.contextPath}/module/household/householdSettingsPanel.form">
-				Household Settings
+				Configuration
 			</a>
 		</li>
 	</openmrs:hasPrivilege>	

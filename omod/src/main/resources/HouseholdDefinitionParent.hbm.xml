@@ -2,24 +2,27 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
 
-	<class name="org.openmrs.module.household.model.Household" table="household">
+	<class name="org.openmrs.module.household.model.HouseholdDefinitionParent" table="householddef_parent">
 
         <cache usage="read-write"/>
 
-		<id name="id" type="java.lang.Integer" unsaved-value="0" column="household_group_id">
+		<id name="id" type="java.lang.Integer" unsaved-value="0" column="parent_id">
 			<generator class="org.openmrs.api.db.hibernate.NativeIfNotAssignedIdentityGenerator" />
 		</id>
-		
-		<discriminator column="household_group_id" insert="false"/>
-		
-		<many-to-one name="householdDef" class="org.openmrs.module.household.model.HouseholdDefinition"
-			property-ref="uuid" column="household_def_uuid"/>
-		
+
+		<discriminator column="parent_id" insert="false"/>
+
+		<property name="parentCode" type="java.lang.String"
+			column="parent_code" not-null="true" length="45"/>
+
+		<property name="parentFullname" type="java.lang.String"
+			column="parent_fullname" not-null="true" length="255"/>
+
+		<property name="parentDescription" type="java.lang.String"
+			column="parent_description" not-null="true" length="255"/>
+
 		<property name="uuid" type="string" length="38" not-null="true" unique="true"/>
-			
-		<property name="householdIdentifier" type="java.lang.String"
-			column="household_identifier" length="50" />
-			
+
 		<many-to-one name="creator" class="org.openmrs.User" />
 
 		<property name="dateCreated" type="java.util.Date"
@@ -40,16 +43,6 @@
 
 		<property name="voided" type="boolean" column="voided"
 			length="1" not-null="true" />
-		<property name="startDate" type="java.util.Date" column="start_date" length="19"/>
-			
-		<property name="endDate" type="java.util.Date" 	column="end_Date" length="19"/>	
-		<property name="provider" type="java.lang.String" column="provider" length="50" />
-                
-                <property name="retireReason" type="java.lang.String"
-			column="retire_reason" length="255" />
-                
-                <property name="resumeReason" type="java.lang.String"
-			column="resume_reason" length="255" />	
-	</class>
 
+	</class>
 </hibernate-mapping>

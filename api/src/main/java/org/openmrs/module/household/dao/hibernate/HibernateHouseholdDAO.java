@@ -3,6 +3,7 @@
  */
 package org.openmrs.module.household.dao.hibernate;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -24,6 +25,7 @@ import org.openmrs.Form;
 import org.openmrs.Person;
 import org.openmrs.User;
 import org.openmrs.api.APIException;
+import org.openmrs.api.context.Context;
 import org.openmrs.api.db.DAOException;
 import org.openmrs.module.household.dao.HouseholdDAO;
 import org.openmrs.module.household.exception.HouseholdModuleException;
@@ -31,6 +33,7 @@ import org.openmrs.module.household.model.Household;
 import org.openmrs.module.household.model.HouseholdAttribValue;
 import org.openmrs.module.household.model.HouseholdAttribute;
 import org.openmrs.module.household.model.HouseholdDefinition;
+import org.openmrs.module.household.model.HouseholdDefinitionParent;
 import org.openmrs.module.household.model.HouseholdEncounter;
 import org.openmrs.module.household.model.HouseholdEncounterType;
 import org.openmrs.module.household.model.HouseholdLocation;
@@ -150,28 +153,6 @@ public class HibernateHouseholdDAO implements HouseholdDAO {
 		return criteria.list();
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.openmrs.module.household.dao.HouseholdDAO#getHouseholdDefinitionParents()
-	 */
-	
-	@SuppressWarnings("unchecked")
-	public List<HouseholdDefinition> getHouseholdDefinitionParents() {
-		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(HouseholdDefinition.class).add(
-			    Expression.isNull("parent"));
-		return criteria.list();
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.openmrs.module.household.dao.HouseholdDAO#getHouseholdDefinitionChildren()
-	 */
-	
-	@SuppressWarnings("unchecked")
-	public List<HouseholdDefinition> getHouseholdDefinitionChildren(HouseholdDefinition hd) {
-		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(HouseholdDefinition.class).add(
-			    Expression.eq("parent", hd));
-		return criteria.list();
-	}
-	
 	public boolean purgeHouseholdDefinition(HouseholdDefinition hd){
 		try {
 			sessionFactory.getCurrentSession().delete(hd);
@@ -260,14 +241,14 @@ public class HibernateHouseholdDAO implements HouseholdDAO {
 				HouseholdMembership.class, id);
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.openmrs.module.household.dao.HouseholdDAO#getHouseholdMembershipByUuid(java.lang.String)
+        /* (non-Javadoc)
+	 * Returns all the householdmemberships whether voided, retired, or active
+         * Helpful for History
 	 */
-	
-	@SuppressWarnings("unchecked")
-	public List<HouseholdMembership> getHouseholdMembershipByUuid(String householdUuid) {
+	public List<HouseholdMembership> getHouseholdMembershipByHousehold(Household household) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(HouseholdMembership.class).add(
-			    Expression.eq("householdMembershipGroups", householdUuid));
+			    Expression.eq("householdMembershipGroups", household))
+                        .addOrder(Order.desc("id"));
 		return criteria.list();
 	}
 
@@ -276,10 +257,10 @@ public class HibernateHouseholdDAO implements HouseholdDAO {
 	 * @see org.openmrs.module.household.dao.HouseholdDAO#getAllHouseholdMemberships()
 	 */
 	
-	@SuppressWarnings("unchecked")
 	public List<HouseholdMembership> getAllHouseholdMemberships() {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(HouseholdMembership.class)
-		.add(Expression.eq("voided", false));
+		.add(Expression.eq("voided", false))
+                .add(Expression.eq("endDate", null));
 		
 		return criteria.list();
 	}
@@ -287,14 +268,18 @@ public class HibernateHouseholdDAO implements HouseholdDAO {
 	/* (non-Javadoc)
 	 * @see org.openmrs.module.household.dao.HouseholdDAO#getAllHouseholdMembershipsByID(int id)
 	 */
-	@SuppressWarnings("unchecked")
 	public List<HouseholdMembership> getAllHouseholdMembershipsByGroup(Household grp) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(HouseholdMembership.class)
-					
-				.add(Expression.eq("householdMembershipGroups",grp))
-				.add(Expression.eq("voided", false));
-		
-				return criteria.list();
+                    .add(Expression.eq("householdMembershipGroups",grp))
+                    .add(Expression.eq("voided", false));
+                List<HouseholdMembership> toret = criteria.list();
+                List<HouseholdMembership> tor = new ArrayList<HouseholdMembership>();
+            for (HouseholdMembership householdMembership : toret) {
+                if((householdMembership.getRetireReason() == null) && (householdMembership.getQuasi() == false)){
+                    tor.add(householdMembership);
+                }
+            }
+            return tor;
 	}
 	
 	/* (non-Javadoc)
@@ -1046,55 +1031,105 @@ public class HibernateHouseholdDAO implements HouseholdDAO {
 	public void deleteHouseholdEncounterType(HouseholdEncounterType encounterType) throws DAOException {
 		sessionFactory.getCurrentSession().delete(encounterType);
 	}
-
-
-
-	/*
-	
-
-
-	
-
-
-
-	
-	public HouseholdEncounter getHouseholdEncounter(Integer id) {
-		return (HouseholdEncounter) sessionFactory.getCurrentSession().get(
-				HouseholdEncounter.class, id);
-	}
-
-
-	@SuppressWarnings("unchecked")
-	
-	public List<HouseholdEncounter> getAllHouseholdEncounter() {
-		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(
-				HouseholdEncounter.class);
+        
+        public boolean saveHouseholdDefinitionParent(HouseholdDefinitionParent householdDefinitionParent){
+            try {
+			sessionFactory.getCurrentSession().saveOrUpdate(householdDefinitionParent);
+			return true;
+            }
+            catch (Exception e) {
+                    return false;
+            }
+        }
+	public HouseholdDefinitionParent getHouseholdDefinitionParent(int id){
+            return (HouseholdDefinitionParent) sessionFactory.getCurrentSession().get(HouseholdDefinitionParent.class, id);
+        }
+	public HouseholdDefinitionParent getHouseholdDefinitionParent(String uuid){
+            Criteria criteria = sessionFactory.getCurrentSession().createCriteria(HouseholdDefinitionParent.class).add(
+		    Expression.eq("uuid", uuid));
+            @SuppressWarnings("unchecked")
+            List<HouseholdDefinitionParent> hp = criteria.list();
+            if (null == hp || hp.isEmpty()) {
+                    return null;
+            }
+            return hp.get(0);
+        }
+	public HouseholdDefinitionParent getHouseholdDefinitionParent(HouseholdDefinitionParent householdDefinitionParent){
+            if (householdDefinitionParent.getId() != null){
+	    	return (HouseholdDefinitionParent) sessionFactory.getCurrentSession().get(HouseholdDefinitionParent.class, householdDefinitionParent.getId());
+	    }else if(householdDefinitionParent.getUuid() != null){
+	    	Criteria criteria = sessionFactory.getCurrentSession().createCriteria(HouseholdDefinitionParent.class).add(
+			    Expression.eq("uuid", householdDefinitionParent.getUuid()));
+			@SuppressWarnings("unchecked")
+			List<HouseholdDefinitionParent> hp = criteria.list();
+			if (null == hp || hp.isEmpty()) {
+				return null;
+			}
+			return hp.get(0);
+	    }else
+	    	return null;
+        }
+	public boolean purgeHouseholdDefinitionParent(HouseholdDefinitionParent householdDefinitionParent, String voidReason){
+            householdDefinitionParent.setVoided(Boolean.TRUE);
+            householdDefinitionParent.setVoidedBy(Context.getUserContext().getAuthenticatedUser());
+            householdDefinitionParent.setVoidReason(voidReason);
+            try {
+                    sessionFactory.getCurrentSession().saveOrUpdate(householdDefinitionParent);
+                    return true;
+            }
+            catch (Exception e) {
+                    return false;
+            }
+        }
+	public List<HouseholdDefinitionParent> getHouseholdDefinitionParent(boolean voidedIncluded){
+            Criteria criteria;
+            if(!voidedIncluded){
+                criteria = sessionFactory.getCurrentSession().createCriteria(HouseholdDefinitionParent.class).add(
+                    Expression.eq("voided", voidedIncluded));
+            }else
+                criteria = sessionFactory.getCurrentSession().createCriteria(HouseholdDefinitionParent.class);
+            @SuppressWarnings("unchecked")
+            List<HouseholdDefinitionParent> hdp = criteria.list();
+            return hdp;
+        }
+        public List<HouseholdDefinition> getHouseholdDefinitionParentChildren(HouseholdDefinitionParent hdp) {
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(HouseholdDefinition.class).add(
+			    Expression.eq("parent", hdp));
 		return criteria.list();
 	}
-
-
-	
-	public HouseholdObs saveHouseholdObs(HouseholdObs householdObs) {
-		sessionFactory.getCurrentSession().saveOrUpdate(householdObs);
-		return householdObs;
-	}
-
-
-	
-	public HouseholdObs getHouseholdObs(Integer id) {
-		return (HouseholdObs) sessionFactory.getCurrentSession().get(
-				HouseholdObs.class, id);
-	}
-
-
-	@SuppressWarnings("unchecked")
-	
-	public List<HouseholdObs> getAllHouseholdObs() {
-		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(
-				HouseholdObs.class);
-		return criteria.list();
-	}*/
-
-
-	
+        
+        //HouseholdMembership
+        public List<HouseholdMembership> getHouseholdQuasiMembersByHousehold(Household household){
+            Criteria criteria = sessionFactory.getCurrentSession().createCriteria(HouseholdMembership.class).add(
+                        Expression.eq("householdMembershipGroups", household))
+                    .add(Expression.eq("quasi", true))
+                    .add(Expression.eq("voided", false));
+            return criteria.list();
+        }
+        public List<HouseholdMembership> getHouseholdRetiredMembersByHousehold(Household household){
+            Criteria criteria = sessionFactory.getCurrentSession().createCriteria(HouseholdMembership.class).add(
+                        Expression.eq("householdMembershipGroups", household));
+            
+            List<HouseholdMembership> toret = criteria.list();
+            List<HouseholdMembership> tor = new ArrayList<HouseholdMembership>();
+            
+            for (HouseholdMembership householdMembership : toret) {
+                if(householdMembership.getRetireReason() != null){
+                    tor.add(householdMembership);
+                }
+            }
+            return tor;
+        }
+        public List<HouseholdMembership> getHouseholdMembersVoidedByHousehold(Household household){
+            Criteria criteria = sessionFactory.getCurrentSession().createCriteria(HouseholdMembership.class)
+                    .add(Expression.eq("householdMembershipGroups", household))
+                    .add(Expression.eq("voided", true));
+            return criteria.list();
+        }
+        
+        public List<Household> getHouseholdsByDefinition(HouseholdDefinition householdDefinition){
+            Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Household.class)
+                    .add(Expression.eq("householdDef", householdDefinition));
+            return criteria.list();
+        }
 }

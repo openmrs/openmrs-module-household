@@ -4,7 +4,7 @@
 
 <%@ include file="/WEB-INF/template/header.jsp" %>
 
-<openmrs:htmlInclude file="/dwr/util.js"/>
+<!--openmrs:htmlInclude file="/dwr/util.js"/-->
 <openmrs:htmlInclude file="/dwr/interface/DWRHouseholdService.js"/>
 <script type="text/javascript" src="${pageContext.request.contextPath}/moduleResources/household/scripts/jquery-1.5.2.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/moduleResources/household/scripts/style-table.js"></script>
@@ -33,6 +33,38 @@ function checkPrefix(){
 		$("#pref").css("display","inline");
 		
 }
+
+function passHDObjectDepartment(){
+	var dpar = document.getElementById("hdAddEditDepartment").value;
+	var dpar1 = document.getElementById("hdidDepartment").value;
+	var dpar2 = document.getElementById("departmentCode").value;
+	var dpar3 = document.getElementById("codeInFullDepartment").value;
+	var dpar4 = document.getElementById("departmentDescription").value;
+	if((dpar == "Add") || (dpar == ""))
+		var parArrHDDepartment = ["1", dpar1, dpar2, dpar3, dpar4];
+	else if(dpar == "Edit")
+		var parArrHDDepartment = ["2", dpar1, dpar2, dpar3, dpar4];
+	else
+		var parArrHDDepartment = ["3", dpar1, dpar2, dpar3, dpar4];
+        DWRHouseholdService.addEditHouseholdDepartment(parArrHDDepartment,returnDepartment);
+}
+function returnDepartment(data){
+	var checkDelete = document.getElementById("hdAddEditDepartment").value;
+	if (checkDelete != "Delete"){
+		$j('#addHouseholdDepartment').slideToggle('fast');
+	}
+        $j.get("ports/householdSettingsDep.form",
+                        function(dat){
+                                $j('#idDepartment').html(dat);
+                        }
+                );
+	document.getElementById("hdAddEditDepartment").value = "Add";
+	document.getElementById("hdidDepartment").value = "";
+	document.getElementById("departmentCode").value = "";
+	document.getElementById("codeInFullDepartment").value = "";
+	document.getElementById("departmentDescription").value = "";
+}
+
 function passHDObject(){
 	var par = document.getElementById("hdAddEdit").value;
 	var par1 = document.getElementById("hdid").value;
@@ -55,7 +87,6 @@ function returnHD(data){
 	var checkDelete = document.getElementById("hdAddEdit").value;
 	if (checkDelete != "Delete"){
 		$j('#addHouseholdProgram').slideToggle('fast');
-		event.preventDefault();
 	}
 		$j.get("ports/householdSettingsDef.form",
 				function(dat){
@@ -108,30 +139,145 @@ function returnEncType(data){
 
 <h3><spring:message code="household.title"/></h3>
 <%@ include file="localHeader.jsp" %>
-<br />
-<b class="boxHeader">Household Settings</b>
-<div class="box">
+<!--b class="boxHeader">Household Settings</b-->
+<div> <!-- class="box"-->
 	<div class="tabscontainer">
 	     <div class="tabs">
-	         <div class="tab selected first" id="tab_menu_1">
-	             <div class="link">Program/Groups</div>
+	         <div class="tab selected first" id="tab_menu_0">
+	             <div class="link">Departments</div>
+	             <div class="arrow"></div>
+	         </div>
+			 <div class="tab" id="tab_menu_1">
+	             <div class="link">Program</div>
 	             <div class="arrow"></div>
 	         </div>
 	         <div class="tab" id="tab_menu_2">
 	             <div class="link">Encounter Types</div>
 	             <div class="arrow"></div>
 	         </div>
-	          <div class="tab" id="tab_menu_3">
+			 <div class="tab" id="tab_menu_3">
+	             <div class="link">Encounter</div>
+	             <div class="arrow"></div>
+	         </div>
+	          <div class="tab" id="tab_menu_4">
 	             <div class="link">General Properties</div>
 	             <div class="arrow"></div>
 	         </div>
-	         <div class="tab last" id="tab_menu_4">
+	         <div class="tab last" id="tab_menu_5">
 	             <div class="link">Custom Privileges</div>
 	             <div class="arrow"></div>
 	         </div>
 	    </div>
 		<div class="curvedContainer">
-			<div class="tabcontent" id="tab_content_1" style="display:block">
+			<div class="tabcontent" id="tab_content_0" style="display:block">
+				<script type="text/javascript">
+					$j(document).ready(function() {
+						$j('.toggleAddHouseholdDepartment').click(function(event) {
+							$j('#addHouseholdDepartment').slideToggle('fast');
+							event.preventDefault();
+						});
+					});
+				</script>
+				<a class="toggleAddHouseholdDepartment" href="#">Add Household Department</a><br />
+                                <div id="addHouseholdDepartment" style="display: none" class="householdtoggle">
+					<form method="post">
+						<table>
+							<tr>
+								<th>Department Code</th>
+								<td>
+									<input type="hidden" name="hdidDepartment" id="hdidDepartment"/>
+									<input type="hidden" name="hdAddEditDepartment" id="hdAddEditDepartment"/>
+									<input type="text" name="departmentCode" id="departmentCode"/>
+									<span class="required">*</span>
+								</td>
+							</tr>
+							<tr>
+								<th>Code in Full</th>
+								<td>
+									<input type="text" name="codeInFullDepartment" id="codeInFullDepartment"/>
+									<span class="required">*</span>
+								</td>
+							</tr>
+							<tr>
+								<th>Description</th>
+								<td><textarea name="departmentDescription" id="departmentDescription" rows="3" cols="72"></textarea></td>
+							</tr>
+							<tr>
+								<th></th>
+								<td>
+									<button id="btnDepAdd" onclick="javascript:passHDObjectDepartment()" class="minimal"><spring:message code="general.save"/></button>
+									<button class="minimal toggleAddHouseholdDepartment"><spring:message code="general.cancel"/></button>
+								</td>
+							</tr>
+						</table>
+					</form>
+				</div>
+				<br />
+				
+				<div id="idDepartment">
+					<table id="houseDefsDepartment"  class="lineTable">
+						<thead>    
+					    	<tr>
+					            <th scope="col" rowspan="2">&nbsp;</th>
+					            <th scope="col" colspan="6">Registered Departments</th>
+					        </tr>
+					        <tr>
+					            <th scope="col">Department Code</th>
+					            <th scope="col">Department Fullname</th>
+					            <th scope="col">Description</th>
+					            <th scope="col"><spring:message code="general.createdBy"/></th>
+					            <th scope="col">Action</th>
+					        </tr>        
+					    </thead>
+					    <tbody id="bdytblDepartment">
+					    	<c:forEach var="household" items="${householdDepartment}" varStatus="ind">
+								<form method="POST" name="formDep${household.id}">
+									<tr valign="top">
+										<th>${ind.index + 1}</th>
+										<td class="highlight">${household.parentCode}</td>
+										<td class="highlight">${household.parentFullname}</td>
+										<td class="highlight">${household.parentDescription}</td>
+										<td class="highlight">
+											<openmrs:format user="${household.creator}"/><br />
+											<openmrs:formatDate date="${household.dateCreated}"/>
+										</td>
+										<td class="highlight">
+											<input type="hidden" name="houseid" id="${household.id}" value="${household.id}" />
+											<a href="#" onclick="javascript:onClickEditDepartment('${household.id}','${household.parentCode}','${household.parentFullname}','${household.parentDescription}')">
+												<img src="${pageContext.request.contextPath}/moduleResources/household/images/edit.gif"/></a>
+											<a href="#" onclick="javascript:onClickDeleteDepartment('${household.id}','${household.parentCode}')">
+												<img src="${pageContext.request.contextPath}/moduleResources/household/images/trash.gif"/></a>
+										</td>
+									</tr>
+								</form>
+							</c:forEach>
+					    </tbody>
+					</table>
+				</div>
+				<div id="openEditDepartment"></div>
+				<script type="text/javascript">
+				
+					function onClickEditDepartment(id,parentCode,parentFullname,parentDescription ){
+						document.getElementById("hdAddEditDepartment").value = "Edit";
+						document.getElementById("hdidDepartment").value = id;
+						document.getElementById("departmentCode").value = parentCode;
+						document.getElementById("codeInFullDepartment").value = parentFullname;
+						document.getElementById("departmentDescription").value = parentDescription;
+						$j('#addHouseholdDepartment').slideToggle('fast');
+					}
+					function onClickDeleteDepartment(id,def){
+						var r=confirm("Do you really want to delete the " + def + " department?");
+						if (r==true){
+							document.getElementById("hdAddEditDepartment").value = "Delete";
+							document.getElementById("hdidDepartment").value = id;
+							passHDObjectDepartment();
+						}else{
+							document.getElementById("hdAddEditDepartment").value = "";
+						}
+					}
+				</script>
+			</div>
+			<div class="tabcontent" id="tab_content_1">
 				<script type="text/javascript">
 					$j(document).ready(function() {
 						$j('.toggleAddHouseholdProgram').click(function(event) {
@@ -140,11 +286,40 @@ function returnEncType(data){
 						});
 					});
 				</script>
-				<a class="toggleAddHouseholdProgram" href="#">Add Household Program/Definition</a><br />
-				<div id="addHouseholdProgram" style="border: 1px black solid; background-color: #e0e0e0; display: none">
-					<form method="post"> <!-- action="householdAddProgram.form" -->
+				<a class="toggleAddHouseholdProgram" href="#">Add Household Program</a><br />
+				<div id="addHouseholdProgram" style="display: none" class="householdtoggle">
+					<form method="post">
 						<table>
-							<tr>
+                                                    <c:choose>
+                                                        <c:when test="${not empty householdsTypes}">
+                                                                <tr>
+                                                                <th>Parent Program</th>
+                                                                <td>
+                                                                        <select name="parent" id="parent" onchange="javascript:checkPrefix()">
+                                                                                <option id="m" value="" selected="selected"></option>
+                                                                                <c:forEach var="hh" items="${householdDepartment}" varStatus="ind">
+                                                                                        <option id="${ind.index + 1 }" value="${hh.id}">${hh.parentCode} - ${hh.parentFullname}</option>
+                                                                                </c:forEach>
+                                                                        </select>
+                                                                </td>
+                                                        </tr>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                                <tr style="display: none;">
+                                                                        <th>Parent Program</th>
+                                                                        <td>
+                                                                                <select name="parent" id="parent" onchange="javascript:checkPrefix()">
+                                                                                        <option id="m" value="" selected="selected"></option>
+                                                                                        <c:forEach var="hh" items="${householdDepartment}" varStatus="ind">
+                                                                                                <option id="${ind.index + 1 }" value="${hh.id}">${hh.parentCode}</option>
+                                                                                        </c:forEach>
+                                                                                </select>
+
+                                                                        </td>
+                                                                </tr>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                        <tr>
 								<th>Program Code</th>
 								<td>
 									<input type="hidden" name="hdid" id="hdid"/>
@@ -160,37 +335,6 @@ function returnEncType(data){
 									<span class="required">*</span>
 								</td>
 							</tr>
-							
-							<c:choose>
-								<c:when test="${not empty householdsTypes}">
-									<tr>
-									<th>Parent Program</th>
-									<td>
-										<select name="parent" id="parent" onchange="javascript:checkPrefix()">
-											<option id="m" value="" selected="selected"></option>
-											<c:forEach var="hh" items="${definitionParents}" varStatus="ind">
-												<option id="${ind.index + 1 }" value="${hh.id}">${hh.householdDefinitionsCode}</option>
-											</c:forEach>
-										</select>
-										
-									</td>
-								</tr>
-								</c:when>
-								<c:otherwise>
-									<tr style="display: none;">
-										<th>Parent Program</th>
-										<td>
-											<select name="parent" id="parent" onchange="javascript:checkPrefix()">
-												<option id="m" value="" selected="selected"></option>
-												<c:forEach var="hh" items="${definitionParents}" varStatus="ind">
-													<option id="${ind.index + 1 }" value="${hh.id}">${hh.householdDefinitionsCode}</option>
-												</c:forEach>
-											</select>
-											
-										</td>
-									</tr>
-								</c:otherwise>
-							</c:choose>
 							<div id="pref" style="display: none;">
 								<tr>
 									<th>Identifier Prefix</th>
@@ -204,8 +348,10 @@ function returnEncType(data){
 							<tr>
 								<th></th>
 								<td>
-									<input type="button" onclick="javascript:passHDObject()" value="<spring:message code="general.save"/>" />
-									<input type="button" value="<spring:message code="general.cancel"/>" class="toggleAddHouseholdProgram" />
+									<button onclick="javascript:passHDObject()" class="minimal"><spring:message code="general.save"/></button>
+									<button class="minimal toggleAddHouseholdProgram"><spring:message code="general.cancel"/></button>
+									<!--input type="button" onclick="javascript:passHDObject()" value="<spring:message code="general.save"/>" />
+									<input type="button" value="<spring:message code="general.cancel"/>" class="toggleAddHouseholdProgram" /-->
 								</td>
 							</tr>
 						</table>
@@ -230,19 +376,11 @@ function returnEncType(data){
 					    </thead>
 					    <tbody id="bdytbl">
 					    	<c:forEach var="household" items="${householdsTypes}" varStatus="ind">
-								<form method="POST" name="${household.id}">
+								<form method="POST" name="def${household.id}">
 									<tr valign="top">
 										<th>${ind.index + 1}</th>
 										<td class="highlight">
-											<c:choose>
-												<c:when test="${not empty household.parent}">
-													${household.householdDefinitionsCode} [Parent: ${household.parent.householdDefinitionsCode}]
-												</c:when>
-												<c:otherwise>
-													${household.householdDefinitionsCode}
-												</c:otherwise>
-											</c:choose>
-										
+											${household.householdDefinitionsCode} [Parent: ${household.parent.parentCode}]
 										</td>
 										<td class="highlight">${household.householdDefinitionsCodeinfull}</td>
 										<td class="highlight">${household.householdDefinitionsDescription}</td>
@@ -256,8 +394,6 @@ function returnEncType(data){
 												<img src="${pageContext.request.contextPath}/moduleResources/household/images/edit.gif"/></a>
 											<a href="#" onclick="javascript:onClickDeleteProgram('${household.id}','${household.householdDefinitionsCode}')">
 												<img src="${pageContext.request.contextPath}/moduleResources/household/images/trash.gif"/></a>
-										   <%--  <input type="button" id="editProgram${household.id}" onclick="clickEditProgram(${household.id})" value="Edit" /> --%>
-											<!-- <input type="submit" value="Delete" /> -->
 										</td>
 									</tr>
 								</form>
@@ -326,7 +462,7 @@ function returnEncType(data){
 						</label>
 					</span>
 				</span>
-				<div id="addHouseholdEncounterType" style="border: 1px black solid; background-color: #e0e0e0; display: none">
+				<div id="addHouseholdEncounterType" style="display: none" class="householdtoggle">
 					<form method="post">  <!-- action="householdAddEncounterType.form" -->
 						<table>
 							<tr>
@@ -480,12 +616,15 @@ function returnEncType(data){
 				
 			</div>
 			<div class="tabcontent" id="tab_content_3">
+				Display encounters here
+			</div>
+			<div class="tabcontent" id="tab_content_4">
 				<strong>General Properties</strong>
 				<br><br>
 				<openmrs:portlet url="globalProperties"
 				parameters="propertyPrefix=household|excludePrefix=household.started;household.mandatory;household.database_version"/>
 			</div>
-			<div class="tabcontent" id="tab_content_4">
+			<div class="tabcontent" id="tab_content_5">
 				<strong>jQuery</strong> is a cross-browser JavaScript library designed to simplify the client-side scripting of HTML.[1] It was released in January 2006 at BarCamp NYC by John Resig. Used by over 43% of the 10,000 most visited websites, jQuery is the most popular JavaScript library in use today.[2][3]
 				<br><br>
 				jQuery is free, open source software, dual-licensed under the MIT License and the GNU General Public License, Version 2.[4] jQuery's syntax is designed to make it easier to navigate a document, select DOM elements, create animations, handle events, and develop Ajax applications. jQuery also provides capabilities for developers to create plugins on top of the JavaScript library. Using these facilities, developers are able to create abstractions for low-level interaction and animation, advanced effects and high-level, theme-able widgets. This contributes to the creation of powerful and dynamic web pages.

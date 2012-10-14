@@ -21,7 +21,7 @@
 					<td class="highlight">
 						<c:choose>
 							<c:when test="${not empty hd.parent}">
-								${hd.householdDefinitionsCode} [Parent: ${hd.parent.householdDefinitionsCode}]
+								${hd.householdDefinitionsCode} [Parent: ${hd.parent.parentCode}]
 							</c:when>
 							<c:otherwise>
 								${hd.householdDefinitionsCode}

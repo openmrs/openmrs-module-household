@@ -12,7 +12,7 @@ table {
 		padding-bottom:10px;
 		}
 	
-	table.lineTable td,
+	/*table.lineTable td,*/
 	table.lineTable th {
 		padding:5px;
 		border:1px solid #fff;
@@ -45,10 +45,150 @@ table {
 		}
 		
 	tfoot td {
-		background:#d7e1c5;
+		background:transparent;/*#d7e1c5;*/
 		font-weight:bold;
 		}
 			
 	tbody tr.odd td.highlight { 
 		background:#ffffcc;
 		}
+        tbody tr {
+                padding-top: 4px;
+        }
+/* householdbg
+*******************************************************************************/
+.householdbg {
+  background: #e3e3e3;
+  border: 1px solid #bbb;
+  border-radius: 3px;
+  -webkit-box-shadow: inset 0 0 1px 1px #f6f6f6;
+  box-shadow: inset 0 0 1px 1px #f6f6f6;
+  color: #333;
+  font: 92.5%/1 "Lucida Sans Unicode","Lucida Grande",Verdana,Arial,Helvetica,sans-serif;
+  padding: 8px 0 9px;
+  /*text-shadow: 0 1px 0 #fff;*/
+  width: fit-content;
+}
+/*householdbgLight
+************************************************/
+.householdbgLight{
+    background: #eee;
+    -webkit-border-radius: 7px;
+    border-radius: 7px;
+    -webkit-box-shadow: inset 0 1px 1px 0 #c7c7c7;
+    box-shadow: inset 0 1px 1px 0 #c7c7c7;
+    margin: 10px 0 0 10px;
+    width: fit-content;
+    padding: 10px 10px;
+}
+
+/* minified
+*******************************************************************************/
+button.minified {
+  background: #e3e3ef;
+  border: 1px solid #bbb;
+  border-radius: 3px;
+  -webkit-box-shadow: inset 0 0 1px 1px #f6f6f6;
+  box-shadow: inset 0 0 1px 1px #f6f6f6;
+  color: #333;
+  font: bold 12px/1 "helvetica neue", helvetica, arial, sans-serif;
+  padding: 8px 0 9px 20px;
+  text-align: left;
+  text-shadow: 0 1px 0 #fff;
+  width: 100%; }
+  button.minified:hover {
+    background: #d9d9d9;
+    -webkit-box-shadow: inset 0 0 1px 1px #eaeaea;
+    box-shadow: inset 0 0 1px 1px #eaeaea;
+    color: #222;
+    cursor: pointer; }
+  button.minified:active {
+    background: #d0d0d0;
+    -webkit-box-shadow: inset 0 0 1px 1px #e3e3e3;
+    box-shadow: inset 0 0 1px 1px #e3e3e3;
+    color: #000; }
+/* minimal
+*******************************************************************************/
+button.minimal {
+  background: #e3e3e3;
+  border: 1px solid #bbb;
+  border-radius: 3px;
+  -webkit-box-shadow: inset 0 0 1px 1px #f6f6f6;
+  box-shadow: inset 0 0 1px 1px #f6f6f6;
+  color: #333;
+  font: bold 12px/1 "helvetica neue", helvetica, arial, sans-serif;
+  padding: 8px 0 9px;
+  text-align: center;
+  text-shadow: 0 1px 0 #fff;
+  width: 150px; }
+  button.minimal:hover {
+    background: #d9d9d9;
+    -webkit-box-shadow: inset 0 0 1px 1px #eaeaea;
+    box-shadow: inset 0 0 1px 1px #eaeaea;
+    color: #222;
+    cursor: pointer; }
+  button.minimal:active {
+    background: #d0d0d0;
+    -webkit-box-shadow: inset 0 0 1px 1px #e3e3e3;
+    box-shadow: inset 0 0 1px 1px #e3e3e3;
+    color: #000; }
+/* titlebar / linetable row
+*******************************************************************************/
+.titlebar {
+  background: #e4e4e4;
+  border: 1px solid #bbb;
+  border-radius: 3px;
+  -webkit-box-shadow: inset 0 0 1px 1px #f6f6f6;
+  box-shadow: inset 0 0 1px 1px #f6f6f6;
+  color: #333;
+  font: bold 12px/1 "helvetica neue", helvetica, arial, sans-serif;
+  padding: 8px 0 9px 20px;
+  text-align: left;
+  text-shadow: 0 0px 0 #fff;
+  width: 100%; }
+.horizontalLine{
+    width: 100%; 
+    border-top: silver dotted thin;
+    padding-bottom: 5px;
+    margin-top: 5px;
+}
+.linetablerow{
+  background: transparent;
+  border: 1px solid #bbb;
+  border-radius: 3px;
+  -webkit-box-shadow: inset 0 0 1px 1px #f6f6f6;
+  box-shadow: inset 0 0 1px 1px #f6f6f6;
+  color: #333;
+  font: 12px/1 "helvetica neue", helvetica, arial, sans-serif;
+  height: 14px;
+  text-align: left;
+  text-shadow: 0 0px 0 #fff;
+  width: 100%;
+}
+/* householdtoggle
+*******************************************************************************/
+.householdtoggle {
+  background: #e3e3e3;
+  border: 1px solid #bbb;
+  border-radius: 3px;
+  -webkit-box-shadow: inset 0 0 1px 1px #f6f6f6;
+  box-shadow: inset 0 0 1px 1px #f6f6f6;
+  color: #333;
+  padding: 8px 0 9px;
+  width: fit-content;
+}
+/*Notice
+*******************************************************************************/
+.notice{
+  background: pink;
+  border: 1px solid #bbb;
+  border-radius: 3px;
+  -webkit-box-shadow: inset 0 0 1px 1px #f6f6f6;
+  box-shadow: inset 0 0 1px 1px #f6f6f6;
+  color: #333;
+  font: bold 12px/1 "helvetica neue", helvetica, arial, sans-serif;
+  padding: 8px 0 9px 20px;
+  text-align: left;
+  text-shadow: 0 0px 0 #fff;
+  width: 100%;
+}

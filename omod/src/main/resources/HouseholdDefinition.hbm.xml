@@ -47,7 +47,7 @@
 		<property name="voided" type="boolean" column="voided"
 			length="1" not-null="true" />
 		
-		<many-to-one name="parent" class="org.openmrs.module.household.model.HouseholdDefinition"
+		<many-to-one name="parent" class="org.openmrs.module.household.model.HouseholdDefinitionParent"
 			property-ref="uuid" column="parent" />	
 		
 		<property name="identifierPrefix" type="java.lang.String"

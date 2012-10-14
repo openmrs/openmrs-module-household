@@ -18,7 +18,7 @@ public class HouseholdDefinition extends BaseOpenmrsData{
 	private String householdDefinitionsCodeinfull;
 	private String householdDefinitionsDescription;
 	private Program program;
-	private HouseholdDefinition parent;
+	private HouseholdDefinitionParent parent;
 	private String identifierPrefix;
 	
 	public HouseholdDefinition(String defCode, String defCodeInFull, String description){
@@ -97,13 +97,13 @@ public class HouseholdDefinition extends BaseOpenmrsData{
 	/**
 	 * @return the parent
 	 */
-	public HouseholdDefinition getParent() {
+	public HouseholdDefinitionParent getParent() {
 		return parent;
 	}
 	/**
 	 * @param parent the HouseholdDefinition to set
 	 */
-	public void setParent(HouseholdDefinition parent) {
+	public void setParent(HouseholdDefinitionParent parent) {
 		this.parent = parent;
 	}
 	/**

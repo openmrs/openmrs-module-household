@@ -18,6 +18,7 @@ import org.openmrs.module.household.model.Household;
 import org.openmrs.module.household.model.HouseholdAttribValue;
 import org.openmrs.module.household.model.HouseholdAttribute;
 import org.openmrs.module.household.model.HouseholdDefinition;
+import org.openmrs.module.household.model.HouseholdDefinitionParent;
 import org.openmrs.module.household.model.HouseholdEncounter;
 import org.openmrs.module.household.model.HouseholdEncounterType;
 import org.openmrs.module.household.model.HouseholdLocation;
@@ -88,20 +89,7 @@ public interface HouseholdDAO {
 	 */
 	public List<HouseholdDefinition> getAllHouseholdDefinitions();
 	
-	/**
-	 * Get all parent HouseholdDefinition
-	 * 
-	 * @return all parent HouseholdDefinition
-	 */
-	public List<HouseholdDefinition> getHouseholdDefinitionParents();
-	
-	/**
-	 * Get all HouseholdDefinition records of parenthd
-	 * 
-	 * @return all HouseholdDefinition record in the system of parenthd
-	 */
-	public List<HouseholdDefinition> getHouseholdDefinitionChildren(HouseholdDefinition hd);
-	
+        public List<HouseholdDefinition> getHouseholdDefinitionParentChildren(HouseholdDefinitionParent hdp);
 	/**
 	 * Purge the definition and 
 	 * 
@@ -169,7 +157,7 @@ public interface HouseholdDAO {
 	 * @param householdUuid the HouseholdMembership householdUuid
 	 * @return HouseholdMembership that match the householdUuid
 	 */
-	public List<HouseholdMembership> getHouseholdMembershipByUuid(String householdUuid);
+	public List<HouseholdMembership> getHouseholdMembershipByHousehold(Household household);
 	
 	/**
 	 * Get all Household Memberships records
@@ -821,4 +809,22 @@ public interface HouseholdDAO {
 	                                 List<Concept> answers, List<HouseholdLocation> locations,
 	                                 List<String> sort, Integer mostRecentN, Integer obsGroupId, Date fromDate, Date toDate,
 	                                 boolean includeVoidedObs) throws APIException;
+        
+        public boolean saveHouseholdDefinitionParent(HouseholdDefinitionParent householdDefinitionParent);
+	public HouseholdDefinitionParent getHouseholdDefinitionParent(int id);
+	public HouseholdDefinitionParent getHouseholdDefinitionParent(String uuid);
+	public HouseholdDefinitionParent getHouseholdDefinitionParent(HouseholdDefinitionParent householdDefinitionParent);
+	public boolean purgeHouseholdDefinitionParent(HouseholdDefinitionParent householdDefinitionParent, String voidReason);
+	public List<HouseholdDefinitionParent> getHouseholdDefinitionParent(boolean voidedIncluded);
+        
+        /******************************************************/
+        /* Unique properties of household members**************/
+        //Quasi//Retired//voided 
+        public List<HouseholdMembership> getHouseholdQuasiMembersByHousehold(Household household);
+        public List<HouseholdMembership> getHouseholdRetiredMembersByHousehold(Household household);
+        public List<HouseholdMembership> getHouseholdMembersVoidedByHousehold(Household household);
+        /******************************************************/
+        /* TODO Unique properties of household definition***********/
+        public List<Household> getHouseholdsByDefinition(HouseholdDefinition householdDefinition);
+        
 }

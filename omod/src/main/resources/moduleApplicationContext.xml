@@ -10,27 +10,6 @@
            http://www.springframework.org/schema/context/spring-context-2.5.xsd
            http://www.springframework.org/schema/util
            http://www.springframework.org/schema/util/spring-util-2.0.xsd">
-            
-        <!-- Register LogicService with OpenMRS ServiceContext -->
-        
-        <bean id="householdUrlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
-	    	<property name="order"><value>1</value></property>
-	    	<property name="mappings">
-	            <props>
-	                <prop key="**/patientHousehold.portlet">patientHouseholdController</prop>
-				</props>
-			</property>
-		</bean>
-		
-		<bean id="householdUrlMapping2" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
-	    	<property name="order"><value>1</value></property>
-	    	<property name="mappings">
-	            <props>
-	                <prop key="**/patientHouseholdPortlet.portlet">patientHouseholdPortletController</prop>
-				</props>
-			</property>
-		</bean>
-        
         <bean parent="serviceContext">
                 <property name="moduleService">
                         <list>
@@ -56,7 +35,4 @@
                         </list>
                 </property>
         </bean>
-        
-        <bean id="patientHouseholdController" class="org.openmrs.module.household.web.controller.PatientHouseholdController"/>
-		<bean id="patientHouseholdPortletController" class="org.openmrs.module.household.web.controller.PatientHouseholdPortletController"/>
 </beans>

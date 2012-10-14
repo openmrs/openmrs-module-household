@@ -119,7 +119,7 @@
 		if((personList != "") && (headOrIndex != "") ){
 			DWRHouseholdService.createHousehold(strArr, returnedSavedHousehold);
 		}else{
-			//$j(errorDivElement).html('<img src="${pageContext.request.contextPath}/moduleResources/household/images/problem.gif" /> Please select people to form the household and indicate the index/head.');
+			$j(errorDivElement).html('<img src="${pageContext.request.contextPath}/moduleResources/household/images/problem.gif" /> Please select people to form the household and indicate the index/head.');
 			errorDivElement.style.display = 'inline';
 			setTimeout("highlightError()",5000);
 		}
@@ -133,6 +133,7 @@
 			$j(highlightDivElement).html(arrData[1]);
 			highlightDivElement.style.display = 'inline';
 			setTimeout("highlightSuccess()",5000);
+                        forwardMem(arrData[2]);
 		}else{
 			$j(errorDivElement).html('<img src="${pageContext.request.contextPath}/moduleResources/household/images/problem.gif" />' + arrData[1]);
 			errorDivElement.style.display = 'inline';
@@ -155,13 +156,14 @@
 <table width="100%">
 	<tr>
 		<td valign="top"> 
-				<b class="boxHeader">Select Household members:</b>
-				<div class="box">
+                    <div class="titlebar">Select members to form a household:</div>
+				<div>
 					<div class="searchWidgetContainer" id="findPatients"></div>
 				</div>
 				<br />
-				<b class="boxHeader">Create a Household:</b>
-				<div class="box">
+                                
+                                <div class="titlebar">New Household:</div>
+				<div>
 					<div id="divSelectedPerson">
 					<input type="hidden" id="hiddenSelectedMembers" name="hiddenSelectedMembers"/>
 					<input type="hidden" id="hiddenIndex" name="hiddenIndex"/>
@@ -198,7 +200,7 @@
 							</tr>
 						</table>
 						<br />
-						<input type="button" onclick="saveHousehold()" value="Create household"/>
+                                                <button onclick="saveHousehold()" class="minimal">Save</button>
 					</div>
 				</div>
 		</td>
