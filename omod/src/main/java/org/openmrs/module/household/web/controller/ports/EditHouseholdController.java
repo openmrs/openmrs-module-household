@@ -22,9 +22,9 @@ import org.springframework.web.bind.annotation.RequestParam;
  *
  */
 @Controller
-public class editHouseholdController {
+public class EditHouseholdController {
  
-        private static final Log log = LogFactory.getLog(editHouseholdController.class);
+        private static final Log log = LogFactory.getLog(EditHouseholdController.class);
         
         @RequestMapping("module/household/ports/editHousehold.form")
    public void preparePage(ModelMap map, HttpServletRequest request,HttpSession httpSession,
@@ -49,6 +49,20 @@ public class editHouseholdController {
                 List<HouseholdMembership> hhmHist = service.getHouseholdMembershipByHousehold(hhd);
                 map.addAttribute("memberHist",hhmHist);
                 map.addAttribute("act","History");
+            }else if(Integer.parseInt(opt) == 6){
+                List<HouseholdMembership> hhmList = service.getAllHouseholdMembershipsByGroup(hhd);
+                map.addAttribute("memberList",hhmList);
+                map.addAttribute("act","Change Index");
+                for (HouseholdMembership householdMembership : hhmList) {
+                    if(householdMembership.isHouseholdMembershipHeadship()){
+                        map.addAttribute("holdHead",householdMembership.getId());
+                        break;
+                    }
+                }
+            }else if(Integer.parseInt(opt) == 7){
+                List<HouseholdMembership> hhmList = service.getAllHouseholdMembershipsByGroup(hhd);
+                map.addAttribute("memberList",hhmList);
+                map.addAttribute("act","Add Quasi Member(s)");
             }
             
             map.addAttribute("opts",opt);

@@ -1,30 +1,21 @@
 package org.openmrs.module.household.web.controller;
  
 import java.util.List;
- 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.household.model.HouseholdDefinition;
 import org.openmrs.module.household.model.HouseholdDefinitionParent;
 import org.openmrs.module.household.model.HouseholdEncounterType;
-import org.openmrs.module.household.service.HouseholdService;
-import org.openmrs.web.WebConstants;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.util.StringUtils;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.support.SessionStatus;
-import org.springframework.web.context.request.WebRequest;
 import org.openmrs.module.household.model.editor.HouseholdDefinitionEditor;
 import org.openmrs.module.household.model.editor.HouseholdDefinitionParentEditor;
 import org.openmrs.module.household.model.editor.HouseholdEncounterTypeEditor;
+import org.openmrs.module.household.service.HouseholdService;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.RequestMapping;
  
 @Controller
 public class HouseholdSettingsPanel {
@@ -53,9 +44,15 @@ public class HouseholdSettingsPanel {
                 
                 List<HouseholdEncounterType> householdET = service.getAllHouseholdEncounterTypes(false);
                 map.addAttribute("householdEncTypes", householdET);
+                String val = Context.getAdministrationService().getGlobalProperty("household.enableAmpathLinks");
+                if(val.equalsIgnoreCase("true")){
+                    map.addAttribute("gotAmpathLinks", true);
+                }else{
+                    map.addAttribute("gotAmpathLinks", false);
+                }
    }
    
-   @RequestMapping("module/household/householdAddProgram")
+   /*@RequestMapping("module/household/householdAddProgram")
    public String programAddPage(ModelMap map, @RequestParam("programCode") String programCode,
                                         @RequestParam("codeInFull") String codeInFull,
                                         @RequestParam("programDescription") String programDescription,
@@ -87,12 +84,12 @@ public class HouseholdSettingsPanel {
        
        
        return "redirect:householdSettingsPanel.form";
-   }
+   }*/
    
    /**
          * Display the edit page for HouseholdDefinitions
          */
-   @RequestMapping(method = RequestMethod.GET, value = "module/household/householdEditProgram")
+   /*@RequestMapping(method = RequestMethod.GET, value = "module/household/householdEditProgram")
         public void showEdit(@RequestParam("id") HouseholdDefinition hd, ModelMap model) {
                 HouseholdDefinition householdDefinition = hd;
                 
@@ -102,12 +99,12 @@ public class HouseholdSettingsPanel {
                 HouseholdService service = Context.getService(HouseholdService.class);
                 List<HouseholdDefinitionParent> householdsTypes = service.getHouseholdDefinitionParent(false);
                 model.addAttribute("householdsTypes", householdsTypes);
-        }
+        }*/
         
         /**
          * Handle submission for editing a Program (for editing its name/parent/description)
          */
-        @RequestMapping(method = RequestMethod.POST, value = "module/household/householdEditProgram")
+        /*@RequestMapping(method = RequestMethod.POST, value = "module/household/householdEditProgram")
         public String handleEditSubmission(WebRequest request, @ModelAttribute("householdDef") HouseholdDefinition householdDefinition,
                 BindingResult result, SessionStatus status) {
                 
@@ -143,21 +140,21 @@ public class HouseholdSettingsPanel {
        
        
        return "redirect:householdSettingsPanel.form";
-   }
+   }*/
    
    /**
          * Display the edit page for HouseholdEncounterType
          */
-   @RequestMapping(method = RequestMethod.GET, value = "module/household/householdEditEncounterType")
+   /*@RequestMapping(method = RequestMethod.GET, value = "module/household/householdEditEncounterType")
         public void showEditET(@RequestParam("id") HouseholdEncounterType hET, ModelMap model) {
                 HouseholdEncounterType householdET = hET;
                 model.addAttribute("householdET", householdET);
-        }
+        }*/
         
         /**
          * Handle submission for editing a EncounterType (for editing its name/description)
          */
-        @RequestMapping(method = RequestMethod.POST, value = "module/household/householdEditEncounterType")
+        /*@RequestMapping(method = RequestMethod.POST, value = "module/household/householdEditEncounterType")
         public String handleEditETSubmission(WebRequest request, @ModelAttribute("householdET") HouseholdEncounterType het,
                 BindingResult result, SessionStatus status) {
                 
@@ -171,5 +168,12 @@ public class HouseholdSettingsPanel {
                         return "redirect:householdSettingsPanel.form";
                 }
         }
+        
+        @RequestMapping("module/household/householdSettingsEncType")
+        public void repostEncounterSettings(ModelMap map, boolean includedRetired){
+        	HouseholdService service = Context.getService(HouseholdService.class);
+        	List<HouseholdEncounterType> encType = service.getAllHouseholdEncounterTypes(includedRetired);
+        	map.addAttribute("householdEncTypes",encType);
+        }*/
         
 }

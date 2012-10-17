@@ -32,6 +32,12 @@ public class HouseholdDashboardController {
                 List<HouseholdDefinitionParent> definitionParents = service.getHouseholdDefinitionParent(false);
                 map.addAttribute("definitionParents", definitionParents);
                 map.addAttribute("par", 1);
+                String val = Context.getAdministrationService().getGlobalProperty("household.enableAmpathLinks");
+                if(val.equalsIgnoreCase("true")){
+                    map.addAttribute("gotAmpathLinks", true);
+                }else{
+                    map.addAttribute("gotAmpathLinks", false);
+                }
    }
         
         @RequestMapping(method = RequestMethod.POST, value = "module/household/householdDashboard")

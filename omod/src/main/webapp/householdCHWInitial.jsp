@@ -15,6 +15,25 @@
 
 
 <script type="text/javascript">
+	//get sites
+	function getLoci(sit){
+		DWRHouseholdService.getLocations(sit.options[sit.selectedIndex].value, gotLoc);
+	} 
+	
+	function gotLoc(strSubs){
+		var opt = document.chwForm.location;
+		if(!(opt.value.length == 0)){
+			opt.length = 0;
+		}
+		var strLocat = new Array();
+		strLocat = strSubs.split(",");
+		
+		var i;
+
+		for(i = 0; i < strLocat.length; i++) {
+			opt.options[i] = new Option(strLocat[i], strLocat[i]);
+		}
+	}
 	// get sub locations
 	function getSubLoci(locat){
 		DWRHouseholdService.getSubLocations(locat.options[locat.selectedIndex].value, gotSub);
@@ -245,19 +264,32 @@
 		</tr>
 		<tr>
 			<td >
-				<b>Location :</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					<select name="location" onchange="getSubLoci(location)" onclick="getSubLoci(location)">
+				<table>
+					<tr>
+						<th>Site :</th>
+						<td><select name="site" onchange="getLoci(site)" onclick="getLoci(site)">
+						<c:forEach var="sit" items="${sites}" varStatus="ind">
+							<option id="${ind.index + 1 }" value="${sit}">${sit}</option>
+						</c:forEach>
+					</select></td>
+					</tr>
+					<tr>
+						<th>Location :</th>
+						<td><select name="location" onchange="getSubLoci(location)" onclick="getSubLoci(location)">
 						<c:forEach var="loca" items="${loci}" varStatus="ind">
 							<option id="${ind.index + 1 }" value="${loca}">${loca}</option>
 						</c:forEach>
-					</select>
-					<input type="hidden" on/>
-					<!--input type="submit" name="getSubLoci" value="Get Sub-locations" /-->
-				<br />
-				<b>Sub-Location :</b>
-				<select name="subLocation" onchange="getVilla(subLocation,location)" onclick="getVilla(subLocation,location)"></select><br />
-				<b>Village :</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				<select name="village" id="village"></select><div id="here4" class="error" style="display: none" >*</div>
+					</select></td>
+					</tr>
+					<tr>
+						<th>Sub-Location :</th>
+						<td><select name="subLocation" onchange="getVilla(subLocation,location)" onclick="getVilla(subLocation,location)"></select></td>
+					</tr>
+					<tr>
+						<th>Village :</th>
+						<td><select name="village" id="village"></select><div id="here4" class="error" style="display: none" >*</div></td>
+					</tr>
+				</table>
 			</td>
 			<td rowspan="2">
 				<b>Number of sleeping spaces:</b><input type="text" name="noOfSleepingSpaces" id="noOfSleepingSpaces" /> <div id="here5" class="error" style="display: none" >*</div><br />
@@ -290,6 +322,7 @@
 						<option value="6856">Bore hole</option>
 						<option value="6384">Rain Water</option>
 						<option value="6857">Well</option>
+						<option value="6382">Lake/Pond</option>
 						<option value="5622">Other</option>
 					</select><div id="here7" class="error" style="display: none" >*</div><br />
 				<b>Do you treat water?</b><br />

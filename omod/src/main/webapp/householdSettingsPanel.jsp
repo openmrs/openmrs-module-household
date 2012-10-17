@@ -118,18 +118,16 @@ function passEncTypeObject(){
 	DWRHouseholdService.addEditHouseholdEncounterType( parArrHD, returnEncType);
 }
 function returnEncType(data){
-	//alert("Successfully saved \n" + data);
 	var checkDelete = document.getElementById("hdAddEditEnc").value;
 	if (checkDelete != "Retire"){
 		$j('#addHouseholdEncounterType').slideToggle('fast');
-		event.preventDefault();
 	}
-		$j.get("ports/householdSettingsEncType.form?includedRetired=" + false,
-				function(dat){
-					$j('#idEncType').html(dat);
-				}
-			);
-	document.getElementById("hdAddEditEnc").value = "Add";
+        $j.get("ports/householdSettingsEncType.form?includedRetired=" + false,
+                        function(dat){
+                                $j('#idEncType').html(dat);
+                        }
+                );
+        document.getElementById("hdAddEditEnc").value = "Add";
 	document.getElementById("hdidEnc").value = "";
 	document.getElementById("idname").value = "";
 	document.getElementById("idencTypeDescription").value = "";
@@ -147,26 +145,26 @@ function returnEncType(data){
 	             <div class="link">Departments</div>
 	             <div class="arrow"></div>
 	         </div>
-			 <div class="tab" id="tab_menu_1">
+                     <div class="tab" id="tab_menu_1">
 	             <div class="link">Program</div>
 	             <div class="arrow"></div>
 	         </div>
 	         <div class="tab" id="tab_menu_2">
-	             <div class="link">Encounter Types</div>
+	             <div class="link">Encounter Forms</div>
 	             <div class="arrow"></div>
 	         </div>
-			 <div class="tab" id="tab_menu_3">
+                 <!--div class="tab" id="tab_menu_3">
 	             <div class="link">Encounter</div>
 	             <div class="arrow"></div>
-	         </div>
-	          <div class="tab" id="tab_menu_4">
+	         </div-->
+	          <div class="tab last" id="tab_menu_4">
 	             <div class="link">General Properties</div>
 	             <div class="arrow"></div>
 	         </div>
-	         <div class="tab last" id="tab_menu_5">
+	         <!--div class="tab last" id="tab_menu_5">
 	             <div class="link">Custom Privileges</div>
 	             <div class="arrow"></div>
-	         </div>
+	         </div-->
 	    </div>
 		<div class="curvedContainer">
 			<div class="tabcontent" id="tab_content_0" style="display:block">
@@ -413,7 +411,7 @@ function returnEncType(data){
 						document.getElementById("identifierPrefix").value = pref;
 						document.getElementById("programDescription").value = householdDefinitionsDescription;
 						$j('#addHouseholdProgram').slideToggle('fast');
-						event.preventDefault();
+						//event.preventDefault();
 					}
 					function onClickDeleteProgram(id,def){
 						var r=confirm("Do you really want to delete the " + def + " definition?");
@@ -538,7 +536,7 @@ function returnEncType(data){
 						document.getElementById("idname").value = nam;
 						document.getElementById("idencTypeDescription").value = description;
 						$j('#addHouseholdEncounterType').slideToggle('fast');
-						event.preventDefault();
+						//event.preventDefault();
 					}
 					function onClickDeleteEncounterType(id,nam){
 						var reason=prompt("Please enter the reson for retiring this Encounter Type.","");
@@ -615,22 +613,18 @@ function returnEncType(data){
 				
 				
 			</div>
-			<div class="tabcontent" id="tab_content_3">
+			<!--div class="tabcontent" id="tab_content_3">
 				Display encounters here
-			</div>
+			</div-->
 			<div class="tabcontent" id="tab_content_4">
 				<strong>General Properties</strong>
 				<br><br>
 				<openmrs:portlet url="globalProperties"
 				parameters="propertyPrefix=household|excludePrefix=household.started;household.mandatory;household.database_version"/>
 			</div>
-			<div class="tabcontent" id="tab_content_5">
-				<strong>jQuery</strong> is a cross-browser JavaScript library designed to simplify the client-side scripting of HTML.[1] It was released in January 2006 at BarCamp NYC by John Resig. Used by over 43% of the 10,000 most visited websites, jQuery is the most popular JavaScript library in use today.[2][3]
-				<br><br>
-				jQuery is free, open source software, dual-licensed under the MIT License and the GNU General Public License, Version 2.[4] jQuery's syntax is designed to make it easier to navigate a document, select DOM elements, create animations, handle events, and develop Ajax applications. jQuery also provides capabilities for developers to create plugins on top of the JavaScript library. Using these facilities, developers are able to create abstractions for low-level interaction and animation, advanced effects and high-level, theme-able widgets. This contributes to the creation of powerful and dynamic web pages.
-				<br><br>
-				Microsoft and Nokia have announced plans to bundle jQuery on their platforms,[5] Microsoft adopting it initially within Visual Studio[6] for use within Microsoft's ASP.NET AJAX framework and ASP.NET MVC Framework while Nokia has integrated it into their Web Run-Time widget development platform.[7] jQuery has also been used in MediaWiki since version 1.16.[8]
-			</div>
+			<!--div class="tabcontent" id="tab_content_5">
+				Custom Privileges
+			</div-->
 		</div>
 	</div>
 </div>

@@ -81,6 +81,13 @@
 			This value represent site that the module is currently installed. e.g. Turbo = TB
 		</description>
 	</globalProperty>
+        <globalProperty>
+		<property>household.enableAmpathLinks</property>
+		<defaultValue>false</defaultValue>
+		<description>
+			Set this to true if you want to view the AMPATH program specific links. By default it is set to "false".
+		</description>
+	</globalProperty>
 	<!-- Global Properties -->
 	
 	<!-- Servlets -->
@@ -109,6 +116,8 @@
                                 <include method="addEditHouseholdDepartment"/>
                                 <include method="retireMembers"/>
                                 <include method="retireHousehold"/>
+                                <include method="changeIndex"/>
+                                <include method="addQuasiMembers"/>
 			</create>
 			<convert match="org.openmrs.module.household.model.HouseholdDefinitionParent" converter="bean" />
                         <convert match="org.openmrs.module.household.model.HouseholdDefinition" converter="bean" />
@@ -140,6 +149,8 @@
                         DWRHouseholdService.addEditHouseholdDepartment(String [] passedArr);
                         DWRHouseholdService.retireMembers(String retireId, String dateRetired, String retireReason);
                         DWRHouseholdService.retireHousehold(String householdID, String dateRetired, String retireReason);
+                        DWRHouseholdService.changeIndex(String [] passedArr);
+                        DWRHouseholdService.addQuasiMembers(String [] passedArr);
 			]]>
 		</signatures>
 	</dwr>

@@ -365,7 +365,8 @@ private static final Log log = LogFactory.getLog(DWRHouseholdService.class);
                             }else{
                                 membership.setVoided(true);
                                 membership.setVoidReason(voidReason);
-                                membership.setEndDate(dateFormatHelper(new Date() + ""));
+                                membership.setVoidedBy(Context.getUserContext().getAuthenticatedUser());
+                                membership.setEndDate(dateFormatHelper(null));
                                 service.saveHouseholdMembership(membership);
                              }
                     }catch (Exception e) {
@@ -535,11 +536,13 @@ private static final Log log = LogFactory.getLog(DWRHouseholdService.class);
 		if(passedArr[0].equals("1")){
 			HouseholdEncounterType he = new HouseholdEncounterType(passedArr[2], passedArr[3]);
 			service.saveHouseholdEncounterType(he);
+                        return true;
 		}else if(passedArr[0].equals("2")){
 			HouseholdEncounterType he =  service.getHouseholdEncounterType(Integer.parseInt(passedArr[1]));
 			he.setName(passedArr[2]);
 			he.setDescription(passedArr[3]);
 			service.saveHouseholdEncounterType(he);
+                        return true;
 		}else if(passedArr[0].equals("3")){
 			HouseholdEncounterType he = service.getHouseholdEncounterType(Integer.parseInt(passedArr[1]));
 			return service.retireHouseholdEncounterType(he, passedArr[4]) != null;
@@ -604,6 +607,78 @@ private static final Log log = LogFactory.getLog(DWRHouseholdService.class);
                 return "true, Member(s) were retired successfully";
 	}
 
+        public String changeIndex(String [] passedArr) throws ParseException{
+            HouseholdService service = Context.getService(HouseholdService.class);
+            HouseholdMembership hmNew = service.getHouseholdMembership(Integer.parseInt(passedArr[0]));
+            HouseholdMembership hmOld = service.getHouseholdMembership(Integer.parseInt(passedArr[1]));
+            String changeReason = "Index Change : " +passedArr[2];
+            try {
+                //retire New index as member giving reason
+                hmNew.setEndDate(dateFormatHelper(null));
+                hmNew.setRetireReason(changeReason);
+                service.saveHouseholdMembership(hmNew);
+                //Add new member marking as index
+                HouseholdMembership toAddIndex = new HouseholdMembership(); 
+                toAddIndex.setStartDate(dateFormatHelper(null));
+                toAddIndex.setResumeReason(changeReason);
+                toAddIndex.setHouseholdMembershipGroups(hmNew.getHouseholdMembershipGroups());
+                toAddIndex.setHouseholdMembershipMember(hmNew.getHouseholdMembershipMember());
+                toAddIndex.setProviderId(passedArr[3]);
+                toAddIndex.setHouseholdMembershipHeadship(true);
+                service.saveHouseholdMembership(toAddIndex);
+                //Retire giving reason  hmOld
+                hmOld.setEndDate(dateFormatHelper(null));
+                hmOld.setRetireReason(changeReason);
+                service.saveHouseholdMembership(hmOld);
+                //add old index member as member
+                HouseholdMembership toAddOld = new HouseholdMembership(); 
+                toAddOld.setStartDate(dateFormatHelper(null));
+                toAddOld.setResumeReason("Previously the Index/Head of the household");
+                toAddOld.setHouseholdMembershipGroups(hmOld.getHouseholdMembershipGroups());
+                toAddOld.setHouseholdMembershipMember(hmOld.getHouseholdMembershipMember());
+                toAddOld.setHouseholdMembershipHeadship(false);
+                toAddOld.setProviderId(passedArr[3]);
+                service.saveHouseholdMembership(toAddOld);
+                
+                return "true, Successfully changed index";
+            } catch (Exception e) {
+                return "false, Problem encountered while changing the index.";
+            }
+            
+        }
+        
+        public String addQuasiMembers(String [] passedArr) throws ParseException{
+            HouseholdService service = Context.getService(HouseholdService.class);
+            String [] hseMembers=passedArr[0].split(",");
+		Arrays.sort(hseMembers);
+		for(int m=0;m<hseMembers.length;m++){
+                    //introduction of variable to handle an individual
+                    String mem=hseMembers[m];
+                    try {
+                            HouseholdMembership membership = service.getHouseholdMembership(Integer.parseInt(mem));
+                            membership.setHouseholdMembershipMember(Context.getPatientService().getPatientByUuid(membership.getHouseholdMembershipMember().getUuid()));
+                            membership.setRetireReason("Quasi take effect: " + passedArr[1]);
+                            membership.setEndDate(dateFormatHelper(null));
+                            membership.setQuasi(true);
+                            service.saveHouseholdMembership(membership);
+                            
+                            /*HouseholdMembership hm = new HouseholdMembership();
+                            hm.setStartDate(dateFormatHelper(null));
+                            hm.setResumeReason("Previously the Active(non-Quasi) member of the household");
+                            hm.setHouseholdMembershipGroups(membership.getHouseholdMembershipGroups());
+                            hm.setHouseholdMembershipMember(membership.getHouseholdMembershipMember());
+                            hm.setHouseholdMembershipHeadship(false);
+                            hm.setProviderId(passedArr[2]);
+                            service.saveHouseholdMembership(hm);*/
+                            
+                    }catch (Exception e) {
+                            return "false, There was a problem while trying to quasi member(s).";
+                    }	
+		}
+                return "true, Member(s) were made quasi successfully";
+            
+        }
+        
 	static DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy"); 
 	private static Date dateFormatHelper(String strvalue) throws ParseException {
 		if (strvalue == null || strvalue.length() == 0){

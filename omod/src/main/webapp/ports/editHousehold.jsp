@@ -207,125 +207,125 @@
                              
         </c:if><!--/New member ->
         <c:if test="${opts == 2}"><!--Remove Member -->
-
-            <script type="text/javascript">
-                function selectThoseToVoid(id) {
-                    var selectedMembers = dwr.util.getValue("hdnMembersToVoid");
-                    if (selectedMembers == ""){
-                            selectedMembers = id;
-                            dwr.util.setValue("hdnMembersToVoid", selectedMembers);
-                    }else{
-                            var found = [];
-
-                            if (selectedMembers.indexOf(",", 0) < 0){
-                                    found = [selectedMembers];
-                            }else{
-                                    found = selectedMembers.split(",");
-                            }
-                            var newMem = "";
-                            var got = false;
-                            for(var x=0; x<(found.length); x++){
-                                if(found[x] != id){
-                                    if (newMem == ""){
-                                        newMem = found[x];
-                                    }else{
-                                        newMem +=  "," + found[x];
-                                    }
-                                }else{
-                                    got =true;
-                                }
-                            }
-                            if(got){
-                                dwr.util.setValue("hdnMembersToVoid", newMem);
-                            }else{
-                                dwr.util.setValue("hdnMembersToVoid", newMem +=  "," + id);
-                            }
-                    }
-                }
-                function voidMembers() {
-                    var errorDivElement = document.getElementById("errorDiv");
-                    var voidableMembers = document.getElementById("hdnMembersToVoid").value;
-                    var voidReason = document.getElementById("voidReason").value;
-                    if ((voidReason == "")||(voidableMembers == "")) {
-                            $j(errorDivElement).html('<img src="${pageContext.request.contextPath}/moduleResources/household/images/problem.gif" /> Please provide a reason for removing the member(s).');
-                            errorDivElement.style.display = 'inline';
-                            setTimeout("highlightError()",5000);
-                    }else{
-                            DWRHouseholdService.voidMembers(voidableMembers,voidReason, returnedSavedHousehold );
-                    }
-                }
-            </script>
             <div>
-                <div class="titlebar">Registered/Existing Members:</div>
-                <table style="margin-left: 10px;" cellpadding="3">
-                    <tr>
-                        <td>&nbsp;</td><td>Name</td><td>Gender</td><td>Age</td><td>Joined</td><td>Remove</td>
-                    </tr>
-                    <c:forEach var="hhm" items="${memberList}" varStatus="ind">
-                        <tr class="linetablerow">
-                            <th>
-                                ${ind.index + 1 }
-                                <c:choose>
-                                    <c:when test="${hhm.householdMembershipHeadship }">
-                                        <img src="${pageContext.request.contextPath}/moduleResources/household/images/tick.png" alt="[HEAD/INDEX]" />
-                                    </c:when>
-                                    <c:otherwise></c:otherwise>
-                                </c:choose>
-                            </th>
-                            <td>
-                                <c:choose>
-                                    <c:when test="${hhm.householdMembershipMember.dead }">
-                                        <span style="color: red;">Dead!</span>
-                                    </c:when>
-                                    <c:otherwise></c:otherwise>
-                                </c:choose>
-                                <c:choose>
-                                    <c:when test="${not empty hhm.householdMembershipMember.givenName }">
-                                        ${hhm.householdMembershipMember.givenName} &nbsp;
-                                    </c:when>
-                                    <c:otherwise></c:otherwise>
-                                </c:choose>
-                                <c:choose>
-                                    <c:when test="${not empty hhm.householdMembershipMember.middleName }">
-                                        ${hhm.householdMembershipMember.middleName} &nbsp;
-                                    </c:when>
-                                    <c:otherwise></c:otherwise>
-                                </c:choose>
-                                <c:choose>
-                                    <c:when test="${not empty hhm.householdMembershipMember.familyName }">
-                                        ${hhm.householdMembershipMember.familyName} &nbsp;
-                                    </c:when>
-                                    <c:otherwise></c:otherwise>
-                                </c:choose>
-                             </td>
-                            <td>[${hhm.householdMembershipMember.gender}]</td>
-                            <td>${hhm.householdMembershipMember.age} yr(s)</td>
-                            <td><openmrs:formatDate date="${hhm.startDate}"/></td>
-                            <td>
-                                <c:choose>
-                                    <c:when test="${hhm.householdMembershipHeadship }"></c:when>
-                                    <c:otherwise>
-                                        <input type="checkbox" name="groupVoid" onclick="javascript:selectThoseToVoid(${hhm.id})">
-                                    </c:otherwise>
-                                </c:choose>
-                            </td>
-                        </tr>
-                    </c:forEach>
+                <script type="text/javascript">
+                    function selectThoseToVoid(id) {
+                        var selectedMembers = dwr.util.getValue("hdnMembersToVoid");
+                        if (selectedMembers == ""){
+                                selectedMembers = id;
+                                dwr.util.setValue("hdnMembersToVoid", selectedMembers);
+                        }else{
+                                var found = [];
+
+                                if (selectedMembers.indexOf(",", 0) < 0){
+                                        found = [selectedMembers];
+                                }else{
+                                        found = selectedMembers.split(",");
+                                }
+                                var newMem = "";
+                                var got = false;
+                                for(var x=0; x<(found.length); x++){
+                                    if(found[x] != id){
+                                        if (newMem == ""){
+                                            newMem = found[x];
+                                        }else{
+                                            newMem +=  "," + found[x];
+                                        }
+                                    }else{
+                                        got =true;
+                                    }
+                                }
+                                if(got){
+                                    dwr.util.setValue("hdnMembersToVoid", newMem);
+                                }else{
+                                    dwr.util.setValue("hdnMembersToVoid", newMem +=  "," + id);
+                                }
+                        }
+                    }
+                    function voidMembers() {
+                        var errorDivElement = document.getElementById("errorDiv");
+                        var voidableMembers = document.getElementById("hdnMembersToVoid").value;
+                        var voidReason = document.getElementById("voidReason").value;
+                        if ((voidReason == "")||(voidableMembers == "")) {
+                                $j(errorDivElement).html('<img src="${pageContext.request.contextPath}/moduleResources/household/images/problem.gif" /> Please provide a reason for removing the member(s).');
+                                errorDivElement.style.display = 'inline';
+                                setTimeout("highlightError()",5000);
+                        }else{
+                                DWRHouseholdService.voidMembers(voidableMembers,voidReason, returnedSavedHousehold );
+                        }
+                    }
+                </script>
+                <div>
+                    <div class="titlebar">Registered/Existing Members:</div>
+                    <table style="margin-left: 10px;" cellpadding="3">
                         <tr>
-                            <td>&nbsp;</td>
-                            <td>Removal reason: </td>
-                            <td colspan="4">
-                                    <textarea rows="3" cols="60" name="voidReason" id="voidReason"></textarea>
-                            </td>
+                            <td>&nbsp;</td><td>Name</td><td>Gender</td><td>Age</td><td>Joined</td><td>Remove</td>
                         </tr>
-                </table>
-                <input type="hidden" value="" name="hdnMembersToVoid" id="hdnMembersToVoid">
-                <br />
-                <button class="minimal" onclick="javascript:voidMembers()">Remove Member(s)</button>
+                        <c:forEach var="hhm" items="${memberList}" varStatus="ind">
+                            <tr class="linetablerow">
+                                <th>
+                                    ${ind.index + 1 }
+                                    <c:choose>
+                                        <c:when test="${hhm.householdMembershipHeadship }">
+                                            <img src="${pageContext.request.contextPath}/moduleResources/household/images/tick.png" alt="[HEAD/INDEX]" />
+                                        </c:when>
+                                        <c:otherwise></c:otherwise>
+                                    </c:choose>
+                                </th>
+                                <td>
+                                    <c:choose>
+                                        <c:when test="${hhm.householdMembershipMember.dead }">
+                                            <span style="color: red;">Dead!</span>
+                                        </c:when>
+                                        <c:otherwise></c:otherwise>
+                                    </c:choose>
+                                    <c:choose>
+                                        <c:when test="${not empty hhm.householdMembershipMember.givenName }">
+                                            ${hhm.householdMembershipMember.givenName} &nbsp;
+                                        </c:when>
+                                        <c:otherwise></c:otherwise>
+                                    </c:choose>
+                                    <c:choose>
+                                        <c:when test="${not empty hhm.householdMembershipMember.middleName }">
+                                            ${hhm.householdMembershipMember.middleName} &nbsp;
+                                        </c:when>
+                                        <c:otherwise></c:otherwise>
+                                    </c:choose>
+                                    <c:choose>
+                                        <c:when test="${not empty hhm.householdMembershipMember.familyName }">
+                                            ${hhm.householdMembershipMember.familyName} &nbsp;
+                                        </c:when>
+                                        <c:otherwise></c:otherwise>
+                                    </c:choose>
+                                 </td>
+                                <td>[${hhm.householdMembershipMember.gender}]</td>
+                                <td>${hhm.householdMembershipMember.age} yr(s)</td>
+                                <td><openmrs:formatDate date="${hhm.startDate}"/></td>
+                                <td>
+                                    <c:choose>
+                                        <c:when test="${hhm.householdMembershipHeadship }"></c:when>
+                                        <c:otherwise>
+                                            <input type="checkbox" name="groupVoid" onclick="javascript:selectThoseToVoid(${hhm.id})">
+                                        </c:otherwise>
+                                    </c:choose>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td>Removal reason: </td>
+                                <td colspan="4">
+                                        <textarea rows="3" cols="60" name="voidReason" id="voidReason"></textarea>
+                                </td>
+                            </tr>
+                    </table>
+                    <input type="hidden" value="" name="hdnMembersToVoid" id="hdnMembersToVoid">
+                    <br />
+                    <button class="minimal" onclick="javascript:voidMembers()">Remove Member(s)</button>
+
+                </div>
 
             </div>
-            
-        
         </c:if><!--/Remove Member ->
         <c:if test="${opts == 3}"><!--Retire Household -->
             <div>
@@ -508,24 +508,26 @@
                                     </c:when>
                                     <c:otherwise></c:otherwise>
                                 </c:choose>
-                                <c:choose>
-                                    <c:when test="${not empty hhm.householdMembershipMember.givenName }">
-                                        ${hhm.householdMembershipMember.givenName} &nbsp;
-                                    </c:when>
-                                    <c:otherwise></c:otherwise>
-                                </c:choose>
-                                <c:choose>
-                                    <c:when test="${not empty hhm.householdMembershipMember.middleName }">
-                                        ${hhm.householdMembershipMember.middleName} &nbsp;
-                                    </c:when>
-                                    <c:otherwise></c:otherwise>
-                                </c:choose>
-                                <c:choose>
-                                    <c:when test="${not empty hhm.householdMembershipMember.familyName }">
-                                        ${hhm.householdMembershipMember.familyName} &nbsp;
-                                    </c:when>
-                                    <c:otherwise></c:otherwise>
-                                </c:choose>
+                                <a href="${pageContext.request.contextPath}/patientDashboard.form?patientId=${hhm.householdMembershipMember.id}" target="_blank">
+                                    <c:choose>
+                                        <c:when test="${not empty hhm.householdMembershipMember.givenName }">
+                                            ${hhm.householdMembershipMember.givenName} &nbsp;
+                                        </c:when>
+                                        <c:otherwise></c:otherwise>
+                                    </c:choose>
+                                    <c:choose>
+                                        <c:when test="${not empty hhm.householdMembershipMember.middleName }">
+                                            ${hhm.householdMembershipMember.middleName} &nbsp;
+                                        </c:when>
+                                        <c:otherwise></c:otherwise>
+                                    </c:choose>
+                                    <c:choose>
+                                        <c:when test="${not empty hhm.householdMembershipMember.familyName }">
+                                            ${hhm.householdMembershipMember.familyName} &nbsp;
+                                        </c:when>
+                                        <c:otherwise></c:otherwise>
+                                    </c:choose>
+                                 </a>
                             </td>
                             <td>
                                 <c:choose>
@@ -558,4 +560,254 @@
                     </c:forEach>
                 </table>
         </c:if><!--/History -->
+        <c:if test="${opts == 6}"><!--Change Index -->
+            <div>
+            <script type="text/javascript">
+                function selectOneToMakeIndex(id) {
+                    $j("#hdnNewindex").val(id);
+                }
+                function changeIndexMember() {
+                    var errorDivElement = document.getElementById("errorDiv");
+                    var newIndexMember = document.getElementById("hdnNewindex").value;
+                    var changeReason = document.getElementById("changeReason").value;
+                    var provider = document.getElementById("userProvider").value;
+                    var holdHead = ${holdHead}
+                    var arr = [newIndexMember,holdHead,changeReason,provider];
+                    if ((changeReason == "")||(newIndexMember == "")) {
+                            $j(errorDivElement).html('<img src="${pageContext.request.contextPath}/moduleResources/household/images/problem.gif" /> Please select new index and provide a reason for changing the index member.');
+                            errorDivElement.style.display = 'inline';
+                            setTimeout("highlightError()",5000);
+                    }else{
+                            DWRHouseholdService.changeIndex(arr, returnedSavedHousehold );
+                    }
+                }
+                function selectProvider(userid,provider){
+                        var proHouseholdId = null;
+                        if(provider != null){
+                                proHouseholdId=provider.personId;
+                        }
+                        $j("#userProvider").val(proHouseholdId);
+                }
+            </script>
+            <div>
+                <div class="titlebar">Registered/Existing Members:</div>
+                <table style="margin-left: 10px;" cellpadding="3">
+                    <tr>
+                        <td>&nbsp;</td><td>Name</td><td>Gender</td><td>Age</td><td>Joined</td><td>New Index</td>
+                    </tr>
+                    <c:forEach var="hhm" items="${memberList}" varStatus="ind">
+                        <tr class="linetablerow">
+                            <th>
+                                ${ind.index + 1 }
+                                <c:choose>
+                                    <c:when test="${hhm.householdMembershipHeadship }">
+                                        <img src="${pageContext.request.contextPath}/moduleResources/household/images/tick.png" alt="[HEAD/INDEX]" />
+                                    </c:when>
+                                    <c:otherwise></c:otherwise>
+                                </c:choose>
+                            </th>
+                            <td>
+                                <c:choose>
+                                    <c:when test="${hhm.householdMembershipMember.dead }">
+                                        <span style="color: red;">Dead!</span>
+                                    </c:when>
+                                    <c:otherwise></c:otherwise>
+                                </c:choose>
+                                <c:choose>
+                                    <c:when test="${not empty hhm.householdMembershipMember.givenName }">
+                                        ${hhm.householdMembershipMember.givenName} &nbsp;
+                                    </c:when>
+                                    <c:otherwise></c:otherwise>
+                                </c:choose>
+                                <c:choose>
+                                    <c:when test="${not empty hhm.householdMembershipMember.middleName }">
+                                        ${hhm.householdMembershipMember.middleName} &nbsp;
+                                    </c:when>
+                                    <c:otherwise></c:otherwise>
+                                </c:choose>
+                                <c:choose>
+                                    <c:when test="${not empty hhm.householdMembershipMember.familyName }">
+                                        ${hhm.householdMembershipMember.familyName} &nbsp;
+                                    </c:when>
+                                    <c:otherwise></c:otherwise>
+                                </c:choose>
+                             </td>
+                            <td>[${hhm.householdMembershipMember.gender}]</td>
+                            <td>${hhm.householdMembershipMember.age} yr(s)</td>
+                            <td><openmrs:formatDate date="${hhm.startDate}"/></td>
+                            <td>
+                                <c:choose>
+                                    <c:when test="${hhm.householdMembershipHeadship }"></c:when>
+                                    <c:otherwise>
+                                        <input type="radio" name="groupIndex" onclick="javascript:selectOneToMakeIndex(${hhm.id})" />
+                                    </c:otherwise>
+                                </c:choose>
+                            </td>
+                        </tr>
+                    </c:forEach>
+                        <tr>
+                            <td>&nbsp;</td>
+                            <td>Reason for change: </td>
+                            <td colspan="4">
+                                <input type="hidden" id="hdnNewindex" />
+                                    <textarea rows="3" cols="60" name="changeReason" id="changeReason"></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>&nbsp;</td> 
+                            <td>Provider :</td>
+                            <td colspan="4"><openmrs_tag:userField formFieldName="userProviders" roles="Trusted+External+Application,Lab+Technician,Community+Health+Worker+Nutritionist,Clinician,Nurse,Psychosocial+Support+Staff,Pharmacist,HCT+Nurse,Outreach+Worker,Community+Health+Extension+Worker,Clinical+Officer,Provider" callback="selectProvider" />
+                                    <input type="hidden" id="userProvider" size="10" />
+                            </td>
+                        </tr>
+                </table>
+                <br />
+                <button class="minimal" onclick="javascript:changeIndexMember()">Change Index Member</button>
+
+            </div>
+            
+            </div>
+        </c:if><!--/Change Index -->
+        <c:if test="${opts == 7}"><!--Add quasi Member(s) -->
+            <div>
+                <script type="text/javascript">
+                    function selectThoseToQuasi(id) {
+                        var selectedMembers = dwr.util.getValue("hdnMembersToQuasi");
+                        if (selectedMembers == ""){
+                                selectedMembers = id;
+                                dwr.util.setValue("hdnMembersToQuasi", selectedMembers);
+                        }else{
+                                var found = [];
+
+                                if (selectedMembers.indexOf(",", 0) < 0){
+                                        found = [selectedMembers];
+                                }else{
+                                        found = selectedMembers.split(",");
+                                }
+                                var newMem = "";
+                                var got = false;
+                                for(var x=0; x<(found.length); x++){
+                                    if(found[x] != id){
+                                        if (newMem == ""){
+                                            newMem = found[x];
+                                        }else{
+                                            newMem +=  "," + found[x];
+                                        }
+                                    }else{
+                                        got =true;
+                                    }
+                                }
+                                if(got){
+                                    dwr.util.setValue("hdnMembersToQuasi", newMem);
+                                }else{
+                                    dwr.util.setValue("hdnMembersToQuasi", newMem +=  "," + id);
+                                }
+                        }
+                    }
+                    function quasiMembers() {
+                        var errorDivElement = document.getElementById("errorDiv");
+                        var quasiMembers = document.getElementById("hdnMembersToQuasi").value;
+                        var quasiReason = document.getElementById("quasiReason").value;
+                        var provider = document.getElementById("userQuasiProvider").value;
+                        var q = [quasiMembers,quasiReason,provider];
+                        if ((quasiReason == "")||(quasiMembers == "")) {
+                                $j(errorDivElement).html('<img src="${pageContext.request.contextPath}/moduleResources/household/images/problem.gif" /> Please provide a reason for removing the member(s).');
+                                errorDivElement.style.display = 'inline';
+                                setTimeout("highlightError()",5000);
+                        }else{
+                                DWRHouseholdService.addQuasiMembers(q, returnedSavedHousehold );
+                        }
+                    }
+                    function selectQuasiProvider(userid,provider){
+                        var proHouseholdId = null;
+                        if(provider != null){
+                                proHouseholdId=provider.personId;
+                        }
+                        $j("#userQuasiProvider").val(proHouseholdId);
+                    }
+                </script>
+                <div>
+                    <div class="titlebar">Registered/Existing Members:</div>
+                    <table style="margin-left: 10px;" cellpadding="3">
+                        <tr>
+                            <td>&nbsp;</td><td>Name</td><td>Gender</td><td>Age</td><td>Joined</td><td>Quasi</td>
+                        </tr>
+                        <c:forEach var="hhm" items="${memberList}" varStatus="ind">
+                            <tr class="linetablerow">
+                                <th>
+                                    ${ind.index + 1 }
+                                    <c:choose>
+                                        <c:when test="${hhm.householdMembershipHeadship }">
+                                            <img src="${pageContext.request.contextPath}/moduleResources/household/images/tick.png" alt="[HEAD/INDEX]" />
+                                        </c:when>
+                                        <c:otherwise></c:otherwise>
+                                    </c:choose>
+                                </th>
+                                <td>
+                                    <c:choose>
+                                        <c:when test="${hhm.householdMembershipMember.dead }">
+                                            <span style="color: red;">Dead!</span>
+                                        </c:when>
+                                        <c:otherwise></c:otherwise>
+                                    </c:choose>
+                                    <c:choose>
+                                        <c:when test="${not empty hhm.householdMembershipMember.givenName }">
+                                            ${hhm.householdMembershipMember.givenName} &nbsp;
+                                        </c:when>
+                                        <c:otherwise></c:otherwise>
+                                    </c:choose>
+                                    <c:choose>
+                                        <c:when test="${not empty hhm.householdMembershipMember.middleName }">
+                                            ${hhm.householdMembershipMember.middleName} &nbsp;
+                                        </c:when>
+                                        <c:otherwise></c:otherwise>
+                                    </c:choose>
+                                    <c:choose>
+                                        <c:when test="${not empty hhm.householdMembershipMember.familyName }">
+                                            ${hhm.householdMembershipMember.familyName} &nbsp;
+                                        </c:when>
+                                        <c:otherwise></c:otherwise>
+                                    </c:choose>
+                                 </td>
+                                <td>[${hhm.householdMembershipMember.gender}]</td>
+                                <td>${hhm.householdMembershipMember.age} yr(s)</td>
+                                <td><openmrs:formatDate date="${hhm.startDate}"/></td>
+                                <td>
+                                    <c:choose>
+                                        <c:when test="${hhm.householdMembershipHeadship }"></c:when>
+                                        <c:otherwise>
+                                            <c:choose>
+                                                <c:when test="${hhm.quasi }">Q</c:when>
+                                                <c:otherwise>
+                                                    <input type="checkbox" name="groupVoid" onclick="javascript:selectThoseToQuasi(${hhm.id})">
+                                                    </c:otherwise>
+                                            </c:choose>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td>Reason: </td>
+                                <td colspan="4">
+                                        <textarea rows="3" cols="60" name="quasiReason" id="quasiReason"></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                            <td>&nbsp;</td> 
+                            <td>Provider :</td>
+                            <td colspan="4"><openmrs_tag:userField formFieldName="userProviders" roles="Trusted+External+Application,Lab+Technician,Community+Health+Worker+Nutritionist,Clinician,Nurse,Psychosocial+Support+Staff,Pharmacist,HCT+Nurse,Outreach+Worker,Community+Health+Extension+Worker,Clinical+Officer,Provider" callback="selectQuasiProvider" />
+                                    <input type="hidden" id="userQuasiProvider" size="10" />
+                            </td>
+                        </tr>
+                    </table>
+                    <input type="hidden" value="" name="hdnMembersToQuasi" id="hdnMembersToQuasi">
+                    <br />
+                    <button class="minimal" onclick="javascript:quasiMembers()">Quasi Member(s)</button>
+
+                </div>
+
+            </div>
+        </c:if><!--/Add quasi Member(s) ->
 </div>

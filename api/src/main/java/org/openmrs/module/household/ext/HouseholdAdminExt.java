@@ -5,6 +5,7 @@ package org.openmrs.module.household.ext;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import org.openmrs.api.context.Context;
 
 import org.openmrs.module.household.util.HouseholdConstants;
 import org.openmrs.module.web.extension.AdministrationSectionExt;
@@ -26,13 +27,13 @@ public class HouseholdAdminExt extends AdministrationSectionExt {
 	@Override
 	public Map<String, String> getLinks() {
 		Map<String, String> map = new LinkedHashMap<String, String>();
+		map.put("module/household/householdSettingsPanel.form", "Configuration");
 		map.put("module/household/householdDashboard.form", "Dashboard");
-		/*map.put("module/household/householdRegistration.form", "Registration");
-		map.put("module/household/householdEncounterTypeList.list", "Encounters Types");*/
-		map.put("module/household/householdSettingsPanel.form", "Settings");
-		/*map.put("module/household/manageHouseholdLocation.form", "Locations/Sites");
-		map.put("module/household/householdCHWInitial.form", "CHW Encounter");*/
-
+                String val = Context.getAdministrationService().getGlobalProperty("household.enableAmpathLinks");
+                if(val.equalsIgnoreCase("true")){
+                    map.put("module/household/manageHouseholdLocation.form", "CHW Sites");
+                    map.put("module/household/householdCHWInitial.form", "CHW Encounter");
+                }
 		return map;
 	}
 	

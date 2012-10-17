@@ -5,6 +5,7 @@ package org.openmrs.module.household.web.controller.ports;
  
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.apache.commons.logging.Log;
@@ -43,42 +44,51 @@ public class HouseholdActivityController {
             List<HouseholdMembership> hhmRetiredFinal = new ArrayList<HouseholdMembership>();
             List<HouseholdMembership> hhmVoidedFinal = new ArrayList<HouseholdMembership>();
             
-            
-                //Quasi
+            Set<Integer> num = null; 
+            //Quasi
                 for (HouseholdMembership householdMembershipQ : hhmQuasi) {
                     boolean gotQuasi = false;
                     for (HouseholdMembership householdMembership : hhmList) {
                         if(householdMembership.getHouseholdMembershipMember().getId() == householdMembershipQ.getHouseholdMembershipMember().getId()){
-                            gotQuasi = true;
-                            break;
+                            if(!num.contains(householdMembership.getHouseholdMembershipMember().getId())){
+                                gotQuasi = true;
+                                num.add(householdMembership.getHouseholdMembershipMember().getId());
+                                break;
+                            }
                         }
                     }
                     if(!gotQuasi){
                         hhmQuasiFinal.add(householdMembershipQ);
                     }
                 }
-                
+                num = null;
                 //Retired
                 boolean gotRetired = false;
                 for (HouseholdMembership householdMembershipR : hhmRetired) {
                     for (HouseholdMembership householdMembership : hhmList) {
                         if(householdMembership.getHouseholdMembershipMember().getId() == householdMembershipR.getHouseholdMembershipMember().getId()){
-                            gotRetired = true;
-                            break;
+                            if(!num.contains(householdMembership.getHouseholdMembershipMember().getId())){
+                                gotRetired = true;
+                                num.add(householdMembership.getHouseholdMembershipMember().getId());
+                                break;
+                            }
                         }
                     }
                     if(!gotRetired){
                         hhmRetiredFinal.add(householdMembershipR);
                     }
                 }
-                
+                num=null;
                 //Voided
                 for (HouseholdMembership householdMembershipV : hhmVoided) {
                     boolean gotVoided = false;
                     for (HouseholdMembership householdMembership : hhmList) {
                         if(householdMembership.getHouseholdMembershipMember().getId() == householdMembershipV.getHouseholdMembershipMember().getId()){
-                            gotVoided = true;
-                            break;
+                            if(!num.contains(householdMembership.getHouseholdMembershipMember().getId())){
+                                gotVoided = true;
+                                num.add(householdMembership.getHouseholdMembershipMember().getId());
+                                break;
+                            }
                         }
                     }
                     if(!gotVoided){

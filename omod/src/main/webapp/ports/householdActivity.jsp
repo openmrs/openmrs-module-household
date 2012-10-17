@@ -13,6 +13,10 @@
                     <h2><span style="color: gray;">Household : </span> ${household.householdIdentifier}</h2>
                 </div>
                 <br />
+            </td>
+        </tr>
+        <tr>
+            <td>
                 <div style="float: right;">
                     <c:if test="${belong}">
                         <c:choose>
@@ -20,8 +24,10 @@
                             <c:otherwise>
                                 <button class="minimal" onclick="javascript:funEditActivity(1, ${household.id})">Add Member(s)</button> 
                                 <button class="minimal" onclick="javascript:funEditActivity(2, ${household.id})">Remove Member(s)</button> 
+                                <button class="minimal" onclick="javascript:funEditActivity(4, ${household.id})">Retire Member(s)</button>
+                                <button class="minimal" onclick="javascript:funEditActivity(6, ${household.id})">Change Index</button> 
+                                <button class="minimal" onclick="javascript:funEditActivity(7, ${household.id})">Add Quasi</button> 
                                 <button class="minimal" onclick="javascript:funEditActivity(3, ${household.id})">Retire Household</button> 
-                                <button class="minimal" onclick="javascript:funEditActivity(4, ${household.id})">Retire Member(s)</button> 
                             </c:otherwise>
                         </c:choose>
                     </c:if>
@@ -108,7 +114,7 @@
                                                                     <img src="${pageContext.request.contextPath}/moduleResources/household/images/tick.png" alt="[HEAD/INDEX]" />
                                                                 </c:when>
                                                                 <c:otherwise></c:otherwise>
-                                                            </c:choose>
+                                                            </c:choose>${hhm.quasi}
                                                         </th>
                                                         <td>
                                                             <c:choose>
@@ -117,24 +123,26 @@
                                                                 </c:when>
                                                                 <c:otherwise></c:otherwise>
                                                             </c:choose>
-                                                            <c:choose>
-                                                                <c:when test="${not empty hhm.householdMembershipMember.givenName }">
-                                                                    ${hhm.householdMembershipMember.givenName} &nbsp;
-                                                                </c:when>
-                                                                <c:otherwise></c:otherwise>
-                                                            </c:choose>
-                                                            <c:choose>
-                                                                <c:when test="${not empty hhm.householdMembershipMember.middleName }">
-                                                                    ${hhm.householdMembershipMember.middleName} &nbsp;
-                                                                </c:when>
-                                                                <c:otherwise></c:otherwise>
-                                                            </c:choose>
-                                                            <c:choose>
-                                                                <c:when test="${not empty hhm.householdMembershipMember.familyName }">
-                                                                    ${hhm.householdMembershipMember.familyName} &nbsp;
-                                                                </c:when>
-                                                                <c:otherwise></c:otherwise>
-                                                            </c:choose>
+                                                            <a href="${pageContext.request.contextPath}/patientDashboard.form?patientId=${hhm.householdMembershipMember.id}" target="_blank">
+                                                                <c:choose>
+                                                                    <c:when test="${not empty hhm.householdMembershipMember.givenName }">
+                                                                        ${hhm.householdMembershipMember.givenName} &nbsp;
+                                                                    </c:when>
+                                                                    <c:otherwise></c:otherwise>
+                                                                </c:choose>
+                                                                <c:choose>
+                                                                    <c:when test="${not empty hhm.householdMembershipMember.middleName }">
+                                                                        ${hhm.householdMembershipMember.middleName} &nbsp;
+                                                                    </c:when>
+                                                                    <c:otherwise></c:otherwise>
+                                                                </c:choose>
+                                                                <c:choose>
+                                                                    <c:when test="${not empty hhm.householdMembershipMember.familyName }">
+                                                                        ${hhm.householdMembershipMember.familyName} &nbsp;
+                                                                    </c:when>
+                                                                    <c:otherwise></c:otherwise>
+                                                                </c:choose>
+                                                            </a>
                                                          </td>
                                                         <td>[${hhm.householdMembershipMember.gender}]</td>
                                                         <td>${hhm.householdMembershipMember.age} yr(s)</td>
@@ -163,24 +171,26 @@
                                                                 </c:when>
                                                                 <c:otherwise></c:otherwise>
                                                             </c:choose>
-                                                            <c:choose>
-                                                                <c:when test="${not empty hhm.householdMembershipMember.givenName }">
-                                                                    ${hhm.householdMembershipMember.givenName} &nbsp;
-                                                                </c:when>
-                                                                <c:otherwise></c:otherwise>
-                                                            </c:choose>
-                                                            <c:choose>
-                                                                <c:when test="${not empty hhm.householdMembershipMember.middleName }">
-                                                                    ${hhm.householdMembershipMember.middleName} &nbsp;
-                                                                </c:when>
-                                                                <c:otherwise></c:otherwise>
-                                                            </c:choose>
-                                                            <c:choose>
-                                                                <c:when test="${not empty hhm.householdMembershipMember.familyName }">
-                                                                    ${hhm.householdMembershipMember.familyName} &nbsp;
-                                                                </c:when>
-                                                                <c:otherwise></c:otherwise>
-                                                            </c:choose>
+                                                            <a href="${pageContext.request.contextPath}/patientDashboard.form?patientId=${hhm.householdMembershipMember.id}" target="_blank">
+                                                                <c:choose>
+                                                                    <c:when test="${not empty hhm.householdMembershipMember.givenName }">
+                                                                        ${hhm.householdMembershipMember.givenName} &nbsp;
+                                                                    </c:when>
+                                                                    <c:otherwise></c:otherwise>
+                                                                </c:choose>
+                                                                <c:choose>
+                                                                    <c:when test="${not empty hhm.householdMembershipMember.middleName }">
+                                                                        ${hhm.householdMembershipMember.middleName} &nbsp;
+                                                                    </c:when>
+                                                                    <c:otherwise></c:otherwise>
+                                                                </c:choose>
+                                                                <c:choose>
+                                                                    <c:when test="${not empty hhm.householdMembershipMember.familyName }">
+                                                                        ${hhm.householdMembershipMember.familyName} &nbsp;
+                                                                    </c:when>
+                                                                    <c:otherwise></c:otherwise>
+                                                                </c:choose>
+                                                            </a>
                                                         </td>
                                                         <td><openmrs:format user="${hhm.creator}"/></td>
                                                         <td><openmrs:formatDate date="${hhm.dateCreated}"/></td>
@@ -209,24 +219,26 @@
                                                                 </c:when>
                                                                 <c:otherwise></c:otherwise>
                                                             </c:choose>
-                                                            <c:choose>
-                                                                <c:when test="${not empty hhm.householdMembershipMember.givenName }">
-                                                                    ${hhm.householdMembershipMember.givenName} &nbsp;
-                                                                </c:when>
-                                                                <c:otherwise></c:otherwise>
-                                                            </c:choose>
-                                                            <c:choose>
-                                                                <c:when test="${not empty hhm.householdMembershipMember.middleName }">
-                                                                    ${hhm.householdMembershipMember.middleName} &nbsp;
-                                                                </c:when>
-                                                                <c:otherwise></c:otherwise>
-                                                            </c:choose>
-                                                            <c:choose>
-                                                                <c:when test="${not empty hhm.householdMembershipMember.familyName }">
-                                                                    ${hhm.householdMembershipMember.familyName} &nbsp;
-                                                                </c:when>
-                                                                <c:otherwise></c:otherwise>
-                                                            </c:choose>
+                                                            <a href="${pageContext.request.contextPath}/patientDashboard.form?patientId=${hhm.householdMembershipMember.id}" target="_blank">
+                                                                <c:choose>
+                                                                    <c:when test="${not empty hhm.householdMembershipMember.givenName }">
+                                                                        ${hhm.householdMembershipMember.givenName} &nbsp;
+                                                                    </c:when>
+                                                                    <c:otherwise></c:otherwise>
+                                                                </c:choose>
+                                                                <c:choose>
+                                                                    <c:when test="${not empty hhm.householdMembershipMember.middleName }">
+                                                                        ${hhm.householdMembershipMember.middleName} &nbsp;
+                                                                    </c:when>
+                                                                    <c:otherwise></c:otherwise>
+                                                                </c:choose>
+                                                                <c:choose>
+                                                                    <c:when test="${not empty hhm.householdMembershipMember.familyName }">
+                                                                        ${hhm.householdMembershipMember.familyName} &nbsp;
+                                                                    </c:when>
+                                                                    <c:otherwise></c:otherwise>
+                                                                </c:choose>
+                                                           </a>
                                                         </td>
                                                         <td>${hhm.retireReason}</td>
                                                         <td><openmrs:format user="${hhm.changedBy}"/></td>
@@ -243,10 +255,10 @@
                                         <td>
                                             <div class="titlebar">Voided/Removed Member(s):</div>
                                             <table style="margin-left: 10px;" cellpadding="3">
+                                                <tr>
+                                                    <td>&nbsp;</td><td>Name:</td><td>Reason:</td><td>Voided By:</td><td>Date:</td>
+                                                </tr>
                                                 <c:forEach var="hhm" items="${memberVoided}" varStatus="ind">
-                                                    <tr>
-                                                        <td>&nbsp;</td><td>Name:</td><td>Reason:</td><td>Voided By:</td><td>Date:</td>
-                                                    </tr>
                                                     <tr class="linetablerow">
                                                         <td>${ind.index + 1 }</td>
                                                         <td>
@@ -256,24 +268,26 @@
                                                                 </c:when>
                                                                 <c:otherwise></c:otherwise>
                                                             </c:choose>
-                                                            <c:choose>
-                                                                <c:when test="${not empty hhm.householdMembershipMember.givenName }">
-                                                                    ${hhm.householdMembershipMember.givenName} &nbsp;
-                                                                </c:when>
-                                                                <c:otherwise></c:otherwise>
-                                                            </c:choose>
-                                                            <c:choose>
-                                                                <c:when test="${not empty hhm.householdMembershipMember.middleName }">
-                                                                    ${hhm.householdMembershipMember.middleName} &nbsp;
-                                                                </c:when>
-                                                                <c:otherwise></c:otherwise>
-                                                            </c:choose>
-                                                            <c:choose>
-                                                                <c:when test="${not empty hhm.householdMembershipMember.familyName }">
-                                                                    ${hhm.householdMembershipMember.familyName} &nbsp;
-                                                                </c:when>
-                                                                <c:otherwise></c:otherwise>
-                                                            </c:choose>
+                                                            <a href="${pageContext.request.contextPath}/patientDashboard.form?patientId=${hhm.householdMembershipMember.id}" target="_blank">
+                                                                <c:choose>
+                                                                    <c:when test="${not empty hhm.householdMembershipMember.givenName }">
+                                                                        ${hhm.householdMembershipMember.givenName} &nbsp;
+                                                                    </c:when>
+                                                                    <c:otherwise></c:otherwise>
+                                                                </c:choose>
+                                                                <c:choose>
+                                                                    <c:when test="${not empty hhm.householdMembershipMember.middleName }">
+                                                                        ${hhm.householdMembershipMember.middleName} &nbsp;
+                                                                    </c:when>
+                                                                    <c:otherwise></c:otherwise>
+                                                                </c:choose>
+                                                                <c:choose>
+                                                                    <c:when test="${not empty hhm.householdMembershipMember.familyName }">
+                                                                        ${hhm.householdMembershipMember.familyName} &nbsp;
+                                                                    </c:when>
+                                                                    <c:otherwise></c:otherwise>
+                                                                </c:choose>
+                                                            </a>
                                                         </td>
                                                         <td>${hhm.voidReason}</td>
                                                         <td><openmrs:format user="${hhm.voidedBy}"/></td>
