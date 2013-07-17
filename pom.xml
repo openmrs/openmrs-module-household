@@ -14,9 +14,9 @@
 	<ciManagement>
 	</ciManagement>
 	<scm>
-		<connection>scm:svn:https://svn.openmrs.org/openmrs-modules/household/</connection>
-		<developerConnection>scm:svn:https://svn.openmrs.org/openmrs-modules/household/</developerConnection>
-		<url>https://svn.openmrs.org/openmrs-modules/household//</url>
+		<connection>scm:git:https://github.com/openmrs/openmrs-module-household/</connection>
+		<developerConnection>scm:git:https://github.com/openmrs/openmrs-module-household/</developerConnection>
+		<url>https://github.com/openmrs/openmrs-module-household/</url>
 	</scm>
 
 	<modules>
