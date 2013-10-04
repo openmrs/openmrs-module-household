@@ -23,6 +23,18 @@ $(document).ready(function() {
         $(".curvedContainer .tabcontent").css("display","none");
         $(".curvedContainer #tab_content_"+index).css("display","block");
     });
+
+    //display add department form
+    $j('.toggleAddHouseholdDepartment').click(function(event) {
+        $j('#addHouseholdDepartment').slideToggle('fast');
+        event.preventDefault();
+    });
+
+    $j('.toggleAddHouseholdEncounterType').click(function(event) {
+        $j('#addHouseholdEncounterType').slideToggle('fast');
+        event.preventDefault();
+    });
+
 });
 function checkPrefix(){
 	var par = document.getElementById("parent").value;
@@ -33,7 +45,7 @@ function checkPrefix(){
 		$("#pref").css("display","inline");
 		
 }
-
+/*code for addding household department object*/
 function passHDObjectDepartment(){
 	var dpar = document.getElementById("hdAddEditDepartment").value;
 	var dpar1 = document.getElementById("hdidDepartment").value;
@@ -53,8 +65,7 @@ function returnDepartment(data){
 	if (checkDelete != "Delete"){
 		$j('#addHouseholdDepartment').slideToggle('fast');
 	}
-        $j.get("ports/householdSettingsDep.form",
-                        function(dat){
+        $j.get("ports/householdSettingsDep.form",function(dat){
                                 $j('#idDepartment').html(dat);
                         }
                 );
@@ -133,6 +144,89 @@ function returnEncType(data){
 	document.getElementById("idencTypeDescription").value = "";
 	document.getElementById("hdidRetire").value = "";
 }
+
+
+function onClickEditDepartment(id,parentCode,parentFullname,parentDescription ){
+    document.getElementById("hdAddEditDepartment").value = "Edit";
+    document.getElementById("hdidDepartment").value = id;
+    document.getElementById("departmentCode").value = parentCode;
+    document.getElementById("codeInFullDepartment").value = parentFullname;
+    document.getElementById("departmentDescription").value = parentDescription;
+    $j('#addHouseholdDepartment').slideToggle('fast');
+}
+function onClickDeleteDepartment(id,def){
+    var r=confirm("Do you really want to delete the " + def + " department?");
+    if (r==true){
+        document.getElementById("hdAddEditDepartment").value = "Delete";
+        document.getElementById("hdidDepartment").value = id;
+        passHDObjectDepartment();
+    }else{
+        document.getElementById("hdAddEditDepartment").value = "";
+    }
+}
+
+function onClickEditProgram(id,householdDefinitionsCode,householdDefinitionsCodeinfull,householdDefinitionsDescription,parentId,pref ){
+    document.getElementById("hdAddEdit").value = "Edit";
+    document.getElementById("hdid").value = id;
+    document.getElementById("programCode").value = householdDefinitionsCode;
+    document.getElementById("codeInFull").value = householdDefinitionsCodeinfull;
+    document.getElementById("parent").value = parentId;
+    document.getElementById("identifierPrefix").value = pref;
+    document.getElementById("programDescription").value = householdDefinitionsDescription;
+    $j('#addHouseholdProgram').slideToggle('fast');
+    //event.preventDefault();
+}
+function onClickDeleteProgram(id,def){
+    var r=confirm("Do you really want to delete the " + def + " definition?");
+    if (r==true){
+        document.getElementById("hdAddEdit").value = "Delete";
+        document.getElementById("hdid").value = id;
+        passHDObject();
+    }else{
+        document.getElementById("hdAddEdit").value = "";
+    }
+}
+
+function onClickEditEncounterType(id,nam,description){
+    document.getElementById("hdAddEditEnc").value = "Edit";
+    document.getElementById("hdidEnc").value = id;
+    document.getElementById("idname").value = nam;
+    document.getElementById("idencTypeDescription").value = description;
+    $j('#addHouseholdEncounterType').slideToggle('fast');
+    //event.preventDefault();
+}
+function onClickDeleteEncounterType(id,nam){
+    var reason=prompt("Please enter the reson for retiring this Encounter Type.","");
+    if (reason!=null && reason!=""){
+        var r=confirm("Do you really want to Retire the " + nam + " Encounter Type?");
+        if (r==true){
+            document.getElementById("hdAddEditEnc").value = "Retire";
+            document.getElementById("hdidEnc").value = id;
+            document.getElementById("hdidRetire").value = reason;
+            passEncTypeObject();
+        }else{
+            document.getElementById("hdAddEditEnc").value = "";
+        }
+    }else{
+        alert("Sorry, you never entered the reason for retiring this record. Not retired.")
+    }
+}
+function pullRetired(){
+    var val = document.getElementById("includeRetired");
+    if(val.checked){
+        $j.get("ports/householdSettingsEncType.form?includedRetired=" + true,
+                function(dat){
+                    $j('#idEncType').html(dat);
+                }
+        );
+    }else{
+        $j.get("ports/householdSettingsEncType.form?includedRetired=" + false,
+                function(dat){
+                    $j('#idEncType').html(dat);
+                }
+        );
+    }
+}
 </script>
 
 <h3><spring:message code="household.title"/></h3>
@@ -168,17 +262,10 @@ function returnEncType(data){
 	    </div>
 		<div class="curvedContainer">
 			<div class="tabcontent" id="tab_content_0" style="display:block">
-				<script type="text/javascript">
-					$j(document).ready(function() {
-						$j('.toggleAddHouseholdDepartment').click(function(event) {
-							$j('#addHouseholdDepartment').slideToggle('fast');
-							event.preventDefault();
-						});
-					});
-				</script>
+
 				<a class="toggleAddHouseholdDepartment" href="#">Add Household Department</a><br />
                                 <div id="addHouseholdDepartment" style="display: none" class="householdtoggle">
-					<form method="post">
+					<form>
 						<table>
 							<tr>
 								<th>Department Code</th>
@@ -253,27 +340,7 @@ function returnEncType(data){
 					</table>
 				</div>
 				<div id="openEditDepartment"></div>
-				<script type="text/javascript">
-				
-					function onClickEditDepartment(id,parentCode,parentFullname,parentDescription ){
-						document.getElementById("hdAddEditDepartment").value = "Edit";
-						document.getElementById("hdidDepartment").value = id;
-						document.getElementById("departmentCode").value = parentCode;
-						document.getElementById("codeInFullDepartment").value = parentFullname;
-						document.getElementById("departmentDescription").value = parentDescription;
-						$j('#addHouseholdDepartment').slideToggle('fast');
-					}
-					function onClickDeleteDepartment(id,def){
-						var r=confirm("Do you really want to delete the " + def + " department?");
-						if (r==true){
-							document.getElementById("hdAddEditDepartment").value = "Delete";
-							document.getElementById("hdidDepartment").value = id;
-							passHDObjectDepartment();
-						}else{
-							document.getElementById("hdAddEditDepartment").value = "";
-						}
-					}
-				</script>
+
 			</div>
 			<div class="tabcontent" id="tab_content_1">
 				<script type="text/javascript">
@@ -286,7 +353,7 @@ function returnEncType(data){
 				</script>
 				<a class="toggleAddHouseholdProgram" href="#">Add Household Program</a><br />
 				<div id="addHouseholdProgram" style="display: none" class="householdtoggle">
-					<form method="post">
+					<form <%--method="post"--%>>
 						<table>
                                                     <c:choose>
                                                         <c:when test="${not empty householdsTypes}">
@@ -374,7 +441,7 @@ function returnEncType(data){
 					    </thead>
 					    <tbody id="bdytbl">
 					    	<c:forEach var="household" items="${householdsTypes}" varStatus="ind">
-								<form method="POST" name="def${household.id}">
+								<form <%--method="POST"--%> name="def${household.id}">
 									<tr valign="top">
 										<th>${ind.index + 1}</th>
 										<td class="highlight">
@@ -400,57 +467,10 @@ function returnEncType(data){
 					</table>
 				</div>
 				<div id="openEdit"></div>
-				<script type="text/javascript">
-				
-					function onClickEditProgram(id,householdDefinitionsCode,householdDefinitionsCodeinfull,householdDefinitionsDescription,parentId,pref ){
-						document.getElementById("hdAddEdit").value = "Edit";
-						document.getElementById("hdid").value = id;
-						document.getElementById("programCode").value = householdDefinitionsCode;
-						document.getElementById("codeInFull").value = householdDefinitionsCodeinfull;
-						document.getElementById("parent").value = parentId;
-						document.getElementById("identifierPrefix").value = pref;
-						document.getElementById("programDescription").value = householdDefinitionsDescription;
-						$j('#addHouseholdProgram').slideToggle('fast');
-						//event.preventDefault();
-					}
-					function onClickDeleteProgram(id,def){
-						var r=confirm("Do you really want to delete the " + def + " definition?");
-						if (r==true){
-							document.getElementById("hdAddEdit").value = "Delete";
-							document.getElementById("hdid").value = id;
-							passHDObject();
-						}else{
-							document.getElementById("hdAddEdit").value = "";
-						}
-					}
-				</script>
-				
+
 			</div>
 			<div class="tabcontent" id="tab_content_2">
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				<script type="text/javascript">
-					$j(document).ready(function() {
-						$j('.toggleAddHouseholdEncounterType').click(function(event) {
-							$j('#addHouseholdEncounterType').slideToggle('fast');
-							event.preventDefault();
-						});
-					});
-				</script>
+
 				<span>
 					<a class="toggleAddHouseholdEncounterType" href="#">Add Household Encounter Type</a><br />
 					<span style="float: right"> 
@@ -529,89 +549,7 @@ function returnEncType(data){
 					</table>
 				</div>
 				<div id="openEditEncounterType"></div>
-				<script type="text/javascript">
-					function onClickEditEncounterType(id,nam,description){
-						document.getElementById("hdAddEditEnc").value = "Edit";
-						document.getElementById("hdidEnc").value = id;
-						document.getElementById("idname").value = nam;
-						document.getElementById("idencTypeDescription").value = description;
-						$j('#addHouseholdEncounterType').slideToggle('fast');
-						//event.preventDefault();
-					}
-					function onClickDeleteEncounterType(id,nam){
-						var reason=prompt("Please enter the reson for retiring this Encounter Type.","");
-						if (reason!=null && reason!=""){
-							var r=confirm("Do you really want to Retire the " + nam + " Encounter Type?");
-							if (r==true){
-								document.getElementById("hdAddEditEnc").value = "Retire";
-								document.getElementById("hdidEnc").value = id;
-								document.getElementById("hdidRetire").value = reason;
-								passEncTypeObject();
-							}else{
-								document.getElementById("hdAddEditEnc").value = "";
-							}
-						}else{
-							alert("Sorry, you never entered the reason for retiring this record. Not retired.")
-						}
-					}
-					function pullRetired(){
-						var val = document.getElementById("includeRetired");
-						if(val.checked){
-							$j.get("ports/householdSettingsEncType.form?includedRetired=" + true,
-									function(dat){
-										$j('#idEncType').html(dat);
-									}
-								);
-						}else{
-							$j.get("ports/householdSettingsEncType.form?includedRetired=" + false,
-									function(dat){
-										$j('#idEncType').html(dat);
-									}
-								);
-						}
-					}
-				</script>
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
+
 			</div>
 			<!--div class="tabcontent" id="tab_content_3">
 				Display encounters here
