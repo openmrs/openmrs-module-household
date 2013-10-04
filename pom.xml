@@ -40,18 +40,18 @@
 				<type>jar</type>
 				<scope>provided</scope>
 			</dependency>
-			<dependency>
-				<groupId>org.openmrs.test</groupId>
-				<artifactId>openmrs-test</artifactId>
-				<version>${openMRSVersion}</version>
-				<type>pom</type>
-				<scope>test</scope>
-			</dependency>
+            <dependency>
+                <groupId>org.openmrs.test</groupId>
+                <artifactId>openmrs-test</artifactId>
+                <version>1.8.0</version>
+                <type>pom</type>
+                <scope>test</scope>
+            </dependency>
 		</dependencies>
 	</dependencyManagement>
 
 	<properties>
-		<openMRSVersion>1.6.2</openMRSVersion>
+		<openMRSVersion>1.8.0</openMRSVersion>
 	</properties>
 
 	<build>
