@@ -35,6 +35,11 @@ $(document).ready(function() {
         event.preventDefault();
     });
 
+    $j('.toggleAddHouseholdProgram').click(function(event) {
+        $j('#addHouseholdProgram').slideToggle('fast');
+        event.preventDefault();
+    });
+
 });
 function checkPrefix(){
 	var par = document.getElementById("parent").value;
@@ -290,8 +295,10 @@ function pullRetired(){
 							<tr>
 								<th></th>
 								<td>
-									<button id="btnDepAdd" onclick="javascript:passHDObjectDepartment()" class="minimal"><spring:message code="general.save"/></button>
-									<button class="minimal toggleAddHouseholdDepartment"><spring:message code="general.cancel"/></button>
+									<input type="button" id="btnDepAdd" onclick="javascript:passHDObjectDepartment()"
+                                             class="minimal" value="<spring:message code="general.save"/>"/>
+									<input type="button" class="minimal toggleAddHouseholdDepartment" value="<spring:message
+                                            code="general.cancel"/>"/>
 								</td>
 							</tr>
 						</table>
@@ -343,14 +350,7 @@ function pullRetired(){
 
 			</div>
 			<div class="tabcontent" id="tab_content_1">
-				<script type="text/javascript">
-					$j(document).ready(function() {
-						$j('.toggleAddHouseholdProgram').click(function(event) {
-							$j('#addHouseholdProgram').slideToggle('fast');
-							event.preventDefault();
-						});
-					});
-				</script>
+
 				<a class="toggleAddHouseholdProgram" href="#">Add Household Program</a><br />
 				<div id="addHouseholdProgram" style="display: none" class="householdtoggle">
 					<form <%--method="post"--%>>
@@ -413,8 +413,10 @@ function pullRetired(){
 							<tr>
 								<th></th>
 								<td>
-									<button onclick="javascript:passHDObject()" class="minimal"><spring:message code="general.save"/></button>
-									<button class="minimal toggleAddHouseholdProgram"><spring:message code="general.cancel"/></button>
+                                    <input type="button" onclick="javascript:passHDObject()"
+                                           class="minimal" value="<spring:message code="general.save"/>" />
+                                    <input type="button" class="minimal toggleAddHouseholdProgram" value=" <spring:message
+                                        code="general.cancel"/>"/>
 									<!--input type="button" onclick="javascript:passHDObject()" value="<spring:message code="general.save"/>" />
 									<input type="button" value="<spring:message code="general.cancel"/>" class="toggleAddHouseholdProgram" /-->
 								</td>
