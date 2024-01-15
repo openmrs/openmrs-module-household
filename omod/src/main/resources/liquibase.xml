@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
-                  http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+<databaseChangeLog
+		xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
 
 	<!-- See http://wiki.openmrs.org/display/docs/Module+liquibase+File for 
 		documentation on this file. See http://www.liquibase.org/manual/home#available_database_refactorings 
@@ -1384,7 +1385,7 @@
 	<changeSet author="ningosi" id="household_definition-30-01-2012:23:31">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<foreignKeyConstraintExists foreignKeyName="user_who_created_definitions"/>
+				<foreignKeyConstraintExists foreignKeyTableName="household_definition" foreignKeyName="user_who_created_definitions"/>
 			</not>
 		</preConditions>
 		<comment> creating household_definition user_who_created_definitions foreign keys</comment>
@@ -1396,7 +1397,7 @@
 	<changeSet author="ningosi" id="household_definition-31-01-2012:06:45">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<foreignKeyConstraintExists foreignKeyName="user_who_changed_definitions"/>
+				<foreignKeyConstraintExists foreignKeyTableName="household_definition" foreignKeyName="user_who_changed_definitions"/>
 			</not>
 		</preConditions>
 		<comment> creating household_definition user_who_changed_definitions foreign keys</comment>
@@ -1408,7 +1409,7 @@
 	<changeSet author="ningosi" id="household_definition-31-01-2012:06:46">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<foreignKeyConstraintExists foreignKeyName="user_who_voided_definitions"/>
+				<foreignKeyConstraintExists foreignKeyTableName="household_definition" foreignKeyName="user_who_voided_definitions"/>
 			</not>
 		</preConditions>
 		<comment> creating household_definition user_who_voided_definitions foreign keys</comment>
@@ -1420,7 +1421,7 @@
 	<changeSet author="ningosi" id="household_definition-31-01-2012:06:47">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<foreignKeyConstraintExists foreignKeyName="definition_program"/>
+				<foreignKeyConstraintExists foreignKeyTableName="household_definition" foreignKeyName="definition_program"/>
 			</not>
 		</preConditions>
 		<comment> creating household_definition definition_program foreign keys</comment>
@@ -1433,7 +1434,7 @@
 	<changeSet author="ningosi" id="household-31-01-2012:06:55">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<foreignKeyConstraintExists foreignKeyName="user_who_created_household"/>
+				<foreignKeyConstraintExists foreignKeyTableName="household" foreignKeyName="user_who_created_household"/>
 			</not>
 		</preConditions>
 		<comment> creating household user_who_created_household foreign keys</comment>
@@ -1445,7 +1446,7 @@
 	<changeSet author="ningosi" id="household-31-01-2012:06:56">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<foreignKeyConstraintExists foreignKeyName="user_who_changed_household"/>
+				<foreignKeyConstraintExists foreignKeyTableName="household" foreignKeyName="user_who_changed_household"/>
 			</not>
 		</preConditions>
 		<comment> creating household user_who_changed_household foreign keys</comment>
@@ -1457,7 +1458,7 @@
 	<changeSet author="ningosi" id="household-31-01-2012:06:57">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<foreignKeyConstraintExists foreignKeyName="user_who_voided_household"/>
+				<foreignKeyConstraintExists foreignKeyTableName="household" foreignKeyName="user_who_voided_household"/>
 			</not>
 		</preConditions>
 		<comment> creating household user_who_voided_household foreign keys</comment>
@@ -1469,7 +1470,7 @@
 	<changeSet author="ningosi" id="household-31-01-2012:06:58">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<foreignKeyConstraintExists foreignKeyName="household_def_uuid"/>
+				<foreignKeyConstraintExists foreignKeyTableName="household" foreignKeyName="household_def_uuid"/>
 			</not>
 		</preConditions>
 		<comment> creating household household_def_uuid foreign keys</comment>
@@ -1482,7 +1483,7 @@
 	<changeSet author="ningosi" id="household_mebership-31-01-2012:07:00">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<foreignKeyConstraintExists foreignKeyName="household_uuid"/>
+				<foreignKeyConstraintExists foreignKeyTableName="household_membership" foreignKeyName="household_uuid"/>
 			</not>
 		</preConditions>
 		<comment> creating household_membership household_uuid foreign keys</comment>
@@ -1494,7 +1495,7 @@
 	<changeSet author="ningosi" id="household_mebership-31-01-2012:07:30">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<foreignKeyConstraintExists foreignKeyName="user_who_created_membership"/>
+				<foreignKeyConstraintExists foreignKeyTableName="household_membership" foreignKeyName="user_who_created_membership"/>
 			</not>
 		</preConditions>
 		<comment> creating household_membership user_who_created_membership foreign keys</comment>
@@ -1506,7 +1507,7 @@
 	<changeSet author="ningosi" id="household_mebership-31-01-2012:07:32">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<foreignKeyConstraintExists foreignKeyName="user_who_changed_membership"/>
+				<foreignKeyConstraintExists foreignKeyTableName="household_membership" foreignKeyName="user_who_changed_membership"/>
 			</not>
 		</preConditions>
 		<comment> creating household_membership user_who_changed_membership foreign keys</comment>
@@ -1518,7 +1519,7 @@
 	<changeSet author="ningosi" id="household_mebership-31-01-2012:07:35">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<foreignKeyConstraintExists foreignKeyName="user_who_voided_membership"/>
+				<foreignKeyConstraintExists foreignKeyTableName="household_membership" foreignKeyName="user_who_voided_membership"/>
 			</not>
 		</preConditions>
 		<comment> creating household_membership user_who_voided_membership foreign keys</comment>
@@ -1530,7 +1531,7 @@
 	<changeSet author="ningosi" id="household_mebership-31-01-2012:07:36">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<foreignKeyConstraintExists foreignKeyName="household_membership_person_uuid"/>
+				<foreignKeyConstraintExists foreignKeyTableName="household_membership" foreignKeyName="household_membership_person_uuid"/>
 			</not>
 		</preConditions>
 		<comment> creating household_membership household_membership_person_uuid foreign keys</comment>
@@ -1543,7 +1544,7 @@
 	<changeSet author="ningosi" id="household_mebership-31-01-2012:07:40">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<foreignKeyConstraintExists foreignKeyName="household_attribute_type_changer"/>
+				<foreignKeyConstraintExists foreignKeyTableName="household_attribute" foreignKeyName="household_attribute_type_changer"/>
 			</not>
 		</preConditions>
 		<comment> creating household_attribute household_attribute_type_changer foreign keys</comment>
@@ -1555,7 +1556,7 @@
 	<changeSet author="ningosi" id="household_mebership-31-01-2012:07:42">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<foreignKeyConstraintExists foreignKeyName="household_attribute_type_creator"/>
+				<foreignKeyConstraintExists foreignKeyTableName="household_attribute" foreignKeyName="household_attribute_type_creator"/>
 			</not>
 		</preConditions>
 		<comment> creating household_attribute household_attribute_type_creator foreign keys</comment>
@@ -1567,7 +1568,7 @@
 	<changeSet author="ningosi" id="household_mebership-31-01-2012:07:43">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<foreignKeyConstraintExists foreignKeyName="household_privilege_which_can_edit"/>
+				<foreignKeyConstraintExists foreignKeyTableName="household_attribute" foreignKeyName="household_privilege_which_can_edit"/>
 			</not>
 		</preConditions>
 		<comment> creating household_attribute household_privilege_which_can_edit foreign keys</comment>
@@ -1579,7 +1580,7 @@
 	<changeSet author="ningosi" id="household_mebership-31-01-2012:07:45">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<foreignKeyConstraintExists foreignKeyName="household_user_who_retired_household_attribute_type"/>
+				<foreignKeyConstraintExists foreignKeyTableName="household_attribute" foreignKeyName="household_user_who_retired_household_attribute_type"/>
 			</not>
 		</preConditions>
 		<comment> creating household_attribute household_user_who_retired_household_attribute_type foreign keys</comment>
@@ -1592,7 +1593,7 @@
 	<changeSet author="ningosi" id="household_attrib_value-31-01-2012:08:27">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<foreignKeyConstraintExists foreignKeyName="household_attribute_changer"/>
+				<foreignKeyConstraintExists foreignKeyTableName="household_attrib_value" foreignKeyName="household_attribute_changer"/>
 			</not>
 		</preConditions>
 		<comment> creating household_attrib_value household_attribute_changer foreign keys</comment>
@@ -1604,7 +1605,7 @@
 	<changeSet author="ningosi" id="household_attrib_value-31-01-2012:08:29">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<foreignKeyConstraintExists foreignKeyName="household_attribute_creator"/>
+				<foreignKeyConstraintExists foreignKeyTableName="household_attrib_value" foreignKeyName="household_attribute_creator"/>
 			</not>
 		</preConditions>
 		<comment> creating household_attrib_value household_attribute_creator foreign keys</comment>
@@ -1616,7 +1617,7 @@
 	<changeSet author="ningosi" id="household_attrib_value-31-01-2012:08:30">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<foreignKeyConstraintExists foreignKeyName="household_attribute_voider"/>
+				<foreignKeyConstraintExists foreignKeyTableName="household_attrib_value" foreignKeyName="household_attribute_voider"/>
 			</not>
 		</preConditions>
 		<comment> creating household_attrib_value household_attribute_voider foreign keys</comment>
@@ -1628,7 +1629,7 @@
 	<changeSet author="ningosi" id="household_attrib_value-31-01-2012:08:33">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<foreignKeyConstraintExists foreignKeyName="household_defines_attribute_type"/>
+				<foreignKeyConstraintExists foreignKeyTableName="household_attrib_value" foreignKeyName="household_defines_attribute_type"/>
 			</not>
 		</preConditions>
 		<comment> creating household_attrib_value household_defines_attribute_type foreign keys</comment>
@@ -1641,7 +1642,7 @@
 	<changeSet author="ningosi" id="household_location-31-01-2012:08:35">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<foreignKeyConstraintExists foreignKeyName="user_who_created_household_location"/>
+				<foreignKeyConstraintExists foreignKeyTableName="household_location" foreignKeyName="user_who_created_household_location"/>
 			</not>
 		</preConditions>
 		<comment> creating household_location household_attribute_voider foreign keys</comment>
@@ -1653,7 +1654,7 @@
 	<changeSet author="ningosi" id="household_location-31-01-2012:08:38">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<foreignKeyConstraintExists foreignKeyName="user_who_retired_household_location"/>
+				<foreignKeyConstraintExists foreignKeyTableName="household_location" foreignKeyName="user_who_retired_household_location"/>
 			</not>
 		</preConditions>
 		<comment> creating household_location user_who_retired_household_location foreign keys</comment>
@@ -1666,7 +1667,7 @@
 	<changeSet author="ningosi" id="household_location_level-31-01-2012:08:40">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<foreignKeyConstraintExists foreignKeyName="parent_level_loc"/>
+				<foreignKeyConstraintExists foreignKeyTableName="household_location_level" foreignKeyName="parent_level_loc"/>
 			</not>
 		</preConditions>
 		<comment> creating household_location_level user_who_retired_household_location foreign keys</comment>
@@ -1679,7 +1680,7 @@
 	<changeSet author="ningosi" id="household_location_entry-31-01-2012:08:42">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<foreignKeyConstraintExists foreignKeyName="level_to_level_loci"/>
+				<foreignKeyConstraintExists foreignKeyTableName="household_location_entry" foreignKeyName="level_to_level_loci"/>
 			</not>
 		</preConditions>
 		<comment> creating household_location_entry level_to_level_loci foreign keys</comment>
@@ -1691,7 +1692,7 @@
 	<changeSet author="ningosi" id="household_location_entry-31-01-2012:08:45">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<foreignKeyConstraintExists foreignKeyName="parent_to_parent_loci"/>
+				<foreignKeyConstraintExists foreignKeyTableName="household_location_entry" foreignKeyName="parent_to_parent_loci"/>
 			</not>
 		</preConditions>
 		<comment> creating household_location_entry parent_to_parent_loci foreign keys</comment>
@@ -1704,7 +1705,7 @@
 	<changeSet author="ningosi" id="household_encounter_type-31-01-2012:08:50">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<foreignKeyConstraintExists foreignKeyName="user_who_created_household_type"/>
+				<foreignKeyConstraintExists foreignKeyTableName="household_encounter_type" foreignKeyName="user_who_created_household_type"/>
 			</not>
 		</preConditions>
 		<comment> creating household_encounter_type user_who_created_household_type foreign keys</comment>
@@ -1716,7 +1717,7 @@
 	<changeSet author="ningosi" id="household_encounter_type-31-01-2012:08:51">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<foreignKeyConstraintExists foreignKeyName="user_who_retired_household_encounter_type"/>
+				<foreignKeyConstraintExists foreignKeyTableName="household_encounter_type" foreignKeyName="user_who_retired_household_encounter_type"/>
 			</not>
 		</preConditions>
 		<comment> creating household_encounter_type user_who_retired_household_encounter_type foreign keys</comment>
@@ -1729,7 +1730,7 @@
 	<changeSet author="ningosi" id="household_encounter-31-01-2012:08:54">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<foreignKeyConstraintExists foreignKeyName="household_encounter_changed_by"/>
+				<foreignKeyConstraintExists foreignKeyTableName="household_encounter" foreignKeyName="household_encounter_changed_by"/>
 			</not>
 		</preConditions>
 		<comment> creating household_encounter household_encounter_changed_by foreign keys</comment>
@@ -1741,7 +1742,7 @@
 	<changeSet author="ningosi" id="household_encounter-31-01-2012:08:55">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<foreignKeyConstraintExists foreignKeyName="household_encounter_form"/>
+				<foreignKeyConstraintExists foreignKeyTableName="household_encounter" foreignKeyName="household_encounter_form"/>
 			</not>
 		</preConditions>
 		<comment> creating household_encounter household_encounter_form foreign keys</comment>
@@ -1753,7 +1754,7 @@
 	<changeSet author="ningosi" id="household_encounter-31-01-2012:08:56">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<foreignKeyConstraintExists foreignKeyName="household_encounter_ibfk_1"/>
+				<foreignKeyConstraintExists foreignKeyTableName="household_encounter" foreignKeyName="household_encounter_ibfk_1"/>
 			</not>
 		</preConditions>
 		<comment> creating household_encounter household_encounter_ibfk_1 foreign keys</comment>
@@ -1765,7 +1766,7 @@
 	<changeSet author="ningosi" id="household_encounter-31-01-2012:08:58">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<foreignKeyConstraintExists foreignKeyName="household_encounter_location"/>
+				<foreignKeyConstraintExists foreignKeyTableName="household_encounter" foreignKeyName="household_encounter_location"/>
 			</not>
 		</preConditions>
 		<comment> creating household_encounter household_encounter_location foreign keys</comment>
@@ -1777,7 +1778,7 @@
 	<changeSet author="ningosi" id="household_encounter-31-01-2012:08:59">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<foreignKeyConstraintExists foreignKeyName="household_encounter_patient"/>
+				<foreignKeyConstraintExists foreignKeyTableName="household_encounter" foreignKeyName="household_encounter_patient"/>
 			</not>
 		</preConditions>
 		<comment> creating household_encounter household_encounter_patient foreign keys</comment>
@@ -1789,7 +1790,7 @@
 	<changeSet author="ningosi" id="household_encounter-31-01-2012:09:01">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<foreignKeyConstraintExists foreignKeyName="household_encounter_provider"/>
+				<foreignKeyConstraintExists foreignKeyTableName="household_encounter" foreignKeyName="household_encounter_provider"/>
 			</not>
 		</preConditions>
 		<comment> creating household_encounter household_encounter_provider foreign keys</comment>
@@ -1801,7 +1802,7 @@
 	<changeSet author="ningosi" id="household_encounter-31-01-2012:09:03">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<foreignKeyConstraintExists foreignKeyName="household_encounter_type_id"/>
+				<foreignKeyConstraintExists foreignKeyTableName="household_encounter" foreignKeyName="household_encounter_type_id"/>
 			</not>
 		</preConditions>
 		<comment> creating household_encounter household_encounter_type_id foreign keys</comment>
@@ -1814,7 +1815,7 @@
 	<changeSet author="ningosi" id="household_obs-31-01-2012:09:08">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<foreignKeyConstraintExists foreignKeyName="household_answer_concept"/>
+				<foreignKeyConstraintExists foreignKeyTableName="household_obs" foreignKeyName="household_answer_concept"/>
 			</not>
 		</preConditions>
 		<comment> creating household_obs household_answer_concept foreign keys</comment>
@@ -1826,7 +1827,7 @@
 	<changeSet author="ningosi" id="household_obs-31-01-2012:09:10">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<foreignKeyConstraintExists foreignKeyName="household_encounter_observations"/>
+				<foreignKeyConstraintExists foreignKeyTableName="household_obs" foreignKeyName="household_encounter_observations"/>
 			</not>
 		</preConditions>
 		<comment> creating household_obs household_encounter_observations foreign keys</comment>
@@ -1838,7 +1839,7 @@
 	<changeSet author="ningosi" id="household_obs-31-01-2012:09:11">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<foreignKeyConstraintExists foreignKeyName="household_obs_concept"/>
+				<foreignKeyConstraintExists foreignKeyTableName="household_obs" foreignKeyName="household_obs_concept"/>
 			</not>
 		</preConditions>
 		<comment> creating household_obs household_obs_concept foreign keys</comment>
@@ -1850,7 +1851,7 @@
 	<changeSet author="ningosi" id="household_obs-31-01-2012:09:12">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<foreignKeyConstraintExists foreignKeyName="household_obs_enterer"/>
+				<foreignKeyConstraintExists foreignKeyTableName="household_obs" foreignKeyName="household_obs_enterer"/>
 			</not>
 		</preConditions>
 		<comment> creating household_obs household_obs_enterer foreign keys</comment>
@@ -1862,7 +1863,7 @@
 	<!-- <changeSet author="ningosi" id="household_obs-31-01-2012:09:14">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<foreignKeyConstraintExists foreignKeyName="household_obs_grouping_uuid"/>
+				<foreignKeyConstraintExists foreignKeyTableName="household_obs" foreignKeyName="household_obs_grouping_uuid"/>
 			</not>
 		</preConditions>
 		<comment> creating household_obs household_obs_grouping_uuid foreign keys</comment>
@@ -1874,7 +1875,7 @@
 	<changeSet author="ningosi" id="household_obs-31-01-2012:09:15">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<foreignKeyConstraintExists foreignKeyName="household_obs_location"/>
+				<foreignKeyConstraintExists foreignKeyTableName="household_obs" foreignKeyName="household_obs_location"/>
 			</not>
 		</preConditions>
 		<comment> creating household_obs household_obs_location foreign keys</comment>
@@ -1886,7 +1887,7 @@
 	<changeSet author="ningosi" id="household_obs-31-01-2012:09:16">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<foreignKeyConstraintExists foreignKeyName="household_obs_name_of_coded_value"/>
+				<foreignKeyConstraintExists foreignKeyTableName="household_obs" foreignKeyName="household_obs_name_of_coded_value"/>
 			</not>
 		</preConditions>
 		<comment> creating household_obs household_obs_name_of_coded_value foreign keys</comment>
@@ -1898,7 +1899,7 @@
 	<changeSet author="ningosi" id="household_obs-31-01-2012:09:17">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<foreignKeyConstraintExists foreignKeyName="household_group_obs"/>
+				<foreignKeyConstraintExists foreignKeyTableName="household_obs" foreignKeyName="household_group_obs"/>
 			</not>
 		</preConditions>
 		<comment> creating household_obs household_group_obs foreign keys</comment>
@@ -1910,7 +1911,7 @@
 	<changeSet author="ningosi" id="household_obs-31-01-2012:09:20">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<foreignKeyConstraintExists foreignKeyName="household_user_who_voided_obs"/>
+				<foreignKeyConstraintExists foreignKeyTableName="household_obs" foreignKeyName="household_user_who_voided_obs"/>
 			</not>
 		</preConditions>
 		<comment> creating household_obs household_user_who_voided_obs foreign keys</comment>
@@ -1922,7 +1923,7 @@
 	<!-- Droping constraint if exist -->
 	<changeSet author="ningosi" id="household_obs_droping-31-01-2012:09:27" dbms="mysql">
 		<preConditions onFail="MARK_RAN">
-			<foreignKeyConstraintExists foreignKeyName="household_obs_grouping_uuid"/>
+			<foreignKeyConstraintExists foreignKeyTableName="household_obs" foreignKeyName="household_obs_grouping_uuid"/>
 		</preConditions>
 		<comment>Drop constraint to allow for household grouping uuid</comment>
 			<sql>
@@ -2097,7 +2098,7 @@
 	<changeSet author="jmwogi" id="householdDef_parent-2012-10-04_22:31">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<foreignKeyConstraintExists foreignKeyName="user_who_created_parent"/>
+				<foreignKeyConstraintExists foreignKeyTableName="householdDef_parent" foreignKeyName="user_who_created_parent"/>
 			</not>
 		</preConditions>
 		<comment> creating householdDef_parent user_who_created_parent foreign keys</comment>
@@ -2109,7 +2110,7 @@
 	<changeSet author="jmwogi" id="householdDef_parent-2012-10-04_22:45">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<foreignKeyConstraintExists foreignKeyName="user_who_changed_parent"/>
+				<foreignKeyConstraintExists foreignKeyTableName="householdDef_parent" foreignKeyName="user_who_changed_parent"/>
 			</not>
 		</preConditions>
 		<comment> creating householdDef_parent user_who_changed_parent foreign keys</comment>
@@ -2121,7 +2122,7 @@
 	<changeSet author="jmwogi" id="householdDef_parent-2012-10-04_22:46">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<foreignKeyConstraintExists foreignKeyName="user_who_voided_parent"/>
+				<foreignKeyConstraintExists foreignKeyTableName="householdDef_parent" foreignKeyName="user_who_voided_parent"/>
 			</not>
 		</preConditions>
 		<comment> creating householdDef_parent user_who_voided_parent foreign keys</comment>
@@ -2135,7 +2136,7 @@
 	<changeSet author="jmwogi" id="householdDef_parent-2012-10-04_21:36" dbms="mysql">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<foreignKeyConstraintExists foreignKeyName="parent_definition"/>
+				<foreignKeyConstraintExists foreignKeyTableName="household_definition" foreignKeyName="parent_definition"/>
 			</not>
 		</preConditions>
 		<sql>
